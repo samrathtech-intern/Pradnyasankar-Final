@@ -9,7 +9,13 @@ type AuthContextValue = {
   authLoading: boolean;
   authError: string;
   login: (email: string, password: string) => Promise<void>;
-  register: (name: string, email: string, password: string) => Promise<void>;
+  register: (
+  firstName: string,
+  lastName: string,
+  email: string,
+  mobileNumber: string,
+  password: string
+) => Promise<void>;
   logout: () => Promise<void>;
   clearAuthError: () => void;
 };
@@ -69,11 +75,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const register = useCallback(async (name: string, email: string, password: string) => {
+  const register = useCallback(
+  async (
+    firstName: string,
+    lastName: string,
+    email: string,
+    mobileNumber: string,
+    password: string
+  ) => {
     setAuthLoading(true);
     setAuthError("");
     try {
-      const { user: u, token: t } = await apiRegister(name, email, password);
+      const { user: u, token: t } = await apiRegister(
+  firstName,
+  lastName,
+  email,
+  mobileNumber,
+  password
+);
       persist(u, t);
     } catch (err) {
       setAuthError(err instanceof Error ? err.message : "Registration failed.");
@@ -105,3 +124,4 @@ export function useAuth() {
   if (!ctx) throw new Error("useAuth must be used within AuthProvider");
   return ctx;
 }
+

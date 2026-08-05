@@ -3,7 +3,15 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Eye, EyeOff, Loader2, Lock, Mail, User } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  Loader2,
+  Lock,
+  Mail,
+  User,
+  Phone
+} from "lucide-react";
 import { useAuth } from "@/components/AuthContext";
 
 export function RegisterForm() {
@@ -12,29 +20,62 @@ export function RegisterForm() {
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") ?? "/orders";
 
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
   const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
+  const [confirm, setConfirm] = useState("");   
   const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState<{ name?: string; email?: string; password?: string; confirm?: string }>({});
 
-  function validate() {
-    const e: typeof errors = {};
-    if (!name.trim()) e.name = "Full name is required.";
-    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = "Valid email is required.";
-    if (!password || password.length < 6) e.password = "Password must be at least 6 characters.";
-    if (password !== confirm) e.confirm = "Passwords do not match.";
-    setErrors(e);
-    return Object.keys(e).length === 0;
-  }
+
+  const [errors, setErrors] = useState<{
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  mobileNumber?: string;
+  password?: string;
+  confirm?: string;
+  }>({}); 
+
+
+
+
+function validate() {
+  const e: typeof errors = {};
+
+  if (!firstName.trim())
+    e.firstName = "First name is required.";
+
+  if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+    e.email = "Valid email is required.";
+
+  if (!mobileNumber.trim() || !/^[0-9]{10}$/.test(mobileNumber))
+    e.mobileNumber = "Valid 10-digit mobile number is required.";
+
+  if (!password || password.length < 6)
+    e.password = "Password must be at least 6 characters.";
+
+  if (password !== confirm)
+    e.confirm = "Passwords do not match.";
+
+  setErrors(e);
+
+  return Object.keys(e).length === 0;
+}
 
   async function handleSubmit(ev: React.FormEvent) {
     ev.preventDefault();
     clearAuthError();
     if (!validate()) return;
     try {
-      await register(name, email, password);
+      await register(
+    firstName,
+    lastName,
+    email,
+    mobileNumber,
+    password
+);
       router.push(redirect);
     } catch {}
   }
@@ -61,20 +102,38 @@ export function RegisterForm() {
           )}
 
           <form onSubmit={handleSubmit} noValidate className="space-y-5">
-            <div>
-              <label className="mb-1.5 block text-[11px] font-extrabold uppercase tracking-[.1em] text-[#2E0569]">Full name</label>
-              <div className="relative">
-                <User size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8C52FF]" />
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => { setName(e.target.value); setErrors((v) => ({ ...v, name: undefined })); }}
-                  placeholder="Your full name"
-                  className={`${inputCls(errors.name)} pl-10`}
-                  autoComplete="name"
-                />
+            {/* First & Last name row */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="mb-1.5 block text-[11px] font-extrabold uppercase tracking-[.1em] text-[#2E0569]">First name</label>
+                <div className="relative">
+                  <User size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8C52FF]" />
+                  <input
+                    type="text"
+                    value={firstName}
+                    onChange={(e) => { setFirstName(e.target.value); setErrors((v) => ({ ...v, firstName: undefined })); }}
+                    placeholder="First name"
+                    className={`${inputCls(errors.firstName)} pl-10`}
+                    autoComplete="given-name"
+                  />
+                </div>
+                {errors.firstName && <p className="mt-1 text-[11px] font-semibold text-red-500">{errors.firstName}</p>}
               </div>
-              {errors.name && <p className="mt-1 text-[11px] font-semibold text-red-500">{errors.name}</p>}
+              <div>
+                <label className="mb-1.5 block text-[11px] font-extrabold uppercase tracking-[.1em] text-[#2E0569]">Last name</label>
+                <div className="relative">
+                  <User size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8C52FF]" />
+                  <input
+                    type="text"
+                    value={lastName}
+                    onChange={(e) => { setLastName(e.target.value); setErrors((v) => ({ ...v, lastName: undefined })); }}
+                    placeholder="Last name"
+                    className={`${inputCls(errors.lastName)} pl-10`}
+                    autoComplete="family-name"
+                  />
+                </div>
+                {errors.lastName && <p className="mt-1 text-[11px] font-semibold text-red-500">{errors.lastName}</p>}
+              </div>
             </div>
 
             <div>
@@ -92,7 +151,46 @@ export function RegisterForm() {
               </div>
               {errors.email && <p className="mt-1 text-[11px] font-semibold text-red-500">{errors.email}</p>}
             </div>
+            {/* mobile number */}
+            <div>
+  <label className="mb-1.5 block text-[11px] font-extrabold uppercase tracking-[.1em] text-[#2E0569]">
+    Mobile Number
+  </label>
 
+  <div className="relative">
+    <Phone
+    size={15}
+    className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8C52FF]"
+/>
+
+    <input
+      type="tel"
+      value={mobileNumber}
+      onChange={(e) => {
+    const value = e.target.value.replace(/\D/g, "");
+
+    setMobileNumber(value);
+
+    setErrors(v => ({
+        ...v,
+        mobileNumber: undefined
+    }));
+    
+    }}
+      placeholder="9876543210"
+      className={`${inputCls(errors.mobileNumber)} pl-10`}
+      autoComplete="tel"
+      maxLength={10}
+    />
+  </div>
+
+  {errors.mobileNumber && (
+    <p className="mt-1 text-[11px] font-semibold text-red-500">
+      {errors.mobileNumber}
+    </p>
+  )}
+</div>
+            {/* Password field */}
             <div>
               <label className="mb-1.5 block text-[11px] font-extrabold uppercase tracking-[.1em] text-[#2E0569]">Password</label>
               <div className="relative">
@@ -153,3 +251,4 @@ export function RegisterForm() {
     </div>
   );
 }
+

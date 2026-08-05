@@ -2,7 +2,14 @@
  * Auth API service
  *
  * Integration points for the backend team:
- * - POST /api/auth/register  — { name, email, password } → { user, token }
+ * - // POST /api/auth/register
+// {
+//   firstName,
+//   lastName,
+//   email,
+//   mobileNumber,
+//   password
+// }
  * - POST /api/auth/login     — { email, password }       → { user, token }
  * - POST /api/auth/logout    — (bearer token in header)  → 200 OK
  *
@@ -11,15 +18,22 @@
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 
+console.log("API_BASE =", API_BASE);
+
 export type AuthUser = {
-  id: string;
-  name: string;
+  userId: number;
+  firstName: string;
+  lastName: string;
   email: string;
+  mobileNumber: string;
+  role: string;
 };
 
+
 export type AuthResponse = {
-  user: AuthUser;
   token: string;
+  message: string;
+  user: AuthUser;
 };
 
 async function request<T>(path: string, body: object, token?: string): Promise<T> {
@@ -41,8 +55,24 @@ async function request<T>(path: string, body: object, token?: string): Promise<T
   return data as T;
 }
 
-export async function apiRegister(name: string, email: string, password: string): Promise<AuthResponse> {
-  return request<AuthResponse>("/api/auth/register", { name, email, password });
+export async function apiRegister(
+  firstName: string,
+  lastName: string,
+  email: string,
+  mobileNumber: string,
+  password: string
+): Promise<AuthResponse> {
+
+  return request<AuthResponse>(
+    "/api/auth/register",
+    {
+      firstName,
+      lastName,
+      email,
+      mobileNumber,
+      password,
+    }
+  );
 }
 
 export async function apiLogin(email: string, password: string): Promise<AuthResponse> {
@@ -52,3 +82,4 @@ export async function apiLogin(email: string, password: string): Promise<AuthRes
 export async function apiLogout(token: string): Promise<void> {
   await request<void>("/api/auth/logout", {}, token);
 }
+
