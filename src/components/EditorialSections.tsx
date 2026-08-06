@@ -288,25 +288,23 @@ export function BusinessCTA() {
                 )}
               </div>
 
-              <div className="relative min-h-[650px] bg-[#FFFDF7]">
-                {/* Main image — fills the full panel, products as primary focus */}
-                <div className="absolute inset-0 overflow-hidden rounded-r-[40px]">
-                  <Image
-                    src="/images/cta-products.webp"
-                    alt="Pradnyasanskar business product and packaging presentation"
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 52vw"
-                    className="object-cover object-center"
-                    priority
-                  />
-                  {/* Subtle gradient vignette at bottom for overlay legibility */}
-                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-t from-[#1A0340]/70 via-[#2E0569]/30 to-transparent" />
-                </div>
-
-                {/* Business Pathways — floating overlay, bottom-right, inset from edges */}
-                <div className="absolute bottom-5 right-5 w-[min(72%,260px)] rounded-[20px] bg-[#2E0569]/90 p-5 text-white shadow-[0_18px_45px_rgba(46,5,105,.32)] backdrop-blur-md sm:bottom-6 sm:right-6">
-                  <p className="text-[9px] font-extrabold uppercase tracking-[.14em] text-[#FFCF85]">Business pathways</p>
-                  <p className="mt-2 text-[13px] font-bold leading-[1.6] text-white/80">Distributor, institutional, private-label and product-development conversations in one clear enquiry flow.</p>
+              <div className="flex min-h-[480px] items-center justify-center rounded-r-[40px] bg-[#EDE4FF] p-6 sm:p-8 lg:min-h-0 lg:p-10">
+                <div className="relative w-full">
+                  <div className="overflow-hidden rounded-[24px] border border-[#D8CCF0] bg-white shadow-[0_16px_48px_rgba(46,5,105,.13)]">
+                    <Image
+                      src="/images/business-partnership.jpeg"
+                      alt="Pradnyasanskar business partnership"
+                      width={800}
+                      height={600}
+                      sizes="(max-width: 1024px) 100vw, 52vw"
+                      className="h-auto w-full"
+                      priority
+                    />
+                  </div>
+                  <div className="absolute bottom-4 right-4 w-[min(72%,240px)] rounded-[18px] bg-[#2E0569]/90 p-4 text-white shadow-[0_12px_32px_rgba(46,5,105,.32)] backdrop-blur-md sm:bottom-5 sm:right-5">
+                    <p className="text-[9px] font-extrabold uppercase tracking-[.14em] text-[#FFCF85]">Business pathways</p>
+                    <p className="mt-2 text-[12px] font-bold leading-[1.6] text-white/80">Distributor, institutional, private-label and product-development conversations in one clear enquiry flow.</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -318,5 +316,80 @@ export function BusinessCTA() {
 }
 
 export function Newsletter() {
-  return <section id="newsletter" className="bg-white py-28 sm:py-36"><div className="relative mx-auto w-[92%] max-w-none px-0"><Reveal><div className="relative overflow-hidden rounded-[38px] bg-[#2E0569] text-white"><div className="grid min-h-[520px] lg:grid-cols-[1fr_1fr]"><div className="relative min-h-[360px] overflow-hidden"><Image src="/images/cta-gift.webp" alt="Pradnyasanskar wellness gifting collection" fill className="object-cover" /><div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#2E0569]/75 lg:block" /></div><div className="relative flex flex-col justify-center p-8 sm:p-12 lg:p-16"><span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[10px] font-extrabold uppercase tracking-[.15em]"><Mail size={14} />Stay connected</span><h2 className="mt-6 text-[clamp(42px,5vw,68px)] font-extrabold leading-[1] tracking-[-.055em]">Wellness worth coming back to.</h2><p className="mt-5 max-w-xl text-[14px] leading-[1.8] text-white/[.72]">Receive ingredient education, product stories, new collection updates and approved offers from Pradnyasanskar.</p><form className="mt-7 flex flex-col gap-3 sm:flex-row" onSubmit={(event) => event.preventDefault()}><label className="sr-only" htmlFor="newsletter-email">Email address</label><input id="newsletter-email" type="email" required placeholder="Enter your email address" className="min-h-[52px] flex-1 rounded-full border border-white/20 bg-white/10 px-5 text-[13px] text-white placeholder:text-white/50 outline-none focus:border-[#FFBB58]" /><button className="min-h-[52px] rounded-full bg-[#FFBB58] px-7 text-[11px] font-extrabold uppercase tracking-[.12em] text-[#2E0569] transition hover:-translate-y-0.5">Join the community</button></form><label className="mt-4 flex items-start gap-3 text-[10px] leading-relaxed text-white/60"><input type="checkbox" required className="mt-0.5 h-4 w-4 rounded accent-[#FFBB58]" />I agree to receive Pradnyasanskar updates and understand that I can unsubscribe at any time.</label><div className="mt-7 flex items-center gap-3 text-[10px] font-bold uppercase tracking-[.12em] text-white/[.55]"><PackageCheck size={16} className="text-[#FFBB58]" />No spam. Only useful product and wellness updates.</div></div></div></div></Reveal></div></section>;
+  const [email, setEmail] = useState("");
+  const [agreed, setAgreed] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    if (!email || !agreed) return;
+    setSubmitted(true);
+  }
+
+  return (
+    <section id="newsletter" className="bg-white py-28 sm:py-36">
+      <div className="relative mx-auto w-[92%] max-w-none px-0">
+        <Reveal>
+          <div className="relative overflow-hidden rounded-[38px] bg-[#2E0569] text-white">
+            <div className="grid min-h-[520px] lg:grid-cols-[1fr_1fr]">
+              <div className="relative min-h-[360px] overflow-hidden">
+                <Image src="/images/cta-gift.webp" alt="Pradnyasanskar wellness gifting collection" fill className="object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#2E0569]/75 lg:block" />
+              </div>
+              <div className="relative flex flex-col justify-center p-8 sm:p-12 lg:p-16">
+                <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[10px] font-extrabold uppercase tracking-[.15em]">
+                  <Mail size={14} />Stay connected
+                </span>
+                <h2 className="mt-6 text-[clamp(42px,5vw,68px)] font-extrabold leading-[1] tracking-[-.055em]">Wellness worth coming back to.</h2>
+                <p className="mt-5 max-w-xl text-[14px] leading-[1.8] text-white/[.72]">Receive ingredient education, product stories, new collection updates and approved offers from Pradnyasanskar.</p>
+
+                {submitted ? (
+                  <div className="mt-7 rounded-[20px] border border-white/20 bg-white/10 p-6">
+                    <p className="text-[10px] font-extrabold uppercase tracking-[.14em] text-[#FFBB58]">You're in!</p>
+                    <p className="mt-2 text-[15px] font-extrabold">Thank you for joining the community.</p>
+                    <p className="mt-1 text-[13px] text-white/70">We'll be in touch with wellness updates and product stories.</p>
+                  </div>
+                ) : (
+                  <form className="mt-7 flex flex-col gap-3" onSubmit={handleSubmit}>
+                    <label className="sr-only" htmlFor="newsletter-email">Email address</label>
+                    <div className="flex flex-col gap-3 sm:flex-row">
+                      <input
+                        id="newsletter-email"
+                        type="email"
+                        required
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Enter your email address"
+                        className="min-h-[52px] flex-1 rounded-full border border-white/20 bg-white/10 px-5 text-[13px] text-white placeholder:text-white/50 outline-none focus:border-[#FFBB58]"
+                      />
+                      <button
+                        type="submit"
+                        className="min-h-[52px] rounded-full bg-[#FFBB58] px-7 text-[11px] font-extrabold uppercase tracking-[.12em] text-[#2E0569] transition hover:-translate-y-0.5 disabled:opacity-50"
+                        disabled={!agreed}
+                      >
+                        Join the community
+                      </button>
+                    </div>
+                    <label className="flex cursor-pointer items-start gap-3 text-[10px] leading-relaxed text-white/60">
+                      <input
+                        type="checkbox"
+                        checked={agreed}
+                        onChange={(e) => setAgreed(e.target.checked)}
+                        className="mt-0.5 h-4 w-4 rounded accent-[#FFBB58]"
+                      />
+                      I agree to receive Pradnyasanskar updates and understand that I can unsubscribe at any time.
+                    </label>
+                  </form>
+                )}
+
+                <div className="mt-7 flex items-center gap-3 text-[10px] font-bold uppercase tracking-[.12em] text-white/[.55]">
+                  <PackageCheck size={16} className="text-[#FFBB58]" />No spam. Only useful product and wellness updates.
+                </div>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
 }

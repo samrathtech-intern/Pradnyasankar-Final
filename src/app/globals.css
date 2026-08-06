@@ -6,6 +6,11 @@
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 110px; }
 body { margin: 0; overflow-x: hidden; background: #fffdf7; color: #21182b; font-family: "Manrope", sans-serif; }
+
+/* Prevent content from being hidden behind the fixed mobile bottom nav */
+@media (max-width: 1023px) {
+  main { padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px)); }
+}
 button, a, input, summary { -webkit-tap-highlight-color: transparent; }
 button, a { outline-color: #8c52ff; outline-offset: 3px; }
 img { user-select: none; }
