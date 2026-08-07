@@ -66,7 +66,7 @@ export function Hero() {
       </div>
 
       {/* ── Main content grid ── */}
-      <div className="container-page relative z-10 grid min-h-[780px] items-center gap-12 py-16 lg:grid-cols-[.9fr_1.1fr] lg:py-24 xl:min-h-[860px]">
+      <div className="container-page relative z-10 grid min-h-[780px] items-center gap-8 py-12 lg:grid-cols-[.9fr_1.1fr] lg:py-24 xl:min-h-[860px]">
 
         {/* Left: Text content */}
         <div className="relative max-w-[700px]">
@@ -89,7 +89,7 @@ export function Hero() {
               </motion.span>
 
               {/* Headline */}
-              <h1 className="mt-7 text-[clamp(50px,6.4vw,92px)] font-extrabold leading-[.94] tracking-[-.068em] text-[#21182B] drop-shadow-[0_2px_24px_rgba(255,253,247,.15)]">
+              <h1 className="mt-7 text-[clamp(38px,6.4vw,92px)] font-extrabold leading-[.94] tracking-[-.068em] text-[#21182B] drop-shadow-[0_2px_24px_rgba(255,253,247,.15)]">
                 {slide.titleLead}
                 <br />
                 <span className="relative inline-block font-display font-semibold italic text-[#8C52FF]">
@@ -148,7 +148,7 @@ export function Hero() {
         </div>
 
         {/* Right: Image composition */}
-        <div className="relative min-h-[560px] sm:min-h-[660px] lg:min-h-[710px]">
+        <div className="relative min-h-[380px] sm:min-h-[500px] lg:min-h-[710px]">
 
           {/* ── Ambient depth glow — sits behind the blob, fills dead space ── */}
           <div

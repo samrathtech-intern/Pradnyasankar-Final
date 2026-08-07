@@ -201,8 +201,8 @@ export function KnowledgeSection() {
         <Reveal><span className="eyebrow">Knowledge hub</span><h2 className="section-heading mt-5">Wellness, explained clearly.</h2><p className="mt-4 max-w-2xl text-[14px] leading-relaxed text-[#716A78]">Educational content that supports understanding without offering diagnosis, personalised dosage or disease-treatment guidance.</p></Reveal>
         <div className="mt-10 grid gap-5 lg:grid-cols-[1.15fr_.85fr]">
           <Reveal>
-            <Link href={`/knowledge/${articles[0].slug}`} className="group grid min-h-[680px] overflow-hidden rounded-[36px] border border-[#E9E3EE] bg-white sm:grid-rows-[1fr_auto] transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(46,5,105,.12)]">
-              <div className="relative min-h-[400px] overflow-hidden"><Image src={articles[0].image} alt={articles[0].title} fill className="object-cover transition duration-700 group-hover:scale-[1.035]" /></div>
+            <Link href={`/knowledge/${articles[0].slug}`} className="group grid overflow-hidden rounded-[36px] border border-[#E9E3EE] bg-white sm:grid-rows-[1fr_auto] transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(46,5,105,.12)]">
+              <div className="relative min-h-[240px] overflow-hidden sm:min-h-[400px]"><Image src={articles[0].image} alt={articles[0].title} fill className="object-cover transition duration-700 group-hover:scale-[1.035]" /></div>
               <div className="bg-[#2E0569] p-7 text-white sm:p-9"><span className="rounded-full bg-white/10 px-4 py-2 text-[9px] font-extrabold uppercase tracking-[.14em]">{articles[0].category}</span><h3 className="mt-5 max-w-2xl text-[clamp(32px,4vw,50px)] font-extrabold leading-[1.05] tracking-[-.05em]">{articles[0].title}</h3><p className="mt-4 max-w-xl text-[13px] leading-[1.75] text-white/[.72]">{articles[0].copy}</p><span className="mt-6 inline-flex items-center gap-2 text-[9px] font-extrabold uppercase tracking-[.13em] text-[#FFCF85]">Read article <ArrowRight size={15} /></span></div>
             </Link>
           </Reveal>
@@ -288,7 +288,7 @@ export function BusinessCTA() {
                 )}
               </div>
 
-              <div className="flex min-h-[480px] items-center justify-center rounded-r-[40px] bg-[#EDE4FF] p-6 sm:p-8 lg:min-h-0 lg:p-10">
+              <div className="flex min-h-[320px] items-center justify-center rounded-r-[40px] bg-[#EDE4FF] p-6 sm:p-8 sm:min-h-[480px] lg:min-h-0 lg:p-10">
                 <div className="relative w-full">
                   <div className="overflow-hidden rounded-[24px] border border-[#D8CCF0] bg-white shadow-[0_16px_48px_rgba(46,5,105,.13)]">
                     <Image
@@ -332,7 +332,7 @@ export function Newsletter() {
         <Reveal>
           <div className="relative overflow-hidden rounded-[38px] bg-[#2E0569] text-white">
             <div className="grid min-h-[520px] lg:grid-cols-[1fr_1fr]">
-              <div className="relative min-h-[360px] overflow-hidden">
+              <div className="relative min-h-[260px] overflow-hidden sm:min-h-[360px]">
                 <Image src="/images/cta-gift.webp" alt="Pradnyasanskar wellness gifting collection" fill className="object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#2E0569]/75 lg:block" />
               </div>

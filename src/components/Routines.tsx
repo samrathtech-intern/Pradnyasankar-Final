@@ -229,11 +229,11 @@ export function RoutineCards() {
                       const [p0, p1, p2] = detail.pillars;
                       return (
                         <>
-                          <div className="mt-7 grid grid-cols-3 divide-x divide-white/30 border-t border-white/30 pt-6">
+                          <div className="mt-7 grid grid-cols-1 gap-4 border-t border-white/30 pt-6 sm:grid-cols-3 sm:divide-x sm:divide-white/30 sm:gap-0">
                             {([p0, p1, p2] as RoutinePillar[]).map((p, i) => {
                               const PIcon = p.icon;
                               return (
-                                <div key={p.label} className={i === 0 ? "pr-5" : i === 1 ? "px-5" : "pl-5"}>
+                                <div key={p.label} className={`border-b border-white/20 pb-4 sm:border-b-0 sm:pb-0 ${i === 0 ? "sm:pr-5" : i === 1 ? "sm:px-5" : "sm:pl-5"}`}>
                                   <div className="flex items-center gap-2">
                                     <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white/20 ring-1 ring-white/30">
                                       <PIcon size={11} className="text-[#2E0569]" />
@@ -247,7 +247,7 @@ export function RoutineCards() {
                           </div>
 
                           {/* Trust / value section */}
-                          <div className="mt-6 flex items-start gap-5 border-t border-white/30 pt-5">
+                          <div className="mt-6 flex flex-col gap-4 border-t border-white/30 pt-5 sm:flex-row sm:items-start sm:gap-5">
                             <div className="flex flex-1 items-start gap-2.5">
                               <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white/20 ring-1 ring-white/30">
                                 <Sparkles size={11} className="text-[#2E0569]" />
@@ -257,7 +257,7 @@ export function RoutineCards() {
                                 <p className="mt-1 text-[11px] leading-[1.65] text-[#6B6070]">{detail.trustCopy}</p>
                               </div>
                             </div>
-                            <div className="h-full w-px self-stretch bg-white/30" />
+                            <div className="hidden h-full w-px self-stretch bg-white/30 sm:block" />
                             <div className="flex flex-1 items-start gap-2.5">
                               <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white/20 ring-1 ring-white/30">
                                 <Heart size={11} className="text-[#2E0569]" />
@@ -298,7 +298,7 @@ export function RoutineCards() {
 
               {/* Portrait image column — aspect ratio matches 1122×1402 source images */}
               <div className={`relative overflow-hidden bg-gradient-to-br ${moment.ambience} lg:rounded-r-[36px]`}>
-                <div className="relative mx-auto w-full" style={{ aspectRatio: "1122 / 1402" }}>
+                <div className="relative mx-auto w-full max-h-[400px] lg:max-h-none" style={{ aspectRatio: "1122 / 1402" }}>
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={routine.image}

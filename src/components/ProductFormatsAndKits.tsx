@@ -60,7 +60,7 @@ export function ProductFormats() {
 
               <a
                 href="#featured"
-                className="group relative grid min-h-[290px] grid-cols-[1fr_144px] items-center overflow-hidden rounded-[28px] border border-[#E9E3EE] bg-white p-6 transition duration-300 hover:border-[#CDBAF1] hover:shadow-[0_18px_42px_rgba(46,5,105,.10)]"
+                className="group relative flex min-h-[200px] flex-col overflow-hidden rounded-[28px] border border-[#E9E3EE] bg-white p-6 transition duration-300 hover:border-[#CDBAF1] hover:shadow-[0_18px_42px_rgba(46,5,105,.10)] sm:grid sm:min-h-[290px] sm:grid-cols-[1fr_144px] sm:flex-none sm:items-center"
               >
                 <div className="min-w-0 pr-3">
                   <span className="text-[9px] font-extrabold uppercase tracking-[.15em] text-[#8C52FF]">Product format</span>
@@ -76,7 +76,7 @@ export function ProductFormats() {
                     </motion.span>
                   </span>
                 </div>
-                <div className="relative h-[210px] overflow-hidden rounded-[20px] bg-white">
+                <div className="relative mt-4 h-[140px] overflow-hidden rounded-[20px] bg-white sm:mt-0 sm:h-[210px]">
                   <Image
                     src={format.image}
                     alt={`${format.name} product format`}

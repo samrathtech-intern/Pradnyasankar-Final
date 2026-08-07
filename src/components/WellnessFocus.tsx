@@ -243,11 +243,11 @@ export function WellnessFocus() {
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               className="relative overflow-hidden rounded-[32px] border border-[#E5DCEB]/80 bg-white shadow-[0_32px_90px_rgba(46,5,105,.14),0_0_0_1px_rgba(140,82,255,.06)]"
             >
-              <div className="grid min-h-[480px] lg:min-h-[520px] lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+              <div className="grid min-h-[380px] lg:min-h-[520px] lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
 
                 {/* Left — image panel with mouse parallax */}
                 <div
-                  className="group relative min-h-[480px] overflow-hidden lg:min-h-full"
+                  className="group relative min-h-[320px] overflow-hidden lg:min-h-full"
                   style={{ backgroundColor: selected.accent }}
                   onMouseMove={parallax.onMove}
                   onMouseLeave={parallax.onLeave}

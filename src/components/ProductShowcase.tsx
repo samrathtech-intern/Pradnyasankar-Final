@@ -406,7 +406,7 @@ export function ProductShowcase() {
 
           {/* ════ RIGHT — Product selector grid ════ */}
           <Reveal delay={0.08}>
-            <div className="grid h-full gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2">
+            <div className="grid h-full gap-3 grid-cols-2 lg:grid-cols-3 xl:grid-cols-2">
               {selectors.map((product, index) => {
                 const isSelected = product.id === activeProduct.id;
                 return (

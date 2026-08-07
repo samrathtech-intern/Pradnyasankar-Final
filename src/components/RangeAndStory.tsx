@@ -154,7 +154,7 @@ export function BrandStory() {
 
           {/* ── Left: image composition ── */}
           <Reveal>
-            <div className="relative min-h-[560px] sm:min-h-[620px]">
+            <div className="relative min-h-[420px] sm:min-h-[560px] lg:min-h-[620px]">
               {/* primary image */}
               <div className="absolute left-0 top-0 h-[72%] w-[76%] overflow-hidden rounded-[38px] shadow-[0_24px_64px_rgba(46,5,105,.13)]">
                 <Image
