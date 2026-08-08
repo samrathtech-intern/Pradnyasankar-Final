@@ -11,6 +11,7 @@ import {
   Heart,
   Info,
   Leaf,
+  Loader2,
   Minus,
   Package,
   Plus,
@@ -19,12 +20,12 @@ import {
   Truck,
   ZoomIn,
 } from "lucide-react";
-import { products } from "@/data";
 import { useApp } from "@/components/AppContext";
 import { PageLayout } from "@/components/PageLayout";
 import { Reveal } from "@/components/Reveal";
 import { NotifyMeFull } from "@/components/NotifyMe";
 import { useEffect } from "react";
+import { useProducts } from "@/lib/useProducts";
 import { trackViewItem } from "@/lib/analytics";
 
 /* ── static product detail content (placeholder until CMS) ─────────── */
@@ -339,24 +340,49 @@ function PincodeCheck() {
 function ProductDetailContent() {
   const params = useParams();
   const slug = typeof params.slug === "string" ? params.slug : "";
-  const product = products.find((p) => p.id === slug);
-
-  if (!product) return notFound();
+  const { products, loading, error } = useProducts();
+  // Match by slug first (the canonical detail URL), falling back to id (productId).
+  const product = products.find((p) => p.slug === slug) ?? products.find((p) => p.id === slug);
 
   const detail = productDetails[slug];
   const { bag, saved, addToBag, toggleSaved } = useApp();
-  const bagItem = bag.find((item) => item.id === product.id);
+  const bagItem = bag.find((item) => item.id === product?.id);
   const inBag = !!bagItem;
-  const isSaved = saved.includes(product.id);
+  const isSaved = product ? saved.includes(product.id) : false;
 
   const [activeTab, setActiveTab] = useState<Tab>("Composition");
   const [zoomed, setZoomed] = useState(false);
   const [qty, setQty] = useState(1);
 
   useEffect(() => {
-    trackViewItem({ id: product.id, name: product.name, range: product.range, format: product.format, price: product.price });
+    if (product) {
+      trackViewItem({ id: product.id, name: product.name, range: product.range, format: product.format, price: product.price });
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [product.id]);
+  }, [product?.id]);
+
+  // Do not 404 while the catalogue is still loading from the API.
+  if (loading) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center bg-[#FFFDF7] px-8 text-center">
+        <Loader2 size={34} className="animate-spin text-[#8C52FF]" />
+        <p className="mt-5 text-[18px] font-extrabold text-[#2E0569]">Loading product…</p>
+        <p className="mt-2 text-[13px] text-[#716A78]">Fetching the latest product details from the store.</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center bg-[#FFFDF7] px-8 text-center">
+        <p className="text-[22px] font-extrabold text-[#2E0569]">Couldn't load this product.</p>
+        <p className="mt-3 text-[14px] text-[#716A78]">{error}</p>
+        <Link href="/shop" className="btn-primary mt-6">Back to shop</Link>
+      </div>
+    );
+  }
+
+  if (!product) return notFound();
 
   const related = products
     .filter((p) => p.id !== product.id && (p.range === product.range || p.goals.some((g) => product.goals.includes(g))))
@@ -733,7 +759,7 @@ function ProductDetailContent() {
                       key={p.id}
                       className="group flex flex-col overflow-hidden rounded-[28px] border border-[#E9E3EE] bg-white transition duration-300 hover:-translate-y-1.5 hover:border-[#CDBAF1] hover:shadow-[0_20px_50px_rgba(46,5,105,.10)]"
                     >
-                      <Link href={`/products/${p.id}`} className="relative aspect-square overflow-hidden bg-gradient-to-br from-[#F4EEFF] to-[#FAF6FF]">
+<Link href={`/products/${p.slug ?? p.id}`} className="relative aspect-square overflow-hidden bg-gradient-to-br from-[#F4EEFF] to-[#FAF6FF]">
                         <Image
                           src={p.image}
                           alt={p.name}
@@ -753,7 +779,7 @@ function ProductDetailContent() {
                             <span className="text-[#8B8292]">{p.format}</span>
                           </div>
                         </div>
-                        <Link href={`/products/${p.id}`}>
+<Link href={`/products/${p.slug ?? p.id}`}>
                           <h3 className="mt-3 text-[18px] font-extrabold leading-tight tracking-[-.03em] text-[#2E0569] hover:text-[#8C52FF] transition">
                             {p.name}
                           </h3>
@@ -841,7 +867,7 @@ function ProductDetailContent() {
               availability: product.inStock
                 ? "https://schema.org/InStock"
                 : "https://schema.org/OutOfStock",
-              url: `https://www.pradnyasanskar.com/products/${product.id}`,
+url: `https://www.pradnyasanskar.com/products/${product.slug ?? product.id}`,
             },
           }),
         }}

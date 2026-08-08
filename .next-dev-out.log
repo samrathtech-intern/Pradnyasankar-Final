@@ -1,0 +1,89 @@
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+  - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 2.2s
+ ○ Compiling / ...
+ ✓ Compiled / in 1321ms (1328 modules)
+API_BASE = http://localhost:8080
+ GET / 200 in 1581ms
+ GET / 200 in 174ms
+ GET / 200 in 137ms
+ ○ Compiling /shop/ayurveda ...
+ ✓ Compiled /shop/ayurveda in 6s (1374 modules)
+API_BASE = http://localhost:8080
+ GET /shop/ayurveda 200 in 6802ms
+ ✓ Compiled in 757ms (689 modules)
+ ✓ Compiled in 1033ms (1374 modules)
+ ✓ Compiled /shop in 275ms (1362 modules)
+API_BASE = http://localhost:8080
+ GET /shop 200 in 430ms
+ GET / 200 in 182ms
+ GET / 200 in 425ms
+ GET /shop/ayurveda 200 in 437ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 1325ms (1363 modules)
+API_BASE = http://localhost:8080
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 1737ms
+ ✓ Compiled /shop in 178ms (687 modules)
+API_BASE = http://localhost:8080
+ GET /shop 200 in 365ms
+ GET / 200 in 396ms
+ GET / 200 in 293ms
+ GET /shop/ayurveda 200 in 148ms
+ ○ Compiling /shop/nutraceuticals ...
+ ✓ Compiled /shop/nutraceuticals in 1939ms (1376 modules)
+API_BASE = http://localhost:8080
+ GET /shop/nutraceuticals 200 in 2551ms
+ GET /shop/ayurveda 200 in 84ms
+ GET /shop/nutraceuticals 200 in 120ms
+ GET / 200 in 421ms
+ GET /shop/nutraceuticals 200 in 115ms
+ GET /shop/nutraceuticals 200 in 96ms
+ ✓ Compiled in 716ms (689 modules)
+ ✓ Compiled in 559ms (689 modules)
+ GET /shop/ayurveda 200 in 182ms
+ GET /shop/ayurveda 200 in 974ms
+ GET /shop/ayurveda 200 in 155ms
+ ✓ Compiled in 2.3s (1376 modules)
+ ✓ Compiled in 640ms (1376 modules)
+ ✓ Compiled in 1348ms (1376 modules)
+ ✓ Compiled in 1675ms (1376 modules)
+API_BASE = http://localhost:8080
+ GET /shop/ayurveda 200 in 1352ms
+ ✓ Compiled in 2.1s (1376 modules)
+ ✓ Compiled in 1082ms (1376 modules)
+ ✓ Compiled in 1025ms (1376 modules)
+API_BASE = http://localhost:8080
+ GET /shop/ayurveda 200 in 712ms
+ ✓ Compiled in 1120ms (1376 modules)
+ ✓ Compiled in 1812ms (1376 modules)
+API_BASE = http://localhost:8080
+ GET /shop/ayurveda 200 in 511ms
+ ✓ Compiled in 1425ms (689 modules)
+ ✓ Compiled in 1049ms (689 modules)
+ ✓ Compiled in 992ms (689 modules)
+ ✓ Compiled in 1149ms (689 modules)
+ GET /shop/ayurveda 200 in 246ms
+ ✓ Compiled in 1397ms (689 modules)
+ ✓ Compiled in 868ms (689 modules)
+ ✓ Compiled in 975ms (689 modules)
+ ✓ Compiled in 1307ms (689 modules)
+ ○ Compiling /shop ...
+ ✓ Compiled /shop in 1015ms (689 modules)
+API_BASE = http://localhost:8080
+ GET /shop 200 in 1856ms
+ GET /shop 200 in 66ms
+ GET /shop 200 in 141ms
+ GET /shop/ayurveda 200 in 160ms
+ GET /shop 200 in 111ms
+ GET /shop/ayurveda 200 in 130ms
+ GET /shop 200 in 81ms
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+  - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 14s
+[?25h

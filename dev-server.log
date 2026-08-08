@@ -1,0 +1,69 @@
+
+> pradnyasanskar-landing@1.0.0 dev
+> next dev
+
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+  - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 2.4s
+ ○ Compiling /shop ...
+ ✓ Compiled /shop in 2.4s (1289 modules)
+API_BASE = http://localhost:8080
+ GET /shop 200 in 2759ms
+ ⨯ upstream image response failed for http://localhost:8080/images/ashwagandha-capsules.png 403
+ ✓ Compiled in 17.1s (661 modules)
+ ✓ Compiled in 226ms (661 modules)
+ ✓ Compiled /shop in 217ms (642 modules)
+API_BASE = http://localhost:8080
+ GET /shop 200 in 522ms
+ GET /shop 200 in 60ms
+ GET /shop 200 in 91ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 1100ms (1292 modules)
+API_BASE = http://localhost:8080
+ GET /images/herbal-face-serum.png 404 in 2372ms
+ ⨯ The requested resource isn't a valid image for /images/herbal-face-serum.png received null
+ ○ Compiling /shop/ayurveda ...
+ ✓ Compiled /shop/ayurveda in 843ms (1294 modules)
+API_BASE = http://localhost:8080
+ GET /shop/ayurveda 200 in 1402ms
+ ○ Compiling /shop/nutraceuticals ...
+ ✓ Compiled /shop/nutraceuticals in 1067ms (1296 modules)
+API_BASE = http://localhost:8080
+ GET /shop/nutraceuticals 200 in 1491ms
+ ○ Compiling / ...
+ ✓ Compiled / in 2.7s (1367 modules)
+API_BASE = http://localhost:8080
+ GET / 200 in 4313ms
+ GET /shop/ayurveda 200 in 170ms
+ GET /images/herbal-face-serum.png 404 in 64ms
+ ⨯ The requested resource isn't a valid image for /images/herbal-face-serum.png received null
+ GET /shop 200 in 264ms
+ GET /images/herbal-face-serum.png 404 in 54ms
+ ⨯ The requested resource isn't a valid image for /images/herbal-face-serum.png received null
+ ✓ Compiled in 4.4s (1367 modules)
+API_BASE = http://localhost:8080
+ GET /images/herbal-face-serum.png 404 in 3744ms
+ ⨯ The requested resource isn't a valid image for /images/herbal-face-serum.png received null
+ ✓ Compiled in 2.4s (1381 modules)
+API_BASE = http://localhost:8080
+ GET /shop/ayurveda 200 in 500ms
+ GET /shop/nutraceuticals 200 in 120ms
+ GET / 200 in 395ms
+ GET /shop/ayurveda 200 in 112ms
+ GET /images/herbal-face-serum.png 404 in 44ms
+ ⨯ The requested resource isn't a valid image for /images/herbal-face-serum.png received null
+ GET /shop/nutraceuticals 200 in 114ms
+ GET /images/herbal-face-serum.png 404 in 45ms
+ ⨯ The requested resource isn't a valid image for /images/herbal-face-serum.png received null
+ GET /images/herbal-face-serum.png 404 in 37ms
+ ⨯ The requested resource isn't a valid image for /images/herbal-face-serum.png received null
+ GET /images/herbal-face-serum.png 404 in 45ms
+ ⨯ The requested resource isn't a valid image for /images/herbal-face-serum.png received null
+ GET /images/herbal-face-serum.png 404 in 58ms
+ ⨯ The requested resource isn't a valid image for /images/herbal-face-serum.png received null
+ GET /shop/nutraceuticals 200 in 112ms
+ GET /images/herbal-face-serum.png 404 in 34ms
+ ⨯ The requested resource isn't a valid image for /images/herbal-face-serum.png received null

@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import { PageLayout } from "@/components/PageLayout";
-import { products } from "@/data";
+import { useProducts } from "@/lib/useProducts";
 import { useApp } from "@/components/AppContext";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -591,6 +591,7 @@ const ingredientData: Record<string, IngredientData> = {
 // ─── Product card (minimal, consistent with site) ─────────────────────────────
 
 function RelatedProductCard({ productId }: { productId: string }) {
+  const { products } = useProducts();
   const product = products.find((p) => p.id === productId);
   const { bag, addToBag } = useApp();
   if (!product) return null;

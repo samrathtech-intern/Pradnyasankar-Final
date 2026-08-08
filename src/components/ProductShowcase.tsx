@@ -18,9 +18,9 @@ import {
   ShoppingBag,
   Sparkles,
 } from "lucide-react";
-import { products } from "@/data";
 import { Reveal } from "./Reveal";
 import { useApp } from "./AppContext";
+import { useProducts } from "@/lib/useProducts";
 
 const tabs = ["All", "Ayurveda", "Nutraceuticals", "External Wellness"] as const;
 
@@ -86,8 +86,9 @@ export function ProductShowcase() {
   const [activeIndex, setActiveIndex] = useState(0);
   const reduce = useReducedMotion();
   const { bag, saved, addToBag, toggleSaved, setQuickView } = useApp();
-  const magAdd = useMagnetic(0.28);
+const magAdd = useMagnetic(0.28);
   const magView = useMagnetic(0.28);
+  const { products, loading } = useProducts();
 
   useEffect(() => {
     const handler = (e: Event) => {
@@ -117,8 +118,29 @@ export function ProductShowcase() {
     return result.length ? result : products;
   }, [tab, goal]);
 
-  const safeIndex = Math.min(activeIndex, filtered.length - 1);
+const safeIndex = Math.min(activeIndex, filtered.length - 1);
   const activeProduct = filtered[safeIndex] ?? products[0];
+
+  // Guard against empty/loading state (during SSR or while the catalogue loads)
+  if (!activeProduct) {
+    return (
+      <section id="featured" className="relative overflow-hidden bg-[#FFFDF7] py-24 sm:py-32">
+        <div className="mx-auto w-[92%] max-w-none px-0">
+          <div className="flex flex-col items-center justify-center rounded-[32px] border border-[#E9E3EE] bg-white px-8 py-24 text-center">
+            {loading ? (
+              <p className="text-[18px] font-extrabold text-[#2E0569]">Loading featured products…</p>
+            ) : (
+              <>
+                <p className="text-[22px] font-extrabold text-[#2E0569]">Products are on their way.</p>
+                <p className="mt-3 text-[13px] text-[#716A78]">Check back soon for the latest collection.</p>
+              </>
+            )}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   const inBag = bag.some((i) => i.id === activeProduct.id);
   const isSaved = saved.includes(activeProduct.id);
   const selectors = filtered.slice(0, 6);

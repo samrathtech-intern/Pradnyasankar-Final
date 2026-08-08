@@ -5,7 +5,8 @@ import { useCallback, useRef, useState, type CSSProperties, type MouseEvent as R
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring } from "framer-motion";
 import { ArrowRight, Check, Droplets, Heart, LayoutList, Leaf, RotateCcw, Sparkles, Sun, Target } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { products, routines } from "@/data";
+import { routines } from "@/data";
+import { useProducts } from "@/lib/useProducts";
 import { Reveal } from "./Reveal";
 import { useApp } from "./AppContext";
 
@@ -398,6 +399,7 @@ export function RoutineFinder() {
   const [answers, setAnswers] = useState<string[]>([]);
   const [complete, setComplete] = useState(false);
   const { addToBag } = useApp();
+  const { products } = useProducts();
 
   const select = (choice: string) => {
     const next = [...answers.slice(0, step), choice];

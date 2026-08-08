@@ -19,16 +19,34 @@ export type ProductStatus = "Signature" | "New" | "Featured";
 export type Product = {
   id: string;
   name: string;
-  range: ProductRange;
+  range: string | ProductRange;
   format: string;
   image: string;
   descriptor: string;
   goals: string[];
-  status: ProductStatus;
+  status: string | ProductStatus;
   mrp: number;
   price: number;
   isVeg: boolean;
   inStock: boolean;
+// Additional API fields (mapped directly from the backend; optional & additive)
+  category?: string;
+  brand?: string;
+  rating?: number;
+  discountPercentage?: number;
+  stock?: number;
+  available?: boolean;
+  slug?: string;
+  packSize?: string;
+  composition?: string;
+  dosageForm?: string;
+  manufacturer?: string;
+  keyIngredients?: string;
+  directions?: string;
+  warnings?: string;
+  storage?: string;
+  gst?: number;
+  licence?: string;
 };
 
 export const announcements = [

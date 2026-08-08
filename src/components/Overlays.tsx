@@ -5,8 +5,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, Eye, Heart, Minus, Plus, Search, ShoppingBag, Trash2, X } from "lucide-react";
-import { products } from "@/data";
+import type { Product } from "@/data";
 import { useApp } from "./AppContext";
+import { useProducts } from "@/lib/useProducts";
 import { trackBeginCheckout } from "@/lib/analytics";
 
 function useBodyLock(locked: boolean) {
@@ -48,6 +49,7 @@ function useFocusTrap(ref: React.RefObject<HTMLElement | null>, active: boolean,
 
 export function SearchOverlay() {
   const { searchOpen, setSearchOpen, setQuickView } = useApp();
+  const { products } = useProducts();
   const [query, setQuery] = useState("");
   const ref = useRef<HTMLDivElement>(null);
   useBodyLock(searchOpen);
@@ -224,9 +226,10 @@ export function BagDrawer() {
 
 export function SavedDrawer() {
   const { saved, savedOpen, setSavedOpen, toggleSaved, addToBag, setQuickView } = useApp();
+  const { products } = useProducts();
   const savedProducts = products.filter((product) => saved.includes(product.id));
-  const moveToBag = (product: (typeof products)[number]) => { setSavedOpen(false); addToBag(product); };
-  const openQuickView = (product: (typeof products)[number]) => { setSavedOpen(false); setQuickView(product); };
+  const moveToBag = (product: Product) => { setSavedOpen(false); addToBag(product); };
+  const openQuickView = (product: Product) => { setSavedOpen(false); setQuickView(product); };
   const ref = useRef<HTMLElement>(null);
   useBodyLock(savedOpen);
   useFocusTrap(ref, savedOpen, () => setSavedOpen(false));

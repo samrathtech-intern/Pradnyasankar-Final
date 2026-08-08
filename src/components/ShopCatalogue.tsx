@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
@@ -19,10 +19,12 @@ import {
   SlidersHorizontal,
   X,
 } from "lucide-react";
-import { products, type ProductRange } from "@/data";
+import { type ProductRange, type Product } from "@/data";
+import { fetchProducts } from "@/lib/productApi";
 import { useApp } from "./AppContext";
 import { Reveal } from "./Reveal";
 import { NotifyMeCompact } from "./NotifyMe";
+import { SearchX, AlertTriangle, Loader2 } from "lucide-react";
 import { trackFilter, trackSearch } from "@/lib/analytics";
 
 
@@ -59,8 +61,8 @@ const SORT_OPTIONS: { label: string; value: SortKey }[] = [
   { label: "Price: High to Low", value: "price-desc" },
 ];
 
-const PRICE_MIN = 329;
-const PRICE_MAX = 999;
+const PRICE_MIN = 0;
+const PRICE_MAX = 9999;
 
 function VegMarker({ isVeg }: { isVeg: boolean }) {
   return (
@@ -96,7 +98,36 @@ export function ShopCatalogue({
 }) {
   const { bag, saved, addToBag, toggleSaved, setQuickView } = useApp();
 
+const [productList, setProductList] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
+
   const [activeRange, setActiveRange] = useState<"all" | ProductRange>(range);
+
+  // Fetch from the backend. When a specific range tab is active, we request the
+  // backend-filtered category via `?category={name}` so the range tabs load from
+  // the API rather than being filtered purely on the client.
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+    fetchProducts(activeRange === "all" ? undefined : activeRange)
+      .then((data) => {
+        if (cancelled) return;
+        setProductList(data);
+        setLoading(false);
+      })
+      .catch((err: unknown) => {
+        if (cancelled) return;
+        setError(err instanceof Error ? err.message : "Failed to load products.");
+        setProductList([]);
+        setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [reloadKey, activeRange]);
   const [format, setFormat] = useState(initialFormat && FORMATS.includes(initialFormat) ? initialFormat : "All formats");
   const [goal, setGoal] = useState(initialGoal && GOALS.includes(initialGoal) ? initialGoal : "All goals");
   const [sort, setSort] = useState<SortKey>("default");
@@ -137,7 +168,7 @@ export function ShopCatalogue({
   }
 
   const filtered = useMemo(() => {
-    let list = [...products];
+    let list = [...productList];
 
     if (activeRange !== "all") list = list.filter((p) => p.range === activeRange);
     if (format !== "All formats") list = list.filter((p) => p.format === format);
@@ -156,8 +187,8 @@ export function ShopCatalogue({
     if (sort === "price-asc") list.sort((a, b) => a.price - b.price);
     if (sort === "price-desc") list.sort((a, b) => b.price - a.price);
 
-    return list;
-  }, [activeRange, format, goal, query, sort, minPrice, maxPrice]);
+return list;
+  }, [productList, activeRange, format, goal, query, sort, minPrice, maxPrice]);
 
   const hasFilters = format !== "All formats" || goal !== "All goals" || query.trim() !== "" || minPrice !== PRICE_MIN || maxPrice !== PRICE_MAX;
 
@@ -433,9 +464,39 @@ export function ShopCatalogue({
           </p>
         </div>
 
-        {/* ── Product grid / list ── */}
+{/* ── Product grid / list ── */}
         <AnimatePresence mode="wait">
-          {filtered.length === 0 ? (
+          {loading ? (
+            <motion.div
+              key="loading"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="mt-10 flex flex-col items-center justify-center rounded-[28px] border border-[#E9E3EE] bg-white px-8 py-20 text-center"
+            >
+              <Loader2 size={32} className="animate-spin text-[#8C52FF]" />
+              <p className="mt-5 text-[18px] font-extrabold text-[#2E0569]">Loading products…</p>
+              <p className="mt-2 text-[13px] text-[#716A78]">Fetching the latest collection from the store.</p>
+            </motion.div>
+          ) : error ? (
+            <motion.div
+              key="error"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className="mt-10 rounded-[28px] border border-dashed border-[#E5A0A0] bg-[#FDECEA] px-8 py-16 text-center"
+            >
+              <AlertTriangle size={34} className="mx-auto text-[#C0392B]" />
+              <p className="mt-5 text-[22px] font-extrabold text-[#2E0569]">Couldn't load products.</p>
+              <p className="mt-3 text-[14px] text-[#716A78]">{error}</p>
+              <button
+                onClick={() => setReloadKey((k) => k + 1)}
+                className="btn-primary mt-6"
+              >
+                <RotateCcw size={15} /> Try again
+              </button>
+            </motion.div>
+          ) : filtered.length === 0 ? (
             <motion.div
               key="empty"
               initial={{ opacity: 0, y: 16 }}
@@ -443,6 +504,7 @@ export function ShopCatalogue({
               exit={{ opacity: 0 }}
               className="mt-10 rounded-[28px] border border-dashed border-[#CDBAF1] bg-[#F2EBFF] px-8 py-16 text-center"
             >
+              <SearchX size={34} className="mx-auto text-[#8C52FF]" />
               <p className="text-[22px] font-extrabold text-[#2E0569]">No products match your filters.</p>
               <p className="mt-3 text-[14px] text-[#716A78]">Try adjusting your search, format or wellness goal.</p>
               <button onClick={resetFilters} className="btn-primary mt-6">
@@ -468,8 +530,8 @@ export function ShopCatalogue({
                     transition={{ duration: 0.38, delay: Math.min(i * 0.04, 0.32), ease: [0.22, 1, 0.36, 1] }}
                     className="group relative flex flex-col overflow-hidden rounded-[28px] border border-[#E9E3EE] bg-white transition duration-300 hover:-translate-y-1.5 hover:border-[#CDBAF1] hover:shadow-[0_20px_50px_rgba(46,5,105,.10)]"
                   >
-                    {/* Image — links to product detail */}
-                    <Link href={`/products/${product.id}`} className="relative aspect-square overflow-hidden bg-gradient-to-br from-[#F4EEFF] to-[#FAF6FF] block">
+{/* Image — links to product detail */}
+                    <Link href={`/products/${product.slug ?? product.id}`} className="relative aspect-square overflow-hidden bg-gradient-to-br from-[#F4EEFF] to-[#FAF6FF] block">
                       <Image
                         src={product.image}
                         alt={product.name}
@@ -513,7 +575,7 @@ export function ShopCatalogue({
                           <span className="text-[#8B8292]">{product.format}</span>
                         </div>
                       </div>
-                      <Link href={`/products/${product.id}`}>
+<Link href={`/products/${product.slug ?? product.id}`}>
                         <h3 className="mt-3 text-[19px] font-extrabold leading-tight tracking-[-.03em] text-[#2E0569] transition hover:text-[#8C52FF]">
                           {product.name}
                         </h3>
@@ -585,8 +647,8 @@ export function ShopCatalogue({
                     className="group grid grid-cols-[88px_1fr_auto] items-center gap-5 overflow-hidden rounded-[22px] border border-[#E9E3EE] bg-white p-4 transition duration-300 hover:border-[#CDBAF1] hover:shadow-[0_10px_30px_rgba(46,5,105,.08)] sm:grid-cols-[110px_1fr_auto]"
                   >
                     {/* Thumbnail — links to product detail */}
-                    <Link
-                      href={`/products/${product.id}`}
+<Link
+                      href={`/products/${product.slug ?? product.id}`}
                       className="relative aspect-square overflow-hidden rounded-[16px] bg-gradient-to-br from-[#F4EEFF] to-[#FAF6FF] block"
                     >
                       <Image
@@ -609,7 +671,7 @@ export function ShopCatalogue({
                           {product.status}
                         </span>
                       </div>
-                      <Link href={`/products/${product.id}`}>
+<Link href={`/products/${product.slug ?? product.id}`}>
                         <h3 className="mt-1.5 text-[17px] font-extrabold leading-tight tracking-[-.03em] text-[#2E0569] transition hover:text-[#8C52FF]">
                           {product.name}
                         </h3>
