@@ -178,14 +178,15 @@ export function Header() {
             />
           </button>
           {[
-            ["Ayurveda", "/shop/ayurveda"],
-            ["Nutraceuticals", "/shop/nutraceuticals"],
-            ["Wellness goals", "/#wellness-focus"],
-            ["Routines", "/#routines"],
-            ["Ingredients", "/ingredients"],
-            ["Knowledge", "/knowledge"],
-            ["Our story", "/about"],
-          ].map(([label, href]) => {
+  ["Ayurveda", "/shop/ayurveda"],
+  ["Nutraceuticals", "/shop/nutraceuticals"],
+  ["Wellness goals", "/#wellness-focus"],
+  ["Routines", "/#routines"],
+  ["Ingredients", "/ingredients"],
+  ["Knowledge", "/knowledge"],
+  ["Our story", "/about"],
+  ["Business Enquiry", "/b2b"],   // <-- Add this line
+].map(([label, href]) => {
             const isActive = pathname === href || pathname.startsWith(href + "/");
             return (
               <a

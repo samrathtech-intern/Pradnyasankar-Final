@@ -1,14 +1,43 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, MapPin, Phone } from "lucide-react";
-import { faqs } from "@/data";
+import { faqs as fallbackFaqs } from "@/data";
+import { fetchFAQs } from "@/lib/faqApi";
 import { Reveal } from "./Reveal";
+
+type FaqEntry = { question: string; answer: string };
 
 export function FAQ() {
   const [open, setOpen] = useState(0);
+  const [faqs, setFaqs] = useState<FaqEntry[]>(
+    fallbackFaqs.map(([question, answer]) => ({ question, answer })),
+  );
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    fetchFAQs()
+      .then((items) => {
+        if (!active) return;
+        const mapped: FaqEntry[] = items
+          .filter((item) => item.question && item.answer)
+          .map((item) => ({ question: item.question, answer: item.answer }));
+        if (mapped.length > 0) setFaqs(mapped);
+      })
+      .catch(() => {
+        // Keep the static fallback FAQs when the backend is unreachable.
+      })
+      .finally(() => {
+        if (active) setLoaded(true);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
   return (
     <section id="faq" className="bg-[#FAF7FF] py-20 sm:py-28">
       <div className="container-page">
@@ -22,7 +51,7 @@ export function FAQ() {
             </div>
           </Reveal>
           <div className="space-y-3">
-            {faqs.map(([question, answer], index) => (
+            {faqs.map(({ question, answer }, index) => (
               <Reveal key={question} delay={index * .04}>
                 <article className="overflow-hidden rounded-[24px] border border-[#E9E3EE] bg-white">
                   <button onClick={() => setOpen(open === index ? -1 : index)} className="flex min-h-20 w-full items-center justify-between gap-6 px-6 text-left" aria-expanded={open === index}>

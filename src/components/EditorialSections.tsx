@@ -262,53 +262,53 @@ export function CommunitySection() {
 }
 
 export function BusinessCTA() {
-  const [submitted, setSubmitted] = useState(false);
   return (
     <section id="business" className="bg-[#FFFDF7] py-28 sm:py-36">
       <div className="relative mx-auto w-[92%] max-w-none px-0">
         <Reveal>
-          <div className="overflow-hidden rounded-[40px] border border-[#E9E3EE] bg-[#F2EBFF] shadow-[0_28px_80px_rgba(46,5,105,.09)]">
-            <div className="grid lg:grid-cols-[.95fr_1.05fr]">
-              <div className="p-8 sm:p-11 lg:p-12">
-                <span className="text-[10px] font-extrabold uppercase tracking-[.16em] text-[#8C52FF]">Business with Pradnyasanskar</span>
-                <h2 className="mt-4 text-[clamp(42px,5vw,66px)] font-extrabold leading-[1] tracking-[-.055em] text-[#2E0569]">Let’s build thoughtful wellness opportunities.</h2>
-                <p className="mt-5 max-w-xl text-[14px] leading-[1.8] text-[#645D68]">Connect for distributor interest, bulk purchase, institutional supply, private-label requirements, product development or contract-manufacturing discussions, subject to capability confirmation.</p>
-                <div className="mt-6 flex flex-wrap gap-2">{["Distributor", "Bulk purchase", "Institutional supply", "Private label", "Product development"].map((item) => <span key={item} className="rounded-full border border-[#DCD0EA] bg-white/75 px-4 py-2 text-[10px] font-extrabold text-[#2E0569]">{item}</span>)}</div>
+          <div className="overflow-hidden rounded-[40px] border border-[#E9E3EE] bg-gradient-to-r from-[#2E0569] to-[#4B1D8B] text-white shadow-[0_28px_80px_rgba(46,5,105,.12)]">
+            <div className="grid items-center gap-10 lg:grid-cols-[1fr_420px] p-10 sm:p-14">
 
-                {submitted ? (
-                  <div className="mt-8 rounded-[24px] border border-[#CFE5C4] bg-[#EAF4E4] p-6"><p className="text-[10px] font-extrabold uppercase tracking-[.14em] text-[#4A732F]">Enquiry captured</p><h3 className="mt-2 text-[22px] font-extrabold text-[#2E0569]">Thank you for connecting.</h3><p className="mt-2 text-[12px] leading-relaxed text-[#5F6D57]">Your enquiry has been recorded. The Pradnyasanskar team can follow up using the contact information provided.</p><button type="button" onClick={() => setSubmitted(false)} className="mt-4 text-[10px] font-extrabold uppercase tracking-[.12em] text-[#2E0569]">Submit another enquiry</button></div>
-                ) : (
-                  <form id="business-form" onSubmit={(event) => { event.preventDefault(); setSubmitted(true); }} className="mt-8 grid gap-3 sm:grid-cols-2">
-                    <label className="grid gap-1.5 text-[10px] font-extrabold uppercase tracking-[.12em] text-[#675A71]">Name<input required name="name" className="min-h-12 rounded-2xl border border-[#DCD0EA] bg-white px-4 text-[13px] font-semibold normal-case tracking-normal text-[#2E0569] outline-none focus:border-[#8C52FF]" /></label>
-                    <label className="grid gap-1.5 text-[10px] font-extrabold uppercase tracking-[.12em] text-[#675A71]">Email<input required type="email" name="email" className="min-h-12 rounded-2xl border border-[#DCD0EA] bg-white px-4 text-[13px] font-semibold normal-case tracking-normal text-[#2E0569] outline-none focus:border-[#8C52FF]" /></label>
-                    <label className="grid gap-1.5 text-[10px] font-extrabold uppercase tracking-[.12em] text-[#675A71] sm:col-span-2">Enquiry type<select name="type" className="min-h-12 rounded-2xl border border-[#DCD0EA] bg-white px-4 text-[13px] font-semibold normal-case tracking-normal text-[#2E0569] outline-none focus:border-[#8C52FF]"><option>Distributor or dealer</option><option>Bulk purchase</option><option>Institutional supply</option><option>Private label</option><option>Product development</option><option>Contract manufacturing</option></select></label>
-                    <label className="grid gap-1.5 text-[10px] font-extrabold uppercase tracking-[.12em] text-[#675A71] sm:col-span-2">Message<textarea required name="message" rows={3} className="rounded-2xl border border-[#DCD0EA] bg-white px-4 py-3 text-[13px] font-semibold normal-case tracking-normal text-[#2E0569] outline-none focus:border-[#8C52FF]" /></label>
-                    <button className="btn-primary mt-2 sm:col-span-2">Submit business enquiry<ArrowRight size={17} /></button>
-                  </form>
-                )}
+              {/* Left Content */}
+              <div>
+                <span className="inline-block rounded-full bg-white/10 px-4 py-2 text-[10px] font-extrabold uppercase tracking-[.15em] text-[#FFCF85]">
+                  Business Partnerships
+                </span>
+
+                <h2 className="mt-6 text-[clamp(42px,5vw,64px)] font-extrabold leading-[1] tracking-[-.05em]">
+                  Grow your business with Pradnyasanskar.
+                </h2>
+
+                <p className="mt-6 max-w-2xl text-[16px] leading-8 text-white/80">
+                  Looking for bulk orders, distributorship,
+                  private label manufacturing or institutional
+                  supply?
+                </p>
+
+                <p className="mt-4 max-w-xl text-[15px] leading-7 text-white/65">
+                  Connect with our business team and we'll help you
+                  choose the right partnership model.
+                </p>
+
+                <Link
+                  href="/b2b"
+                  className="mt-10 inline-flex items-center gap-3 rounded-full bg-[#FFBB58] px-8 py-4 text-[12px] font-extrabold uppercase tracking-[.12em] text-[#2E0569] transition hover:scale-105"
+                >
+                  Business Enquiry
+                  <ArrowRight size={18} />
+                </Link>
               </div>
 
-              <div className="relative min-h-[650px] bg-[#FFFDF7]">
-                {/* Main image — fills the full panel, products as primary focus */}
-                <div className="absolute inset-0 overflow-hidden rounded-r-[40px]">
-                  <Image
-                    src="/images/cta-products.webp"
-                    alt="Pradnyasanskar business product and packaging presentation"
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 52vw"
-                    className="object-cover object-center"
-                    priority
-                  />
-                  {/* Subtle gradient vignette at bottom for overlay legibility */}
-                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-t from-[#1A0340]/70 via-[#2E0569]/30 to-transparent" />
-                </div>
-
-                {/* Business Pathways — floating overlay, bottom-right, inset from edges */}
-                <div className="absolute bottom-5 right-5 w-[min(72%,260px)] rounded-[20px] bg-[#2E0569]/90 p-5 text-white shadow-[0_18px_45px_rgba(46,5,105,.32)] backdrop-blur-md sm:bottom-6 sm:right-6">
-                  <p className="text-[9px] font-extrabold uppercase tracking-[.14em] text-[#FFCF85]">Business pathways</p>
-                  <p className="mt-2 text-[13px] font-bold leading-[1.6] text-white/80">Distributor, institutional, private-label and product-development conversations in one clear enquiry flow.</p>
-                </div>
+              {/* Right Image */}
+              <div className="relative h-[420px] overflow-hidden rounded-[30px]">
+                <Image
+                  src="/images/cta-products.webp"
+                  alt="Business Partnership"
+                  fill
+                  className="object-cover"
+                />
               </div>
+
             </div>
           </div>
         </Reveal>
@@ -316,7 +316,6 @@ export function BusinessCTA() {
     </section>
   );
 }
-
 export function Newsletter() {
   return <section id="newsletter" className="bg-white py-28 sm:py-36"><div className="relative mx-auto w-[92%] max-w-none px-0"><Reveal><div className="relative overflow-hidden rounded-[38px] bg-[#2E0569] text-white"><div className="grid min-h-[520px] lg:grid-cols-[1fr_1fr]"><div className="relative min-h-[360px] overflow-hidden"><Image src="/images/cta-gift.webp" alt="Pradnyasanskar wellness gifting collection" fill className="object-cover" /><div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#2E0569]/75 lg:block" /></div><div className="relative flex flex-col justify-center p-8 sm:p-12 lg:p-16"><span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[10px] font-extrabold uppercase tracking-[.15em]"><Mail size={14} />Stay connected</span><h2 className="mt-6 text-[clamp(42px,5vw,68px)] font-extrabold leading-[1] tracking-[-.055em]">Wellness worth coming back to.</h2><p className="mt-5 max-w-xl text-[14px] leading-[1.8] text-white/[.72]">Receive ingredient education, product stories, new collection updates and approved offers from Pradnyasanskar.</p><form className="mt-7 flex flex-col gap-3 sm:flex-row" onSubmit={(event) => event.preventDefault()}><label className="sr-only" htmlFor="newsletter-email">Email address</label><input id="newsletter-email" type="email" required placeholder="Enter your email address" className="min-h-[52px] flex-1 rounded-full border border-white/20 bg-white/10 px-5 text-[13px] text-white placeholder:text-white/50 outline-none focus:border-[#FFBB58]" /><button className="min-h-[52px] rounded-full bg-[#FFBB58] px-7 text-[11px] font-extrabold uppercase tracking-[.12em] text-[#2E0569] transition hover:-translate-y-0.5">Join the community</button></form><label className="mt-4 flex items-start gap-3 text-[10px] leading-relaxed text-white/60"><input type="checkbox" required className="mt-0.5 h-4 w-4 rounded accent-[#FFBB58]" />I agree to receive Pradnyasanskar updates and understand that I can unsubscribe at any time.</label><div className="mt-7 flex items-center gap-3 text-[10px] font-bold uppercase tracking-[.12em] text-white/[.55]"><PackageCheck size={16} className="text-[#FFBB58]" />No spam. Only useful product and wellness updates.</div></div></div></div></Reveal></div></section>;
 }
