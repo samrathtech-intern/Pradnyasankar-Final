@@ -111,7 +111,7 @@ export function IngredientsSection() {
 
   return (
     <section id="ingredients" className="overflow-hidden bg-white py-28 sm:py-36">
-      <div className="relative mx-auto w-[92%] max-w-none px-0">
+      <div className="relative container-page ">
         <Reveal>
           <span className="eyebrow"><BookOpen size={13} /> Ingredient library</span>
           <div className="mt-5 grid gap-6 lg:grid-cols-[.9fr_1fr] lg:items-end">
@@ -197,7 +197,7 @@ const articles = [
 export function KnowledgeSection() {
   return (
     <section id="knowledge" className="bg-[#FAF7FF] py-28 sm:py-36">
-      <div className="relative mx-auto w-[92%] max-w-none px-0">
+      <div className="relative container-page">
         <Reveal><span className="eyebrow">Knowledge hub</span><h2 className="section-heading mt-5">Wellness, explained clearly.</h2><p className="mt-4 max-w-2xl text-[14px] leading-relaxed text-[#716A78]">Educational content that supports understanding without offering diagnosis, personalised dosage or disease-treatment guidance.</p></Reveal>
         <div className="mt-10 grid gap-5 lg:grid-cols-[1.15fr_.85fr]">
           <Reveal>
@@ -223,7 +223,7 @@ const community = [
 export function CommunitySection() {
   return (
     <section className="bg-white py-28 sm:py-36">
-      <div className="relative mx-auto w-[92%] max-w-none px-0">
+      <div className="relative container-page">
         <Reveal>
           <div className="grid gap-5 lg:grid-cols-[.9fr_1fr] lg:items-end">
             <div>
@@ -265,7 +265,7 @@ export function BusinessCTA() {
   const [submitted, setSubmitted] = useState(false);
   return (
     <section id="business" className="bg-[#FFFDF7] py-28 sm:py-36">
-      <div className="relative mx-auto w-[92%] max-w-none px-0">
+      <div className="relative container-page">
         <Reveal>
           <div className="overflow-hidden rounded-[40px] border border-[#E9E3EE] bg-[#F2EBFF] shadow-[0_28px_80px_rgba(46,5,105,.09)]">
             <div className="grid lg:grid-cols-[.95fr_1.05fr]">
@@ -328,7 +328,7 @@ export function Newsletter() {
 
   return (
     <section id="newsletter" className="bg-white py-28 sm:py-36">
-      <div className="relative mx-auto w-[92%] max-w-none px-0">
+      <div className="relative container-page">
         <Reveal>
           <div className="relative overflow-hidden rounded-[38px] bg-[#2E0569] text-white">
             <div className="grid min-h-[520px] lg:grid-cols-[1fr_1fr]">

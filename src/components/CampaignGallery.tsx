@@ -92,7 +92,7 @@ export function CampaignGallery() {
         <div className="absolute left-1/2 top-[30%] h-[300px] w-[300px] -translate-x-1/2 rounded-full bg-white/60 blur-[80px]" />
       </div>
 
-      <div className="relative mx-auto w-[92%] max-w-none px-0">
+      <div className="relative container-page">
         {/* header */}
         <motion.div
           variants={headerStagger}

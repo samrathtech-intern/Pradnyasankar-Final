@@ -30,7 +30,7 @@ export function ProductFormats() {
   const reduce = useReducedMotion();
   return (
     <section id="formats" className="bg-white py-28 sm:py-36">
-      <div className="mx-auto w-[92%] max-w-none px-0">
+      <div className="container-page">
         <Reveal>
           <span className="eyebrow"><Sparkles size={13} /> Browse by format</span>
           <div className="mt-5 grid gap-5 lg:grid-cols-[.9fr_1fr] lg:items-end">
@@ -106,7 +106,7 @@ const labelItems = [
 export function TransparencySection() {
   return (
     <section id="transparency" className="bg-[#FFFDF7] py-28 sm:py-36">
-      <div className="mx-auto w-[92%] max-w-none px-0">
+      <div className="container-page">
         <Reveal>
           <div className="overflow-hidden rounded-[40px] border border-[#E9E3EE] bg-white shadow-[0_24px_68px_rgba(46,5,105,.07)]">
             <div className="grid items-stretch lg:grid-cols-[.78fr_1.22fr]">
@@ -181,7 +181,7 @@ export function WellnessSets() {
   ];
   return (
     <section id="wellness-sets" className="bg-[#FAF7FF] py-28 sm:py-36">
-      <div className="mx-auto w-[92%] max-w-none px-0">
+      <div className="container-page">
 
         {/* header */}
         <motion.div

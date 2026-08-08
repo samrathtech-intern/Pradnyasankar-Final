@@ -150,7 +150,7 @@ export function RoutineCards() {
         />
       </div>
 
-      <div className="relative mx-auto w-[92%] max-w-none px-0">
+      <div className="relative container-page">
         <Reveal>
           <motion.div
             variants={headerStagger}
@@ -417,7 +417,7 @@ export function RoutineFinder() {
 
   return (
     <section id="routine-finder" className="bg-[#FFFDF7] py-28 sm:py-36">
-      <div className="mx-auto w-[92%] max-w-none px-0">
+      <div className="container-page">
         <Reveal>
           <div className="relative overflow-hidden rounded-[32px] bg-[#2E0569] text-white shadow-[0_18px_55px_rgba(46,5,105,.14),0_0_0_1px_rgba(46,5,105,.08)]">
             {/* ambient glows */}

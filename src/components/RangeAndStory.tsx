@@ -63,7 +63,7 @@ export function RangeSplit() {
         <div className="absolute -right-24 bottom-16 h-[360px] w-[360px] rounded-full bg-[#FFBB58]/[.055] blur-[80px]" />
       </div>
 
-      <div className="relative mx-auto w-[92%] max-w-none px-0">
+      <div className="relative container-page">
         {/* header */}
         <motion.div
           variants={headerStagger}
@@ -149,7 +149,7 @@ export function RangeSplit() {
 export function BrandStory() {
   return (
     <section id="philosophy" className="overflow-hidden bg-[#FFFDF7] py-28 sm:py-36">
-      <div className="relative mx-auto w-[92%] max-w-none px-0">
+      <div className="relative container-page">
         <div className="grid gap-16 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-20">
 
           {/* ── Left: image composition ── */}

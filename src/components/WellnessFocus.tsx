@@ -196,7 +196,7 @@ export function WellnessFocus() {
         />
       </div>
 
-      <div className="relative mx-auto w-[92%] max-w-none px-0">
+      <div className="relative container-page">
 
         {/* ── Section header — staggered reveal ── */}
         <motion.div

@@ -147,7 +147,7 @@ export function ProductShowcase() {
         <Leaf className="absolute right-[18%] bottom-[6%] h-12 w-8 rotate-[50deg] text-[#8C52FF]/[.06]" />
       </div>
 
-      <div className="relative mx-auto w-[92%] max-w-none px-0">
+      <div className="relative container-page">
 
         {/* ── Section header ── */}
         <motion.div
