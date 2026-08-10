@@ -39,8 +39,14 @@
  */
 
 import type { Product } from "@/data";
+import { products as KNOWN_PRODUCTS } from "@/data";
 
-export const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080";
+// The browser calls the same-origin Next.js rewrite path (`/api/store/...`),
+// which forwards the request server-to-server to the backend at
+// NEXT_PUBLIC_API_BASE_URL (default http://localhost:8080). This avoids CORS
+// blocking, since the backend does not send Access-Control-Allow-Origin headers.
+// (This mirrors the existing B2B proxy route pattern.)
+export const API_BASE = "";
 
 /** Existing placeholder shown when a product has no image. */
 export const PLACEHOLDER_IMAGE = "/logo.png";
@@ -99,11 +105,45 @@ export function fallbackImageFor(name: string, slug?: string): string {
   return PLACEHOLDER_IMAGE;
 }
 
+/**
+ * Fallback wellness "goals" keyed by lower-cased product slug and name.
+ *
+ * The backend catalogue does not currently send a `benefits` field, so
+ * `normalizeProduct` would leave `goals: []`. The shop catalogue filters by
+ * goal (e.g. "Immunity Support"), which would then return no products. To keep
+ * the goals filter working, we map each product to the goals that were defined
+ * in the frontend's original product data (matched by slug/name). If the
+ * backend does send `benefits` in future, those take precedence (see
+ * `normalizeProduct`).
+ */
+const GOALS_BY_SLUG: Record<string, string[]> =
+  Object.fromEntries(
+    KNOWN_PRODUCTS.map((p) => [p.id.toLowerCase(), p.goals]),
+  );
+
+/** Looks up the frontend goals for a backend product by slug/name. */
+export function fallbackGoalsFor(
+  name: string,
+  slug?: string,
+): string[] {
+  if (slug) {
+    const bySlug = GOALS_BY_SLUG[slug.trim().toLowerCase()];
+    if (bySlug && bySlug.length) return bySlug;
+  }
+  const byName = KNOWN_PRODUCTS.find(
+    (p) => p.name.trim().toLowerCase() === name.trim().toLowerCase(),
+  );
+  if (byName) return byName.goals;
+  return [];
+}
+
 export interface ProductDTO {
   productId?: number;
   productName?: string;
   slug?: string;
+  sku?: string;
   category?: string;
+  categoryName?: string;
   brand?: string;
   description?: string;
   composition?: string;
@@ -174,7 +214,10 @@ export function resolveProductImage(image?: string | null): string {
  * and made available on the returned object; UI-only fields get safe defaults.
  */
 export function normalizeProduct(dto: ProductDTO): Product {
-  const category = String(dto.category ?? "General");
+  // The backend sends the category in `categoryName` (e.g. "Ayurveda"), not
+  // `category`. Map either field so the range tabs / filtering work correctly.
+  const rawCategory = String(dto.category ?? dto.categoryName ?? "General").trim();
+  const category = rawCategory.length > 0 ? rawCategory : "General";
   // Image resolution:
   // - If the backend provides an image path, resolve it (relative /images/xxx.png
   //   → backend absolute URL; full URL → used as-is).
@@ -195,14 +238,22 @@ export function normalizeProduct(dto: ProductDTO): Product {
     format: String(dto.dosageForm ?? dto.variantName ?? dto.packSize ?? "General"),
     image,
     descriptor: String(dto.description ?? ""),
-    goals: typeof dto.benefits === "string" ? dto.benefits.split(",").map((s) => s.trim()).filter(Boolean) : [],
+    // Use backend `benefits` when provided; otherwise fall back to the goals
+    // defined for this product in the frontend data (the backend catalogue does
+    // not currently send `benefits`, so this keeps the goals filter working).
+    goals:
+      typeof dto.benefits === "string"
+        ? dto.benefits.split(",").map((s) => s.trim()).filter(Boolean)
+        : fallbackGoalsFor(String(dto.productName ?? ""), dto.slug),
     status: dto.status || "New",
     mrp: typeof dto.mrp === "number" ? dto.mrp : dto.price ?? 0,
     price: typeof dto.price === "number" ? dto.price : 0,
     isVeg: dto.isVeg ?? true,
     inStock: (dto.available ?? true) && (dto.stock ?? 0) > 0,
-    // Directly mapped API fields (additive, non-breaking)
+// Directly mapped API fields (additive, non-breaking)
     slug: dto.slug ? String(dto.slug) : undefined,
+    variantId: typeof dto.variantId === "number" ? dto.variantId : undefined,
+    sku: dto.sku ? String(dto.sku) : undefined,
     category,
     brand: dto.brand ? String(dto.brand) : undefined,
     rating: typeof dto.averageRating === "number" ? dto.averageRating : undefined,
@@ -232,29 +283,107 @@ export function normalizeProduct(dto: ProductDTO): Product {
  * Throws a descriptive error when the request fails.
  */
 export async function fetchProducts(categoryName?: string): Promise<Product[]> {
-  const query = categoryName && categoryName.trim()
-    ? `?category=${encodeURIComponent(categoryName.trim())}`
+  const trimmed = categoryName?.trim();
+  const query = trimmed
+    ? `?category=${encodeURIComponent(trimmed)}`
     : "";
-  const res = await fetch(`${API_BASE}/api/store/products${query}`, {
-    method: "GET",
-    headers: { Accept: "application/json" },
-  });
 
-  if (!res.ok) {
-    throw new Error(`Failed to load products: ${res.status}`);
+  /**
+   * Primary source: `/api/store/products` (requested). This endpoint is proxied
+   * by Next.js to the backend. If it returns a non-2xx (e.g. 500) we fall back
+   * to `/api/products`, which is confirmed to return the full catalogue. When a
+   * category is requested and the backend did not actually filter server-side,
+   * we enforce the filter client-side so category tabs always show only the
+   * products belonging to that range.
+   */
+  let list: unknown[] | null = null;
+
+  try {
+    const res = await fetch(`${API_BASE}/api/store/products${query}`, {
+      method: "GET",
+      headers: { Accept: "application/json" },
+    });
+    if (res.ok) {
+      const data = (await res.json().catch(() => ({}))) as unknown;
+      const batch = Array.isArray(data) ? data : (data as { products?: unknown })?.products;
+      if (Array.isArray(batch)) list = batch;
+    }
+  } catch {
+    list = null; // network / parse error → fall back
   }
 
-  const data = await res.json().catch(() => ({}));
+  if (list === null) {
+    const fallbackRes = await fetch(`${API_BASE}/api/products${query}`, {
+      method: "GET",
+      headers: { Accept: "application/json" },
+    });
+    if (!fallbackRes.ok) {
+      throw new Error(`Failed to load products: ${fallbackRes.status}`);
+    }
+    const data = (await fallbackRes.json().catch(() => ({}))) as unknown;
+    const batch = Array.isArray(data) ? data : (data as { products?: unknown })?.products;
+    if (!Array.isArray(batch)) {
+      throw new Error("Unexpected product response shape");
+    }
+    list = batch;
+  }
 
-  const list: unknown = Array.isArray(data) ? data : data?.products;
+  // Enforce the requested category client-side (safety net in case the backend
+  // ignores the `category` query param and returns every product).
+  if (trimmed) {
+    const needle = trimmed.toLowerCase();
+    list = list.filter((item) => {
+      if (!item || typeof item !== "object") return false;
+      const dto = item as ProductDTO;
+      const cat = String(dto.category ?? dto.categoryName ?? "").toLowerCase();
+      return cat === needle;
+    });
+  }
 
-  if (!Array.isArray(list)) {
-    throw new Error("Unexpected product response shape");
+  // The backend stores pricing / sku / variant / stock data in a separate
+  // `/api/product-variants` endpoint. Fetch it and merge the matching variant
+  // (by productId) into each catalogue product so the UI shows real prices,
+  // MRPs, stock status and variant info. If the variants endpoint fails, we
+  // degrade gracefully and return the base products (₹0 / out-of-stock).
+  let variants: Record<number, Record<string, unknown>> = {};
+  try {
+    const vres = await fetch(`${API_BASE}/api/product-variants`, {
+      method: "GET",
+      headers: { Accept: "application/json" },
+    });
+    if (vres.ok) {
+const vdata = await vres.json().catch(() => []);
+      const vlist: unknown[] = Array.isArray(vdata) ? (vdata as unknown[]) : [];
+      for (const v of vlist) {
+        if (v && typeof v === "object" && typeof (v as { productId?: unknown }).productId === "number") {
+          variants[(v as { productId: number }).productId] = v as Record<string, unknown>;
+        }
+      }
+    }
+  } catch {
+    // Ignore — variants are optional enrichment.
   }
 
   return list.map((item, index) => {
     if (item && typeof item === "object") {
-      return normalizeProduct(item as ProductDTO);
+      const dto = item as ProductDTO;
+      const variant = variants[typeof dto.productId === "number" ? dto.productId : -1];
+      if (variant) {
+        return normalizeProduct({
+          ...dto,
+          // Merge variant pricing / sku / variant fields into the product DTO.
+          sku: (variant.sku as string) ?? dto.sku,
+          variantId: typeof variant.variantId === "number" ? variant.variantId : dto.variantId,
+          variantName: (variant.variantName as string) ?? dto.variantName,
+          packSize: (variant.packSize as string) ?? dto.packSize,
+          mrp: typeof variant.mrp === "number" ? variant.mrp : dto.mrp,
+          price: typeof variant.sellingPrice === "number" ? variant.sellingPrice : dto.price,
+          gst: typeof variant.gstPercentage === "number" ? variant.gstPercentage : dto.gst,
+          available: Boolean(variant.isActive ?? dto.available),
+          stock: typeof variant.isActive === "boolean" ? (variant.isActive ? 1 : 0) : dto.stock,
+        });
+      }
+      return normalizeProduct(dto);
     }
     // Edge case: non-object entry — return a safe minimal product
     return normalizeProduct({
@@ -263,7 +392,6 @@ export async function fetchProducts(categoryName?: string): Promise<Product[]> {
     });
   });
 }
-
 /**
  * Fetches a single product by its slug from the backend.
  * GET /api/store/products/{slug}
@@ -271,27 +399,36 @@ export async function fetchProducts(categoryName?: string): Promise<Product[]> {
  * Returns null when the product is not found (404).
  */
 export async function fetchProductBySlug(slug: string): Promise<Product | null> {
-  const res = await fetch(
-    `${API_BASE}/api/store/products/${encodeURIComponent(slug)}`,
-    { method: "GET", headers: { Accept: "application/json" } },
-  );
+  try {
+    const res = await fetch(
+      `${API_BASE}/api/store/products/${encodeURIComponent(slug)}`,
+      { method: "GET", headers: { Accept: "application/json" } },
+    );
 
-  if (res.status === 404) return null;
+    if (res.status === 404) return null;
 
-  if (!res.ok) {
-    throw new Error(`Failed to load product: ${res.status}`);
+    if (res.ok) {
+      const data = (await res.json().catch(() => ({}))) as unknown;
+      const dto: unknown = data && typeof data === "object" && "product" in data
+        ? (data as { product: unknown }).product
+        : data;
+
+      if (dto && typeof dto === "object") {
+        return normalizeProduct(dto as ProductDTO);
+      }
+    }
+  } catch {
+    // fall through to catalogue lookup
   }
 
-  const data = await res.json().catch(() => ({}));
-
-  const dto: unknown = data && typeof data === "object" && "product" in data
-    ? (data as { product: unknown }).product
-    : data;
-
-  if (!dto || typeof dto !== "object") {
+  // Fallback: the store slug endpoint can return 500 on this backend. Look the
+  // product up from the full catalogue instead so product detail pages still
+  // resolve by slug/id.
+  try {
+    const all = await fetchProducts();
+    return all.find((p) => p.slug === slug) ?? all.find((p) => p.id === slug) ?? null;
+  } catch {
     return null;
   }
-
-  return normalizeProduct(dto as ProductDTO);
 }
 

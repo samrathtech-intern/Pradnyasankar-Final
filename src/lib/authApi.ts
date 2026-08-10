@@ -16,9 +16,12 @@
  * Set NEXT_PUBLIC_API_BASE_URL in .env.local to point to the backend.
  */
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
-
-console.log("API_BASE =", API_BASE);
+// The browser calls the same-origin Next.js rewrite path (`/api/auth/...`),
+// which forwards the request server-to-server to the backend at
+// NEXT_PUBLIC_API_BASE_URL (default http://localhost:8080). This avoids CORS
+// blocking, since the backend does not send Access-Control-Allow-Origin headers.
+// (This mirrors the existing B2B proxy route pattern.)
+const API_BASE = "";
 
 export type AuthUser = {
   userId: number;

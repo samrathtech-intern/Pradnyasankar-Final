@@ -173,7 +173,7 @@ function OrderSummary({
 }
 
 function CheckoutContent() {
-  const { bag, hydrated, clearBag } = useApp();
+  const { bag, hydrated, clearBag, checkoutCart } = useApp();
   const router = useRouter();
   const scriptLoaded = useRef(false);
   const [payError, setPayError] = useState("");
@@ -545,6 +545,10 @@ function CheckoutContent() {
                               // Payment successful — persist order and navigate
                               trackPaymentResult("success", undefined, total);
                               try { localStorage.setItem("ps_pending_order", JSON.stringify(pending)); } catch {}
+                              // Create the order in the backend cart module (logged-in users only).
+                              // Errors are surfaced via the bag drawer's cartError state; we never
+                              // block the confirmed local order flow.
+                              checkoutCart().catch(() => {});
                               clearBag();
                               router.push("/order-confirmation");
                             },

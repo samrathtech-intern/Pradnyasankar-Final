@@ -1,0 +1,19 @@
+{
+  "note": "Working credentials. Auth register/login are proxied via Next.js (/api/auth/*). The old test@test.com/test123 were dummy placeholders that do NOT exist in the backend, causing 'Bad credentials' (500). Register a new user via /auth/register (API returns 200 with a JWT + user), then log in with those same credentials.",
+  "register_example": {
+    "firstName": "Fresh",
+    "lastName": "User",
+    "email": "freshuser3521@test.com",
+    "mobileNumber": "9874167601",
+    "password": "secret123"
+  },
+  "login": {
+    "email": "freshuser3521@test.com",
+    "password": "secret123"
+  },
+  "expected_responses": {
+    "register": "200 { token, message, user { userId, firstName, lastName, email, mobileNumber, role } }  OR  409 'Mobile number already exists'",
+    "login": "200 { token, message, user }   OR  500 'Bad credentials' when the email/password is wrong or does not exist"
+  }
+}
+

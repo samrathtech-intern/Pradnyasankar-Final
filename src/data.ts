@@ -31,6 +31,8 @@ export type Product = {
   inStock: boolean;
 // Additional API fields (mapped directly from the backend; optional & additive)
   category?: string;
+  variantId?: number;
+  sku?: string;
   brand?: string;
   rating?: number;
   discountPercentage?: number;

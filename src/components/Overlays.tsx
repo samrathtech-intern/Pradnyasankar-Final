@@ -127,7 +127,7 @@ export function SearchOverlay() {
 }
 
 export function BagDrawer() {
-  const { bag, bagOpen, setBagOpen, removeFromBag, updateBagQty, setQuickView } = useApp();
+  const { bag, bagOpen, setBagOpen, removeFromBag, updateBagQty, setQuickView, cartLoading, cartError } = useApp();
   const ref = useRef<HTMLElement>(null);
   useBodyLock(bagOpen);
   useFocusTrap(ref, bagOpen, () => setBagOpen(false));
@@ -210,6 +210,15 @@ export function BagDrawer() {
             </div>
             {bag.length > 0 && (
               <div className="border-t border-[#E9E3EE] bg-white p-6">
+                {cartError && (
+                  <p className="mb-3 rounded-[12px] bg-red-50 px-3 py-2 text-[11px] font-semibold text-red-600">{cartError}</p>
+                )}
+                {cartLoading && (
+                  <div className="mb-3 flex items-center gap-2 text-[11px] font-semibold text-[#8C52FF]">
+                    <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-[#8C52FF] border-t-transparent" />
+                    Syncing with your account…
+                  </div>
+                )}
                 <div className="mb-3 flex items-center justify-between text-[13px]">
                   <span className="font-semibold text-[#716A78]">Subtotal ({bag.reduce((n, p) => n + p.quantity, 0)} item{bag.reduce((n, p) => n + p.quantity, 0) !== 1 ? "s" : ""})</span>
                   <span className="font-extrabold text-[#2E0569]">₹{subtotal.toLocaleString("en-IN")}</span>

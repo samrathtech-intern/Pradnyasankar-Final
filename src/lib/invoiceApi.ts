@@ -8,7 +8,10 @@
  * - Set NEXT_PUBLIC_API_BASE_URL in .env.local to point to the backend
  */
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
+// The browser calls the same-origin Next.js rewrite path (`/api/orders/...`),
+// which forwards the request server-to-server to the backend at
+// NEXT_PUBLIC_API_BASE_URL. This avoids CORS blocking.
+const API_BASE = "";
 
 export async function downloadInvoice(orderId: string): Promise<void> {
   const response = await fetch(`${API_BASE}/api/orders/${orderId}/invoice`, {

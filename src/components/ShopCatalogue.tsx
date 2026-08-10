@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
+  ChevronDown,
   Eye,
   Heart,
   LayoutGrid,
@@ -43,7 +44,6 @@ const RANGE_TABS: { label: string; value: "all" | ProductRange }[] = [
 const FORMATS = ["All formats", "Capsules", "Tablets", "Powder", "Oil", "Serum", "Cream", "Lehya"];
 
 const GOALS = [
-  "All goals",
   "Daily Wellness",
   "Digestive Wellness",
   "Immunity Support",
@@ -53,6 +53,15 @@ const GOALS = [
   "Joint & Mobility",
 ];
 
+const PRICE_RANGES: { label: string; min: number; max: number }[] = [
+  { label: "All prices", min: 0, max: 9999 },
+  { label: "Under ₹300", min: 0, max: 300 },
+  { label: "₹300 – ₹500", min: 300, max: 500 },
+  { label: "₹500 – ₹700", min: 500, max: 700 },
+  { label: "₹700 – ₹1,000", min: 700, max: 1000 },
+  { label: "Over ₹1,000", min: 1000, max: 9999 },
+];
+
 const SORT_OPTIONS: { label: string; value: SortKey }[] = [
   { label: "Default", value: "default" },
   { label: "Name A–Z", value: "name-asc" },
@@ -60,9 +69,6 @@ const SORT_OPTIONS: { label: string; value: SortKey }[] = [
   { label: "Price: Low to High", value: "price-asc" },
   { label: "Price: High to Low", value: "price-desc" },
 ];
-
-const PRICE_MIN = 0;
-const PRICE_MAX = 9999;
 
 function VegMarker({ isVeg }: { isVeg: boolean }) {
   return (
@@ -128,16 +134,16 @@ const [productList, setProductList] = useState<Product[]>([]);
       cancelled = true;
     };
   }, [reloadKey, activeRange]);
-  const [format, setFormat] = useState(initialFormat && FORMATS.includes(initialFormat) ? initialFormat : "All formats");
-  const [goal, setGoal] = useState(initialGoal && GOALS.includes(initialGoal) ? initialGoal : "All goals");
+const [format, setFormat] = useState(initialFormat && FORMATS.includes(initialFormat) ? initialFormat : "All formats");
+  const [selectedGoals, setSelectedGoals] = useState<string[]>(
+    initialGoal && GOALS.includes(initialGoal) ? [initialGoal] : [],
+  );
+  const [goalsOpen, setGoalsOpen] = useState(false);
   const [sort, setSort] = useState<SortKey>("default");
   const [query, setQuery] = useState("");
   const [view, setView] = useState<ViewMode>("grid");
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [minPrice, setMinPrice] = useState(PRICE_MIN);
-  const [maxPrice, setMaxPrice] = useState(PRICE_MAX);
-  const [minInput, setMinInput] = useState(String(PRICE_MIN));
-  const [maxInput, setMaxInput] = useState(String(PRICE_MAX));
+  const [priceRange, setPriceRange] = useState(0);
   const lastTrackedQuery = useRef("");
   const queryRef = useRef("");
 
@@ -146,25 +152,21 @@ const [productList, setProductList] = useState<Product[]>([]);
     setQuery(val);
   }
 
-  function handleMinChange(raw: string) {
-    setMinInput(raw);
-    const n = Number(raw);
-    if (!isNaN(n) && raw !== "") setMinPrice(Math.max(PRICE_MIN, Math.min(n, maxPrice)));
+  const activeRangeBounds = PRICE_RANGES[priceRange];
+
+  function handlePriceRangeChange(idx: number) {
+    setPriceRange(idx);
+    if (idx > 0) trackFilter("price", PRICE_RANGES[idx].label);
   }
-  function handleMaxChange(raw: string) {
-    setMaxInput(raw);
-    const n = Number(raw);
-    if (!isNaN(n) && raw !== "") setMaxPrice(Math.min(PRICE_MAX, Math.max(n, minPrice)));
-  }
-  function commitMin(raw: string) {
-    const n = Math.max(PRICE_MIN, Math.min(Number(raw) || PRICE_MIN, maxPrice));
-    setMinPrice(n); setMinInput(String(n));
-    trackFilter("price", `${n}-${maxPrice}`);
-  }
-  function commitMax(raw: string) {
-    const n = Math.min(PRICE_MAX, Math.max(Number(raw) || PRICE_MAX, minPrice));
-    setMaxPrice(n); setMaxInput(String(n));
-    trackFilter("price", `${minPrice}-${n}`);
+
+  function toggleGoal(goalName: string) {
+    setSelectedGoals((prev) => {
+      const next = prev.includes(goalName)
+        ? prev.filter((g) => g !== goalName)
+        : [...prev, goalName];
+      trackFilter("goal", next.length ? next.join(",") : "none");
+      return next;
+    });
   }
 
   const filtered = useMemo(() => {
@@ -172,7 +174,9 @@ const [productList, setProductList] = useState<Product[]>([]);
 
     if (activeRange !== "all") list = list.filter((p) => p.range === activeRange);
     if (format !== "All formats") list = list.filter((p) => p.format === format);
-    if (goal !== "All goals") list = list.filter((p) => p.goals.includes(goal));
+    if (selectedGoals.length > 0) {
+      list = list.filter((p) => selectedGoals.some((g) => p.goals.includes(g)));
+    }
     if (query.trim()) {
       const q = query.trim().toLowerCase();
       list = list.filter((p) =>
@@ -180,7 +184,7 @@ const [productList, setProductList] = useState<Product[]>([]);
       );
     }
 
-    list = list.filter((p) => p.price >= minPrice && p.price <= maxPrice);
+    list = list.filter((p) => p.price >= activeRangeBounds.min && p.price <= activeRangeBounds.max);
 
     if (sort === "name-asc") list.sort((a, b) => a.name.localeCompare(b.name));
     if (sort === "name-desc") list.sort((a, b) => b.name.localeCompare(a.name));
@@ -188,20 +192,17 @@ const [productList, setProductList] = useState<Product[]>([]);
     if (sort === "price-desc") list.sort((a, b) => b.price - a.price);
 
 return list;
-  }, [productList, activeRange, format, goal, query, sort, minPrice, maxPrice]);
+  }, [productList, activeRange, format, selectedGoals, query, sort, priceRange, activeRangeBounds]);
 
-  const hasFilters = format !== "All formats" || goal !== "All goals" || query.trim() !== "" || minPrice !== PRICE_MIN || maxPrice !== PRICE_MAX;
+  const hasFilters = format !== "All formats" || selectedGoals.length > 0 || query.trim() !== "" || priceRange !== 0;
 
   function resetFilters() {
     setQueryAndRef("");
     lastTrackedQuery.current = "";
     setFormat("All formats");
-    setGoal("All goals");
+    setSelectedGoals([]);
     setSort("default");
-    setMinPrice(PRICE_MIN);
-    setMaxPrice(PRICE_MAX);
-    setMinInput(String(PRICE_MIN));
-    setMaxInput(String(PRICE_MAX));
+    setPriceRange(0);
   }
 
   // Track search when query is committed (on Enter or blur)
@@ -221,13 +222,9 @@ return list;
     setActiveRange(val);
     pushFilterEvent("category", val);
   }
-  function handleFormatChange(val: string) {
+function handleFormatChange(val: string) {
     setFormat(val);
     pushFilterEvent("format", val);
-  }
-  function handleGoalChange(val: string) {
-    setGoal(val);
-    pushFilterEvent("goal", val);
   }
   function handleSortChange(val: SortKey) {
     setSort(val);
@@ -337,13 +334,46 @@ return list;
             >
               {FORMATS.map((f) => <option key={f}>{f}</option>)}
             </select>
-            <select
-              value={goal}
-              onChange={(e) => handleGoalChange(e.target.value)}
-              className="min-h-11 rounded-full border border-[#E9E3EE] bg-white px-4 text-[11px] font-extrabold uppercase tracking-[.1em] text-[#2E0569] outline-none transition hover:border-[#8C52FF] focus:border-[#8C52FF]"
-            >
-              {GOALS.map((g) => <option key={g}>{g}</option>)}
-            </select>
+{/* Goals filter (multi-select checkboxes) */}
+            <div className="relative">
+              <button
+                onClick={() => setGoalsOpen((o) => !o)}
+                className={`inline-flex min-h-11 items-center gap-2 rounded-full border px-4 text-[11px] font-extrabold uppercase tracking-[.1em] transition ${
+                  selectedGoals.length > 0
+                    ? "border-[#8C52FF] bg-[#F2EBFF] text-[#8C52FF]"
+                    : "border-[#E9E3EE] bg-white text-[#2E0569] hover:border-[#8C52FF]"
+                }`}
+              >
+                Goals {selectedGoals.length > 0 && `(${selectedGoals.length})`}
+                <ChevronDown size={14} className={`transition ${goalsOpen ? "rotate-180" : ""}`} />
+              </button>
+              {goalsOpen && (
+                <div className="absolute left-0 top-full z-30 mt-2 w-64 rounded-2xl border border-[#E9E3EE] bg-white p-3 shadow-[0_20px_50px_rgba(46,5,105,.14)]">
+                  <p className="px-1 pb-2 text-[10px] font-extrabold uppercase tracking-[.13em] text-[#8B8292]">
+                    Select wellness goals
+                  </p>
+                  <div className="flex flex-col gap-1">
+                    {GOALS.map((g) => {
+                      const checked = selectedGoals.includes(g);
+                      return (
+                        <label
+                          key={g}
+                          className="flex cursor-pointer items-center gap-2.5 rounded-xl px-2 py-2 text-[12px] font-semibold text-[#2E0569] transition hover:bg-[#F7F2FF]"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={checked}
+                            onChange={() => toggleGoal(g)}
+                            className="peer h-4 w-4 shrink-0 cursor-pointer appearance-none rounded border border-[#CDBAF1] bg-white transition checked:border-[#8C52FF] checked:bg-[#8C52FF] checked:bg-[url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'white\' stroke-width=\'3\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><polyline points=\'20 6 9 17 4 12\'/></svg>')] checked:bg-[length:12px] checked:bg-center checked:bg-no-repeat"
+                          />
+                          <span>{g}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
             <select
               value={sort}
               onChange={(e) => handleSortChange(e.target.value as SortKey)}
@@ -351,25 +381,16 @@ return list;
             >
               {SORT_OPTIONS.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
             </select>
-            {/* Price range */}
-            <div className="flex min-h-11 items-center gap-2 rounded-full border border-[#E9E3EE] bg-white px-4 text-[11px] font-extrabold text-[#2E0569] transition hover:border-[#8C52FF]">
-              <span className="uppercase tracking-[.1em] text-[#8B8292]">₹</span>
-              <input
-                type="number"
-                value={minInput}
-                onChange={(e) => handleMinChange(e.target.value)}
-                onBlur={(e) => commitMin(e.target.value)}
-                className="w-14 bg-transparent outline-none"
-              />
-              <span className="text-[#D8CEE1]">–</span>
-              <input
-                type="number"
-                value={maxInput}
-                onChange={(e) => handleMaxChange(e.target.value)}
-                onBlur={(e) => commitMax(e.target.value)}
-                className="w-16 bg-transparent outline-none"
-              />
-            </div>
+            {/* Price range dropdown */}
+            <select
+              value={priceRange}
+              onChange={(e) => handlePriceRangeChange(Number(e.target.value))}
+              className="min-h-11 rounded-full border border-[#E9E3EE] bg-white px-4 text-[11px] font-extrabold uppercase tracking-[.1em] text-[#2E0569] outline-none transition hover:border-[#8C52FF] focus:border-[#8C52FF]"
+            >
+              {PRICE_RANGES.map((r, i) => (
+                <option key={r.label} value={i}>{r.label}</option>
+              ))}
+            </select>
           </div>
 
           {/* Reset */}
@@ -417,14 +438,32 @@ return list;
                   className="min-h-11 rounded-full border border-[#E9E3EE] bg-[#FFFDF7] px-4 text-[11px] font-extrabold uppercase tracking-[.1em] text-[#2E0569] outline-none"
                 >
                   {FORMATS.map((f) => <option key={f}>{f}</option>)}
-                </select>
-                <select
-                  value={goal}
-                  onChange={(e) => handleGoalChange(e.target.value)}
-                  className="min-h-11 rounded-full border border-[#E9E3EE] bg-[#FFFDF7] px-4 text-[11px] font-extrabold uppercase tracking-[.1em] text-[#2E0569] outline-none"
-                >
-                  {GOALS.map((g) => <option key={g}>{g}</option>)}
-                </select>
+</select>
+                {/* Goals checkboxes (mobile) */}
+                <div className="rounded-[20px] border border-[#E9E3EE] bg-[#FFFDF7] p-3">
+                  <p className="px-1 pb-2 text-[10px] font-extrabold uppercase tracking-[.13em] text-[#8B8292]">
+                    Wellness goals
+                  </p>
+                  <div className="flex flex-col gap-1">
+                    {GOALS.map((g) => {
+                      const checked = selectedGoals.includes(g);
+                      return (
+                        <label
+                          key={g}
+                          className="flex cursor-pointer items-center gap-2.5 rounded-xl px-2 py-2 text-[12px] font-semibold text-[#2E0569]"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={checked}
+                            onChange={() => toggleGoal(g)}
+                            className="peer h-4 w-4 shrink-0 cursor-pointer appearance-none rounded border border-[#CDBAF1] bg-white transition checked:border-[#8C52FF] checked:bg-[#8C52FF] checked:bg-[url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'white\' stroke-width=\'3\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><polyline points=\'20 6 9 17 4 12\'/></svg>')] checked:bg-[length:12px] checked:bg-center checked:bg-no-repeat"
+                          />
+                          <span>{g}</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
                 <select
                   value={sort}
                   onChange={(e) => handleSortChange(e.target.value as SortKey)}
@@ -432,25 +471,16 @@ return list;
                 >
                   {SORT_OPTIONS.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
                 </select>
-                {/* Price range (mobile) */}
-                <div className="flex items-center gap-2 rounded-full border border-[#E9E3EE] bg-[#FFFDF7] px-4 py-2.5 text-[11px] font-extrabold text-[#2E0569]">
-                  <span className="uppercase tracking-[.1em] text-[#8B8292]">Price ₹</span>
-                  <input
-                    type="number"
-                    value={minInput}
-                    onChange={(e) => handleMinChange(e.target.value)}
-                    onBlur={(e) => commitMin(e.target.value)}
-                    className="w-16 bg-transparent outline-none"
-                  />
-                  <span className="text-[#D8CEE1]">–</span>
-                  <input
-                    type="number"
-                    value={maxInput}
-                    onChange={(e) => handleMaxChange(e.target.value)}
-                    onBlur={(e) => commitMax(e.target.value)}
-                    className="w-16 bg-transparent outline-none"
-                  />
-                </div>
+                {/* Price range dropdown (mobile) */}
+                <select
+                  value={priceRange}
+                  onChange={(e) => handlePriceRangeChange(Number(e.target.value))}
+                  className="min-h-11 rounded-full border border-[#E9E3EE] bg-[#FFFDF7] px-4 text-[11px] font-extrabold uppercase tracking-[.1em] text-[#2E0569] outline-none"
+                >
+                  {PRICE_RANGES.map((r, i) => (
+                    <option key={r.label} value={i}>{r.label}</option>
+                  ))}
+                </select>
               </div>
             </motion.div>
           )}

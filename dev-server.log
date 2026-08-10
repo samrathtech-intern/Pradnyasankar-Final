@@ -7,63 +7,70 @@
   - Environments: .env.local
 
  ✓ Starting...
- ✓ Ready in 2.4s
- ○ Compiling /shop ...
- ✓ Compiled /shop in 2.4s (1289 modules)
-API_BASE = http://localhost:8080
- GET /shop 200 in 2759ms
- ⨯ upstream image response failed for http://localhost:8080/images/ashwagandha-capsules.png 403
- ✓ Compiled in 17.1s (661 modules)
- ✓ Compiled in 226ms (661 modules)
- ✓ Compiled /shop in 217ms (642 modules)
-API_BASE = http://localhost:8080
- GET /shop 200 in 522ms
- GET /shop 200 in 60ms
- GET /shop 200 in 91ms
- ○ Compiling /_not-found ...
- ✓ Compiled /_not-found in 1100ms (1292 modules)
-API_BASE = http://localhost:8080
- GET /images/herbal-face-serum.png 404 in 2372ms
- ⨯ The requested resource isn't a valid image for /images/herbal-face-serum.png received null
+ ✓ Ready in 16.6s
  ○ Compiling /shop/ayurveda ...
- ✓ Compiled /shop/ayurveda in 843ms (1294 modules)
-API_BASE = http://localhost:8080
- GET /shop/ayurveda 200 in 1402ms
- ○ Compiling /shop/nutraceuticals ...
- ✓ Compiled /shop/nutraceuticals in 1067ms (1296 modules)
-API_BASE = http://localhost:8080
- GET /shop/nutraceuticals 200 in 1491ms
+ ✓ Compiled /shop/ayurveda in 13.1s (1305 modules)
+ GET /shop/ayurveda 200 in 14073ms
+ ○ Compiling /shop ...
+ ✓ Compiled /shop in 749ms (1307 modules)
+ GET /shop 200 in 995ms
+ ○ Compiling /products/[slug] ...
+ ✓ Compiled /products/[slug] in 1394ms (1332 modules)
+ GET /products/ashwagandha-capsules 200 in 2037ms
  ○ Compiling / ...
- ✓ Compiled / in 2.7s (1367 modules)
-API_BASE = http://localhost:8080
- GET / 200 in 4313ms
- GET /shop/ayurveda 200 in 170ms
- GET /images/herbal-face-serum.png 404 in 64ms
- ⨯ The requested resource isn't a valid image for /images/herbal-face-serum.png received null
- GET /shop 200 in 264ms
- GET /images/herbal-face-serum.png 404 in 54ms
- ⨯ The requested resource isn't a valid image for /images/herbal-face-serum.png received null
- ✓ Compiled in 4.4s (1367 modules)
-API_BASE = http://localhost:8080
- GET /images/herbal-face-serum.png 404 in 3744ms
- ⨯ The requested resource isn't a valid image for /images/herbal-face-serum.png received null
- ✓ Compiled in 2.4s (1381 modules)
-API_BASE = http://localhost:8080
- GET /shop/ayurveda 200 in 500ms
- GET /shop/nutraceuticals 200 in 120ms
- GET / 200 in 395ms
- GET /shop/ayurveda 200 in 112ms
- GET /images/herbal-face-serum.png 404 in 44ms
- ⨯ The requested resource isn't a valid image for /images/herbal-face-serum.png received null
- GET /shop/nutraceuticals 200 in 114ms
- GET /images/herbal-face-serum.png 404 in 45ms
- ⨯ The requested resource isn't a valid image for /images/herbal-face-serum.png received null
- GET /images/herbal-face-serum.png 404 in 37ms
- ⨯ The requested resource isn't a valid image for /images/herbal-face-serum.png received null
- GET /images/herbal-face-serum.png 404 in 45ms
- ⨯ The requested resource isn't a valid image for /images/herbal-face-serum.png received null
- GET /images/herbal-face-serum.png 404 in 58ms
- ⨯ The requested resource isn't a valid image for /images/herbal-face-serum.png received null
- GET /shop/nutraceuticals 200 in 112ms
- GET /images/herbal-face-serum.png 404 in 34ms
- ⨯ The requested resource isn't a valid image for /images/herbal-face-serum.png received null
+ ✓ Compiled / in 2s (1353 modules)
+ GET / 200 in 3362ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 986ms (1356 modules)
+ GET /_next/static/css/app/layout.css?v=1786272446974 404 in 1352ms
+ GET /_next/static/chunks/main-app.js?v=1786272446974 404 in 1276ms
+ GET /_next/static/chunks/app/layout.js 404 in 1249ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 1273ms
+ ✓ Compiled in 2.7s (699 modules)
+ ✓ Compiled in 1340ms (699 modules)
+ ○ Compiling /shop ...
+ ✓ Compiled /shop in 1257ms (643 modules)
+ GET /shop 200 in 2111ms
+ ✓ Compiled / in 500ms (668 modules)
+ GET / 200 in 1738ms
+ GET / 200 in 294ms
+ GET / 200 in 301ms
+ ○ Compiling /auth/login ...
+ ✓ Compiled /auth/login in 2.2s (1367 modules)
+ ○ Compiling /_not-found ...
+ GET /auth/login 200 in 3193ms
+ ✓ Compiled /_not-found in 1383ms (1370 modules)
+ ○ Compiling /orders ...
+ ✓ Compiled /orders in 1642ms (1399 modules)
+ ○ Compiling /shop ...
+ ✓ Compiled /shop in 776ms (712 modules)
+ GET /auth/login 200 in 453ms
+ ○ Compiling /shop/ayurveda ...
+ ✓ Compiled /shop/ayurveda in 555ms (714 modules)
+ GET /shop/ayurveda 200 in 1052ms
+ GET / 200 in 288ms
+ GET /shop/ayurveda 200 in 111ms
+ GET /auth/login 200 in 98ms
+ ○ Compiling /auth/register ...
+ ✓ Compiled /auth/register in 1161ms (1426 modules)
+ GET /shop/ayurveda 200 in 385ms
+ ○ Compiling /checkout ...
+ ✓ Compiled /checkout in 1659ms (1410 modules)
+ ✓ Compiled / in 435ms (720 modules)
+ GET / 200 in 1253ms
+ ✓ Compiled /checkout in 380ms (719 modules)
+ ✓ Compiled in 1815ms (1429 modules)
+ ✓ Compiled in 0ms (706 modules)
+ GET /checkout 200 in 907ms
+ ✓ Compiled /auth/login in 434ms (712 modules)
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 2.1s (1422 modules)
+ GET /_next/static/webpack/894842a3f311b263.webpack.hot-update.json 404 in 968ms
+ GET /auth/login?redirect=%2Fcheckout 200 in 123ms
+ GET / 200 in 243ms
+ GET / 200 in 173ms
+ ○ Compiling /shop ...
+ ✓ Compiled /shop in 2.2s (712 modules)
+ ✓ Compiled in 1983ms (1433 modules)
+ ✓ Compiled in 1632ms (1433 modules)
+ ✓ Compiled in 2s (1433 modules)

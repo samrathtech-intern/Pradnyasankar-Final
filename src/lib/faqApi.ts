@@ -9,7 +9,10 @@
  * Set NEXT_PUBLIC_API_BASE_URL in .env.local to point to the backend.
  */
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
+// The browser calls the same-origin Next.js rewrite path (`/api/faqs`),
+// which forwards the request server-to-server to the backend at
+// NEXT_PUBLIC_API_BASE_URL. This avoids CORS blocking.
+const API_BASE = "";
 
 export type Faq = {
   id: number;
