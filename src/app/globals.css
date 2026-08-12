@@ -18,7 +18,7 @@ img { user-select: none; }
 
 .container-page { @apply mx-auto w-full max-w-[1500px] px-5 sm:px-10 lg:px-16 xl:px-24; }
 .font-display { font-family: "Fraunces", serif; }
-.section-heading { @apply text-[clamp(42px,5.2vw,72px)] font-extrabold leading-[1.01] tracking-[-.052em] text-[#2E0569]; }
+.section-heading { @apply text-[clamp(30px,3.8vw,52px)] font-extrabold leading-[1.04] tracking-[-.052em] text-[#2E0569]; }
 .wf-heading { @apply text-[clamp(48px,5.8vw,82px)] font-extrabold leading-[1.0] tracking-[-.058em] text-[#2E0569]; }
 .eyebrow { @apply inline-flex items-center gap-2 rounded-full border border-[#DDD3E5] bg-white/80 px-4 py-2.5 text-[11px] font-extrabold uppercase tracking-[.15em] text-[#8C52FF] backdrop-blur; }
 .btn-primary { @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#8C52FF] px-6 py-3.5 text-[11px] font-extrabold uppercase tracking-[.08em] text-white shadow-[0_14px_30px_rgba(140,82,255,.24)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#2E0569] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFBB58]; }
@@ -133,7 +133,7 @@ img { user-select: none; }
 /* Ingredient book: genuine two-sided page turn with moving sheet shadow. */
 .ingredient-book-stage {
   position: relative;
-  padding: 20px 24px 34px;
+  padding: 14px 18px 24px;
   perspective: 2200px;
   overflow: hidden;
 }
@@ -179,7 +179,7 @@ img { user-select: none; }
   display: grid;
   width: 100%;
   min-width: 0;
-  min-height: 760px;
+  min-height: 580px;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   transform: rotateX(1.5deg);
   transform-style: preserve-3d;

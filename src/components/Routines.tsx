@@ -131,7 +131,7 @@ export function RoutineCards() {
   const magnetic = useMagnetic(0.22);
 
   return (
-    <section id="routines" className="relative overflow-hidden bg-[#FFFDF7] py-28 sm:py-36">
+    <section id="routines" className="relative overflow-hidden bg-[#FFFDF7] pt-8 pb-10 sm:pt-10 sm:pb-12">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
         <motion.div
           animate={reduce ? undefined : { x: [0, 26, 0], y: [0, -16, 0] }}
@@ -157,13 +157,13 @@ export function RoutineCards() {
             initial={reduce ? false : "hidden"}
             whileInView="show"
             viewport={{ once: true, margin: "-80px" }}
-            className="grid gap-6 lg:grid-cols-[1fr_.7fr] lg:items-end"
+            className="grid gap-3 lg:grid-cols-[1fr_.7fr] lg:items-end"
           >
             <div>
               <motion.span variants={headerChild} className="eyebrow inline-flex"><Sparkles size={13} /> Shop by routine</motion.span>
-              <motion.h2 variants={headerChild} className="section-heading mt-6 max-w-4xl">Move through wellness at your own <span className="font-display italic text-[#FFBB58]">rhythm.</span></motion.h2>
+              <motion.h2 variants={headerChild} className="section-heading mt-2 max-w-4xl">Move through wellness at your own <span className="font-display italic text-[#FFBB58]">rhythm.</span></motion.h2>
             </div>
-            <motion.p variants={headerChild} className="max-w-2xl text-[15px] leading-[1.85] text-[#645D68] lg:justify-self-end lg:text-right">
+            <motion.p variants={headerChild} className="max-w-2xl text-[13px] leading-[1.65] text-[#645D68] lg:justify-self-end lg:text-right">
               Slide between six familiar moments, from an energising start to a softer close, and discover products that fit naturally into each part of the day.
             </motion.p>
           </motion.div>
@@ -177,7 +177,7 @@ export function RoutineCards() {
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             whileHover={reduce ? undefined : { y: -4, boxShadow: "0 48px_120px_rgba(46,5,105,.18),0_0_0_1px_rgba(140,82,255,.08)" }}
-            className="relative mt-14 overflow-hidden rounded-[36px] border border-[#E8DFF2]/90 bg-white/80 shadow-[0_35px_100px_rgba(46,5,105,.14),0_0_0_1px_rgba(140,82,255,.05)] backdrop-blur-xl"
+            className="relative mt-4 overflow-hidden rounded-[36px] border border-[#E8DFF2]/90 bg-white/80 shadow-[0_35px_100px_rgba(46,5,105,.14),0_0_0_1px_rgba(140,82,255,.05)] backdrop-blur-xl"
           >
             <div className={`absolute inset-0 bg-gradient-to-br ${moment.ambience}`} />
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.95),transparent_35%),radial-gradient(circle_at_80%_20%,rgba(255,187,88,0.14),transparent_32%),radial-gradient(circle_at_30%_80%,rgba(140,82,255,0.14),transparent_30%)]" />
@@ -195,8 +195,11 @@ export function RoutineCards() {
               className="pointer-events-none absolute bottom-10 right-[24%] h-56 w-56 rounded-full bg-white/35 blur-[46px]"
             />
 
-            <div className="relative grid items-stretch lg:grid-cols-[1fr_.82fr]">
-              <div className="relative z-10 flex flex-col justify-center p-8 sm:p-10 lg:p-12 xl:p-16">
+            {/* ── Main body: content left, image right ── */}
+            <div className="relative grid items-stretch gap-0 lg:grid-cols-[1fr_45%]">
+
+              {/* Left — copy */}
+              <div className="relative z-10 flex flex-col justify-start p-6 sm:p-8 lg:p-10">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={`${routine.title}-copy`}
@@ -204,72 +207,53 @@ export function RoutineCards() {
                     animate={{ opacity: 1, x: 0 }}
                     exit={reduce ? undefined : { opacity: 0, x: 18 }}
                     transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-                    className="max-w-xl"
+                    className="flex h-full flex-col"
                   >
-                    <div className="inline-flex items-center gap-3 rounded-full border border-white/70 bg-white/70 px-3.5 py-2 shadow-[0_10px_30px_rgba(46,5,105,.08)] backdrop-blur-md">
-                      <span className="grid h-10 w-10 place-items-center rounded-full bg-[#2E0569] text-white shadow-[0_10px_24px_rgba(46,5,105,.18)]">
-                        <Icon size={18} />
+                    {/* Badge pill */}
+                    <div className="inline-flex w-fit items-center gap-2.5 rounded-full border border-white/70 bg-white/70 px-3 py-1.5 shadow-[0_10px_30px_rgba(46,5,105,.08)] backdrop-blur-md">
+                      <span className="grid h-7 w-7 place-items-center rounded-full bg-[#2E0569] text-white shadow-[0_8px_20px_rgba(46,5,105,.18)]">
+                        <Icon size={13} />
                       </span>
                       <div>
                         <p className="text-[9px] font-extrabold uppercase tracking-[.18em] text-[#8C52FF]">Wellness rhythm {String(active + 1).padStart(2, "0")}</p>
-                        <p className="mt-1 text-[11px] font-semibold text-[#716A78]">{moment.detail}</p>
+                        <p className="mt-0.5 text-[10.5px] font-semibold text-[#716A78]">{moment.detail}</p>
                       </div>
                     </div>
 
-                    <h3 className="mt-7 text-[clamp(40px,4.7vw,64px)] font-extrabold leading-[0.96] tracking-[-.06em] text-[#2E0569]">
+                    <h3 className="mt-4 text-[clamp(26px,2.8vw,42px)] font-extrabold leading-[0.97] tracking-[-.06em] text-[#2E0569]">
                       {routine.title}
                     </h3>
-                    <p className="mt-5 text-[15px] leading-[1.85] text-[#5F5765]">
+                    <p className="mt-2 text-[12.5px] leading-[1.6] text-[#5F5765]">
                       {routine.copy}
                     </p>
 
-                    {/* Three pillars — data-driven per routine */}
+                    {/* Four pillars in 2×2 grid */}
                     {(() => {
                       const detail = routineDetails[active];
                       const [p0, p1, p2] = detail.pillars;
+                      const p3 = { icon: Sparkles, label: detail.trustHeading, copy: detail.trustCopy };
                       return (
-                        <>
-                          <div className="mt-7 grid grid-cols-1 gap-4 border-t border-white/30 pt-6 sm:grid-cols-3 sm:divide-x sm:divide-white/30 sm:gap-0">
-                            {([p0, p1, p2] as RoutinePillar[]).map((p, i) => {
-                              const PIcon = p.icon;
-                              return (
-                                <div key={p.label} className={`border-b border-white/20 pb-4 sm:border-b-0 sm:pb-0 ${i === 0 ? "sm:pr-5" : i === 1 ? "sm:px-5" : "sm:pl-5"}`}>
-                                  <div className="flex items-center gap-2">
-                                    <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white/20 ring-1 ring-white/30">
-                                      <PIcon size={11} className="text-[#2E0569]" />
-                                    </span>
-                                    <p className="text-[12px] font-extrabold tracking-[.04em] text-[#2E0569]">{p.label}</p>
-                                  </div>
-                                  <p className="mt-1.5 text-[11px] leading-[1.7] text-[#6B6070]">{p.copy}</p>
+                        <div className="mt-4 grid flex-1 grid-cols-2 gap-x-4 gap-y-0 divide-y divide-white/20 border-t border-white/30">
+                          {([p0, p1, p2, p3] as RoutinePillar[]).map((p, i) => {
+                            const PIcon = p.icon;
+                            return (
+                              <div key={p.label} className="flex items-start gap-3 py-3 pr-2">
+                                <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white/20 ring-1 ring-white/30">
+                                  <PIcon size={11} className="text-[#2E0569]" />
+                                </span>
+                                <div>
+                                  <p className="text-[11px] font-extrabold tracking-[.03em] text-[#2E0569]">{p.label}</p>
+                                  <p className="mt-0.5 text-[10.5px] leading-[1.5] text-[#6B6070]">{p.copy}</p>
                                 </div>
-                              );
-                            })}
-                          </div>
-
-                          {/* Trust / value section */}
-                          <div className="mt-6 flex flex-col gap-4 border-t border-white/30 pt-5 sm:flex-row sm:items-start sm:gap-5">
-                            <div className="flex flex-1 items-start gap-2.5">
-                              <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white/20 ring-1 ring-white/30">
-                                <Sparkles size={11} className="text-[#2E0569]" />
-                              </span>
-                              <div>
-                                <p className="text-[11.5px] font-extrabold leading-snug tracking-[.02em] text-[#2E0569]">{detail.trustHeading}</p>
-                                <p className="mt-1 text-[11px] leading-[1.65] text-[#6B6070]">{detail.trustCopy}</p>
                               </div>
-                            </div>
-                            <div className="hidden h-full w-px self-stretch bg-white/30 sm:block" />
-                            <div className="flex flex-1 items-start gap-2.5">
-                              <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white/20 ring-1 ring-white/30">
-                                <Heart size={11} className="text-[#2E0569]" />
-                              </span>
-                              <p className="text-[11px] leading-[1.65] text-[#6B6070]">{detail.trustRight}</p>
-                            </div>
-                          </div>
-                        </>
+                            );
+                          })}
+                        </div>
                       );
                     })()}
 
-                    <div className="relative mt-8 w-fit">
+                    {/* CTA */}
+                    <div className="relative mt-4 w-fit">
                       {!reduce && (
                         <motion.span
                           aria-hidden="true"
@@ -287,44 +271,44 @@ export function RoutineCards() {
                         whileHover={reduce ? undefined : { y: -3, scale: 1.03, boxShadow: "0 22px 48px rgba(46,5,105,.28)" }}
                         whileTap={reduce ? undefined : { scale: 0.97 }}
                         transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                        className="relative inline-flex min-h-12 w-fit items-center gap-2 rounded-full bg-[#2E0569] px-6 text-[10px] font-extrabold uppercase tracking-[.15em] text-white shadow-[0_16px_40px_rgba(46,5,105,.16)]"
+                        className="relative inline-flex min-h-[40px] w-fit items-center gap-2 rounded-full bg-[#2E0569] px-5 text-[10px] font-extrabold uppercase tracking-[.15em] text-white shadow-[0_12px_32px_rgba(46,5,105,.16)]"
                       >
-                        Explore this rhythm <ArrowRight size={16} />
+                        Explore this rhythm <ArrowRight size={14} />
                       </motion.a>
                     </div>
                   </motion.div>
                 </AnimatePresence>
               </div>
 
-              {/* Portrait image column — aspect ratio matches 1122×1402 source images */}
-              <div className={`relative overflow-hidden bg-gradient-to-br ${moment.ambience} lg:rounded-r-[36px]`}>
-                <div className="relative mx-auto w-full max-h-[400px] lg:max-h-none" style={{ aspectRatio: "1122 / 1402" }}>
+              {/* Right — image with white border frame, full image visible */}
+              <div className="hidden lg:flex lg:items-center lg:justify-center lg:p-5">
+                <div className="relative w-full overflow-hidden rounded-[16px] border-[3px] border-white shadow-[0_4px_20px_rgba(46,5,105,.12)]" style={{ aspectRatio: "4/3" }}>
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={routine.image}
-                      initial={reduce ? false : { opacity: 0, y: 18 }}
+                      initial={reduce ? false : { opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
-                      exit={reduce ? undefined : { opacity: 0, y: -14 }}
-                      transition={{ duration: 0.52, ease: [0.22, 1, 0.36, 1] }}
+                      exit={reduce ? undefined : { opacity: 0, y: -10 }}
+                      transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
                       className="absolute inset-0"
                     >
                       <motion.div
-                        animate={reduce ? undefined : { y: [0, -8, 0], scale: [1, 1.018, 1] }}
+                        animate={reduce ? undefined : { y: [0, -6, 0], scale: [1, 1.015, 1] }}
                         transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
                         className="absolute inset-0"
                       >
                         {imgError ? (
-                          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-[#8C52FF]/60">
-                            <Icon size={48} strokeWidth={1.2} />
-                            <span className="text-[11px] font-extrabold uppercase tracking-[.12em]">{routine.title}</span>
+                          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-[#8C52FF]/60">
+                            <Icon size={36} strokeWidth={1.2} />
+                            <span className="text-[10px] font-extrabold uppercase tracking-[.12em]">{routine.title}</span>
                           </div>
                         ) : (
                           <Image
                             src={routine.image}
                             alt={routine.title}
                             fill
-                            sizes="(max-width: 1024px) 100vw, 45vw"
-                            className="object-contain"
+                            sizes="(max-width: 1280px) 45vw, 560px"
+                            className="object-cover"
                             priority
                             onError={() => setImgError(true)}
                           />
@@ -336,9 +320,10 @@ export function RoutineCards() {
               </div>
             </div>
 
-            <div className="relative border-t border-white/70 bg-white/60 px-7 py-7 backdrop-blur-xl sm:px-10 lg:px-12 xl:px-16">
+            {/* ── Controls bar ── */}
+            <div className="relative border-t border-white/50 px-6 py-3 sm:px-8 lg:px-10">
               <div className="w-full">
-                <div className="mb-4 flex flex-wrap items-center justify-between gap-3 text-[10.5px] font-extrabold uppercase tracking-[.14em] text-[#8C52FF]">
+                <div className="mb-1.5 flex items-center justify-between gap-2 text-[10px] font-extrabold uppercase tracking-[.14em] text-[#8C52FF]">
                   <span>Choose your moment</span>
                   <span className="text-[#716A78]">{moment.short} · {active + 1} of {routines.length}</span>
                 </div>
@@ -353,7 +338,7 @@ export function RoutineCards() {
                   onChange={(event) => { setActive(Number(event.target.value)); setImgError(false); }}
                   style={{ "--routine-progress": `${(active / (routines.length - 1)) * 100}%` } as CSSProperties}
                 />
-                <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-6">
+                <div className="mt-2 grid grid-cols-3 sm:grid-cols-6">
                   {routineMoments.map((item, index) => {
                     const isActive = index === active;
                     return (
@@ -361,19 +346,21 @@ export function RoutineCards() {
                         key={item.short}
                         type="button"
                         onClick={() => { setActive(index); setImgError(false); }}
-                        whileHover={reduce ? undefined : { y: -2, scale: 1.04 }}
-                        whileTap={reduce ? undefined : { scale: 0.95 }}
+                        whileHover={reduce ? undefined : { y: -1 }}
+                        whileTap={reduce ? undefined : { scale: 0.97 }}
                         transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-                        className={`relative min-w-0 rounded-full border px-2 py-2.5 text-center text-[9.5px] font-extrabold uppercase tracking-[.06em] sm:text-[10.5px] sm:tracking-[.1em] ${isActive ? "border-[#8C52FF]/20 text-white shadow-[0_10px_24px_rgba(46,5,105,.16)]" : "border-[#E6DDF1] bg-white/70 text-[#8A7693] hover:border-[#8C52FF]/20 hover:text-[#8C52FF]"}`}
+                        className="relative py-1.5 text-center text-[9.5px] font-extrabold uppercase tracking-[.1em] sm:text-[10px]"
                       >
+                        <span className={`relative z-10 transition-colors duration-200 ${
+                          isActive ? "text-[#2E0569]" : "text-[#8A7693] hover:text-[#2E0569]"
+                        }`}>{item.short}</span>
                         {isActive && (
                           <motion.span
-                            layoutId="routine-pill"
-                            className="absolute inset-0 rounded-full bg-[#2E0569]"
+                            layoutId="routine-tab-indicator"
+                            className="absolute inset-x-2 bottom-0 h-[2px] rounded-full bg-[#2E0569]"
                             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                           />
                         )}
-                        <span className="relative z-10">{item.short}</span>
                       </motion.button>
                     );
                   })}
@@ -416,7 +403,7 @@ export function RoutineFinder() {
         : products.slice(0, 3);
 
   return (
-    <section id="routine-finder" className="bg-[#FFFDF7] py-28 sm:py-36">
+    <section id="routine-finder" className="bg-[#FFFDF7] py-10 sm:py-14">
       <div className="container-page">
         <Reveal>
           <div className="relative overflow-hidden rounded-[32px] bg-[#2E0569] text-white shadow-[0_18px_55px_rgba(46,5,105,.14),0_0_0_1px_rgba(46,5,105,.08)]">
@@ -431,7 +418,7 @@ export function RoutineFinder() {
                 <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[10px] font-extrabold uppercase tracking-[.15em] backdrop-blur-sm">
                   <Sparkles size={13} /> Guided discovery
                 </span>
-                <h2 className="mt-6 text-[clamp(36px,4vw,60px)] font-extrabold leading-[1.02] tracking-[-.05em]">
+                <h2 className="mt-6 text-[clamp(28px,3.2vw,44px)] font-extrabold leading-[1.02] tracking-[-.05em]">
                   Not sure where to begin?
                 </h2>
                 <p className="mt-5 max-w-md text-[15px] leading-[1.8] text-white/70">

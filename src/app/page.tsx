@@ -1,7 +1,6 @@
 import { AppProvider } from "@/components/AppContext";
 import { AnnouncementBar, Header } from "@/components/Header";
 import { Hero, TrustMarquee } from "@/components/Hero";
-import { WellnessFocus } from "@/components/WellnessFocus";
 import { ProductShowcase } from "@/components/ProductShowcase";
 import { RoutineCards, RoutineFinder } from "@/components/Routines";
 import { ProductFormats, TransparencySection, WellnessSets } from "@/components/ProductFormatsAndKits";
@@ -27,10 +26,9 @@ export default function HomePage() {
         <main id="main-content">
           <Hero />
           <TrustMarquee />
-          <WellnessFocus />
+          <RoutineCards />
           <ProductShowcase />
           <ProductFormats />
-          <RoutineCards />
           <RangeSplit />
           <CampaignGallery />
           <WellnessSets />

@@ -181,7 +181,6 @@ export function Header() {
           {[
             ["Ayurveda", "/shop/ayurveda"],
             ["Nutraceuticals", "/shop/nutraceuticals"],
-            ["Wellness goals", "/#wellness-focus"],
             ["Routines", "/#routines"],
             ["Ingredients", "/ingredients"],
             ["Knowledge", "/knowledge"],
@@ -365,7 +364,6 @@ export function Header() {
                     ["Shop all", "/shop"],
                     ["Ayurveda", "/shop/ayurveda"],
                     ["Nutraceuticals", "/shop/nutraceuticals"],
-                    ["Wellness goals", "/#wellness-focus"],
                     ["Routines", "/#routines"],
                     ["Ingredients", "/ingredients"],
                     ["Knowledge", "/knowledge"],

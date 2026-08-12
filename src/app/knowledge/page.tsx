@@ -353,7 +353,13 @@ function BrowseByTopic({ onExplore }: { onExplore: (v: string) => void }) {
         <Reveal>
           <div className="mb-7 flex items-center justify-between">
             <h2 className="text-[18px] font-extrabold text-[#2E0569]">Browse by topic</h2>
-            <button className="inline-flex items-center gap-1.5 text-[12px] font-extrabold text-[#8C52FF] transition hover:gap-2.5">
+            <button
+              onClick={() => {
+                onExplore("all");
+                document.getElementById("articles-grid")?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="inline-flex items-center gap-1.5 text-[12px] font-extrabold text-[#8C52FF] transition hover:gap-2.5"
+            >
               View all articles <ArrowRight size={13} />
             </button>
           </div>
@@ -372,8 +378,11 @@ function BrowseByTopic({ onExplore }: { onExplore: (v: string) => void }) {
                   {title}
                 </h3>
                 <p className="mt-2 flex-1 text-[11.5px] leading-[1.65] text-[#716A78]">{copy}</p>
-                <button
-                  onClick={() => onExplore(value)}
+              <button
+                  onClick={() => {
+                    onExplore(value);
+                    document.getElementById("articles-grid")?.scrollIntoView({ behavior: "smooth" });
+                  }}
                   className="mt-4 inline-flex items-center gap-1.5 text-[11px] font-extrabold text-[#8C52FF] transition hover:gap-2.5"
                 >
                   Explore <ArrowRight size={11} />
@@ -489,7 +498,7 @@ function ArticlesGrid({ active }: { active: string }) {
   if (filtered.length === 0) return null;
 
   return (
-    <section className="bg-[#FFFDF7] pb-10">
+    <section id="articles-grid" className="bg-[#FFFDF7] pb-10">
       <div className="container-page">
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((article, i) => (
@@ -543,8 +552,8 @@ export default function KnowledgePage() {
       <div className="min-h-screen bg-[#FFFDF7]">
         <KnowledgeHero onTopicClick={setActiveTopic} />
         <TopicFilterBar active={activeTopic} setActive={setActiveTopic} />
-        {activeTopic !== "all" && <ArticlesGrid active={activeTopic} />}
-        <BrowseByTopic onExplore={setActiveTopic} />
+        <ArticlesGrid active={activeTopic} />
+        <BrowseByTopic onExplore={(v) => { setActiveTopic(v); }} />
         <WhyTrust />
         <KnowledgeNewsletter />
       </div>

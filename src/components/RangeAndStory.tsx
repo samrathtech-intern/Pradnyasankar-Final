@@ -56,7 +56,7 @@ export function RangeSplit() {
   ];
 
   return (
-    <section id="ranges" className="relative overflow-hidden bg-white py-28 sm:py-36">
+    <section id="ranges" className="relative overflow-hidden bg-white py-8 sm:py-10">
       {/* ambient blobs */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -left-32 top-20 h-[420px] w-[420px] rounded-full bg-[#8C52FF]/[.045] blur-[90px]" />
@@ -70,22 +70,22 @@ export function RangeSplit() {
           initial={reduce ? false : "hidden"}
           whileInView="show"
           viewport={{ once: true, margin: "-80px" }}
-          className="grid gap-6 lg:grid-cols-[1fr_.65fr] lg:items-end"
+          className="grid gap-2 lg:grid-cols-[1fr_.65fr] lg:items-end"
         >
           <div>
             <motion.span variants={headerChild} className="eyebrow inline-flex">Two distinct ranges</motion.span>
-            <motion.h2 variants={headerChild} className="section-heading mt-6 max-w-5xl">
+            <motion.h2 variants={headerChild} className="section-heading mt-2 max-w-5xl">
               Ancient knowledge and modern nutrition,{" "}
               <span className="font-display italic text-[#FFBB58]">without blurring the difference.</span>
             </motion.h2>
           </div>
-          <motion.p variants={headerChild} className="max-w-xl text-[15px] leading-[1.85] text-[#716A78] lg:justify-self-end lg:text-right">
+          <motion.p variants={headerChild} className="max-w-xl text-[13px] leading-[1.7] text-[#716A78] lg:justify-self-end lg:text-right">
             Each range keeps its own visual language, product classification and information hierarchy so the difference stays clear from the first glance.
           </motion.p>
         </motion.div>
 
         {/* cards */}
-        <div className="relative mt-14 grid gap-6 lg:grid-cols-2">
+        <div className="relative mt-4 grid gap-4 lg:grid-cols-2">
           {ranges.map((range, index) => (
             <motion.article
               key={range.title}
@@ -98,10 +98,10 @@ export function RangeSplit() {
               className="group overflow-hidden rounded-[32px] border border-[#E9E3EE] bg-[#FFFDF7] shadow-[0_22px_65px_rgba(46,5,105,.08)] transition-shadow duration-300 hover:shadow-[0_36px_90px_rgba(46,5,105,.15)]"
             >
               {/* image panel */}
-              <div className={`relative overflow-hidden p-5 sm:p-7 ${range.imageBg}`}>
+              <div className={`relative overflow-hidden p-3 ${range.imageBg}`}>
                 {/* soft glow behind image */}
                 <div className={`pointer-events-none absolute left-1/2 top-1/2 h-56 w-56 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl ${range.glow}`} />
-                <div className="relative w-full aspect-[16/10] overflow-hidden rounded-xl border border-white/60 shadow-[0_12px_40px_rgba(46,5,105,.08)]">
+                <div className="relative w-full aspect-[16/7] overflow-hidden rounded-xl border border-white/60 shadow-[0_12px_40px_rgba(46,5,105,.08)]">
                   <motion.div
                     className="absolute inset-0"
                     whileHover={reduce ? undefined : { scale: 1.04, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } }}
@@ -118,17 +118,17 @@ export function RangeSplit() {
               </div>
 
               {/* content panel */}
-              <div className={`${range.panel} p-8 sm:p-12`}>
+              <div className={`${range.panel} px-6 py-4 sm:px-7`}>
                 <span className={`inline-flex items-center gap-2 text-[9px] font-extrabold uppercase tracking-[.15em] ${range.eyebrowTone}`}>
                   <range.icon size={15} /> {range.eyebrow}
                 </span>
-                <h3 className="mt-5 text-[clamp(40px,4.5vw,62px)] font-extrabold leading-none tracking-[-.055em]">{range.title}</h3>
-                <p className={`mt-4 max-w-lg text-[13px] leading-[1.8] ${range.bodyTone}`}>{range.copy}</p>
-                <div className="mt-7">
+                <h3 className="mt-1.5 text-[clamp(26px,3vw,42px)] font-extrabold leading-none tracking-[-.055em]">{range.title}</h3>
+                <p className={`mt-1.5 max-w-lg text-[13px] leading-[1.6] ${range.bodyTone}`}>{range.copy}</p>
+                <div className="mt-3">
                   <button
                     type="button"
                     onClick={() => navigateToRange(range.title)}
-                    className={`inline-flex min-h-12 items-center gap-2 rounded-full px-6 text-[10px] font-extrabold uppercase tracking-[.12em] ${range.button}`}
+                    className={`inline-flex min-h-10 items-center gap-2 rounded-full px-5 text-[10px] font-extrabold uppercase tracking-[.12em] ${range.button}`}
                   >
                     Explore {range.title} <ArrowRight size={16} />
                   </button>
@@ -148,13 +148,13 @@ export function RangeSplit() {
 
 export function BrandStory() {
   return (
-    <section id="philosophy" className="overflow-hidden bg-[#FFFDF7] py-28 sm:py-36">
+    <section id="philosophy" className="overflow-hidden bg-[#FFFDF7] py-10 sm:py-14">
       <div className="relative container-page">
-        <div className="grid gap-16 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-20">
+        <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-start lg:gap-14">
 
           {/* ── Left: image composition ── */}
           <Reveal>
-            <div className="relative min-h-[420px] sm:min-h-[560px] lg:min-h-[620px]">
+            <div className="relative min-h-[340px] sm:min-h-[440px] lg:min-h-[500px]">
               {/* primary image */}
               <div className="absolute left-0 top-0 h-[72%] w-[76%] overflow-hidden rounded-[38px] shadow-[0_24px_64px_rgba(46,5,105,.13)]">
                 <Image
@@ -187,34 +187,34 @@ export function BrandStory() {
           <Reveal delay={0.1}>
             <div className="flex flex-col">
               <span className="eyebrow">At the heart of Pradnyasanskar</span>
-              <h2 className="section-heading mt-5">
+              <h2 className="section-heading mt-3">
                 Knowledge with values.{" "}
                 <span className="font-display italic text-[#8C52FF]">Wellness with clarity.</span>
               </h2>
-              <p className="mt-5 max-w-[52ch] text-[15px] leading-[1.85] text-[#4A4352]">
+              <p className="mt-3 max-w-[52ch] text-[15px] leading-[1.75] text-[#4A4352]">
                 Pradnyasanskar is built around a simple belief: wellness products should be thoughtfully developed, clearly explained and responsibly presented. The experience separates ranges, explains formats and keeps important information close to every decision.
               </p>
 
               {/* feature cards */}
-              <div className="mt-8 space-y-3">
+              <div className="mt-5 space-y-2">
                 {brandPrinciples.map((item, index) => (
                   <div
                     key={item.title}
-                    className="grid grid-cols-[56px_1fr] items-start gap-4 rounded-2xl border border-[#E2D9EE] bg-white px-5 py-4 shadow-[0_2px_12px_rgba(46,5,105,.05)] transition-shadow duration-200 hover:shadow-[0_6px_24px_rgba(46,5,105,.09)]"
+                    className="grid grid-cols-[48px_1fr] items-start gap-3 rounded-2xl border border-[#E2D9EE] bg-white px-4 py-3 shadow-[0_2px_12px_rgba(46,5,105,.05)] transition-shadow duration-200 hover:shadow-[0_6px_24px_rgba(46,5,105,.09)]"
                   >
-                    <span className="mt-0.5 grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-[#F2EBFF] text-[#8C52FF]">
-                      <item.icon size={21} />
+                    <span className="mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-[#F2EBFF] text-[#8C52FF]">
+                      <item.icon size={19} />
                     </span>
                     <div>
                       <p className="text-[10px] font-extrabold uppercase tracking-[.15em] text-[#F08C26]">0{index + 1}</p>
-                      <h3 className="mt-1 text-[18px] font-extrabold leading-snug text-[#2E0569]">{item.title}</h3>
-                      <p className="mt-1 text-[13px] leading-relaxed text-[#5C5465]">{item.copy}</p>
+                      <h3 className="mt-0.5 text-[18px] font-extrabold leading-snug text-[#2E0569]">{item.title}</h3>
+                      <p className="mt-0.5 text-[13px] leading-relaxed text-[#5C5465]">{item.copy}</p>
                     </div>
                   </div>
                 ))}
               </div>
 
-              <a href="#quality" className="btn-primary mt-8 self-start">
+              <a href="#quality" className="btn-primary mt-5 self-start">
                 Read our quality approach <ArrowRight size={17} />
               </a>
             </div>
@@ -228,5 +228,5 @@ export function BrandStory() {
 
 export function QualityStrip() {
   const items=["Range clearly identified","Composition easy to find","Directions kept visible","Warnings placed responsibly"];
-  return <section id="quality" className="bg-[#2E0569] py-16 text-white"><div className="container-page"><Reveal><div className="grid gap-7 lg:grid-cols-[1fr_1.4fr] lg:items-center"><div><span className="text-[10px] font-extrabold uppercase tracking-[.16em] text-[#FFBB58]">What customers should know</span><h2 className="mt-3 text-[clamp(36px,4vw,58px)] font-extrabold leading-[1.04] tracking-[-.05em]">Product information should never feel hidden.</h2></div><div className="grid gap-3 sm:grid-cols-2">{items.map(item=><div key={item} className="flex items-center gap-3 rounded-2xl border border-white/[.15] bg-white/[.08] p-4"><CheckCircle2 size={18} className="text-[#FFBB58]"/><span className="text-[12px] font-bold text-white/85">{item}</span></div>)}</div></div></Reveal></div></section>;
+  return <section id="quality" className="bg-[#2E0569] py-16 text-white"><div className="container-page"><Reveal><div className="grid gap-7 lg:grid-cols-[1fr_1.4fr] lg:items-center"><div><span className="text-[10px] font-extrabold uppercase tracking-[.16em] text-[#FFBB58]">What customers should know</span><h2 className="mt-3 text-[clamp(28px,3.2vw,44px)] font-extrabold leading-[1.04] tracking-[-.05em]">Product information should never feel hidden.</h2></div><div className="grid gap-3 sm:grid-cols-2">{items.map(item=><div key={item} className="flex items-center gap-3 rounded-2xl border border-white/[.15] bg-white/[.08] p-4"><CheckCircle2 size={18} className="text-[#FFBB58]"/><span className="text-[12px] font-bold text-white/85">{item}</span></div>)}</div></div></Reveal></div></section>;
 }

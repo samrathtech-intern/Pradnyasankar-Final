@@ -84,7 +84,7 @@ export function CampaignGallery() {
   const reduce = useReducedMotion();
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-[#F7F1FF] via-[#FFFDF7] to-white py-28 sm:py-36">
+    <section className="relative overflow-hidden bg-gradient-to-b from-[#F7F1FF] via-[#FFFDF7] to-white py-12 sm:py-16">
       {/* ambient blobs */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -left-32 top-16 h-[480px] w-[480px] rounded-full bg-[#8C52FF]/[.05] blur-[100px]" />
@@ -99,24 +99,24 @@ export function CampaignGallery() {
           initial={reduce ? false : "hidden"}
           whileInView="show"
           viewport={{ once: true, margin: "-80px" }}
-          className="grid gap-6 lg:grid-cols-[.9fr_1fr] lg:items-end"
+          className="grid gap-3 lg:grid-cols-[.9fr_1fr] lg:items-end"
         >
           <div>
             <motion.span variants={headerChild} className="eyebrow inline-flex">
               <Sparkles size={13} /> The Pradnyasanskar world
             </motion.span>
-            <motion.h2 variants={headerChild} className="section-heading mt-6 max-w-3xl">
+            <motion.h2 variants={headerChild} className="section-heading mt-3 max-w-3xl">
               Wellness, styled for{" "}
               <span className="font-display italic text-[#FFBB58]">real life.</span>
             </motion.h2>
           </div>
-          <motion.p variants={headerChild} className="max-w-2xl text-[15px] leading-[1.85] text-[#716A78] lg:justify-self-end lg:text-right">
+          <motion.p variants={headerChild} className="max-w-2xl text-[13px] leading-[1.7] text-[#716A78] lg:justify-self-end lg:text-right">
             A visual universe that brings together botanicals, modern nutrition, external care and thoughtful gifting—without placing important text over busy imagery.
           </motion.p>
         </motion.div>
 
         {/* gallery grid */}
-        <div className="mt-14 grid gap-5 md:grid-cols-12">
+        <div className="mt-6 grid gap-3 md:grid-cols-12">
           {campaignTiles.map((tile, index) => {
             const isHero = index === 0;
             return (
@@ -133,7 +133,7 @@ export function CampaignGallery() {
                 {isHero ? (
                   /* ── large hero tile: original split layout ── */
                   <div className="flex h-full flex-col bg-white">
-                    <div className={`relative min-h-[260px] flex-1 overflow-hidden ${tile.tone} p-3 md:min-h-0`}>
+                    <div className={`relative min-h-[200px] flex-1 overflow-hidden ${tile.tone} p-3 md:min-h-0`}>
                       <div className={`pointer-events-none absolute left-1/2 top-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl ${tile.glow}`} />
                       <div className="relative h-full overflow-hidden rounded-[20px] border border-white/50 bg-white/30 backdrop-blur-[2px]">
                         <motion.div
@@ -144,7 +144,7 @@ export function CampaignGallery() {
                         </motion.div>
                       </div>
                     </div>
-                    <div className="border-t border-[#EDE6F4]/60 bg-white/90 p-6 backdrop-blur-sm sm:p-7">
+                    <div className="border-t border-[#EDE6F4]/60 bg-white/90 p-4 backdrop-blur-sm sm:p-5">
                       <p className={`text-[9px] font-extrabold uppercase tracking-[.16em] ${tile.labelColor}`}>{tile.label}</p>
                       <h3 className="mt-2 max-w-md text-[22px] font-extrabold leading-tight tracking-[-.04em] text-[#2E0569]">{tile.title}</h3>
                       <p className="mt-1.5 max-w-lg text-[11px] leading-[1.65] text-[#716A78]">{tile.copy}</p>
@@ -152,7 +152,7 @@ export function CampaignGallery() {
                   </div>
                 ) : (
                   /* ── 4 sub-cards: full-bleed image + text overlay ── */
-                  <div className="flex h-full min-h-[360px] flex-col md:min-h-[420px]">
+                  <div className="flex h-full min-h-[280px] flex-col md:min-h-[320px]">
                     {/* tone background */}
                     <div className={`absolute inset-0 ${tile.tone}`} />
                     {/* full-bleed image */}
@@ -189,24 +189,24 @@ export function CampaignGallery() {
             <div className="grid lg:grid-cols-[5fr_7fr]">
 
               {/* left — copy */}
-              <div className="flex flex-col justify-center bg-[#2E0569] p-8 text-white sm:p-12 lg:p-14">
+              <div className="flex flex-col justify-center bg-[#2E0569] p-6 text-white sm:p-8 lg:p-10">
                 <p className="text-[10px] font-extrabold uppercase tracking-[.18em] text-[#FFCF85]">One thoughtful brand</p>
-                <h3 className="mt-4 text-[clamp(28px,3.5vw,48px)] font-extrabold leading-[1.06] tracking-[-.04em]">
+                <h3 className="mt-3 text-[clamp(22px,2.8vw,38px)] font-extrabold leading-[1.06] tracking-[-.04em]">
                   Ayurveda, nutrition and everyday care in one connected experience.
                 </h3>
-                <p className="mt-4 max-w-md text-[13px] leading-[1.85] text-white/65">
+                <p className="mt-3 max-w-md text-[13px] leading-[1.75] text-white/65">
                   Explore the complete visual world without losing the distinction between product ranges, formats and responsible product information.
                 </p>
                 <a
                   href="#featured"
-                  className="mt-8 inline-flex w-fit items-center gap-2 rounded-full bg-[#FFBB58] px-7 py-3.5 text-[10px] font-extrabold uppercase tracking-[.14em] text-[#2E0569] shadow-[0_8px_24px_rgba(255,187,88,.28)] transition hover:shadow-[0_12px_32px_rgba(255,187,88,.38)]"
+                  className="mt-5 inline-flex w-fit items-center gap-2 rounded-full bg-[#FFBB58] px-6 py-3 text-[10px] font-extrabold uppercase tracking-[.14em] text-[#2E0569] shadow-[0_8px_24px_rgba(255,187,88,.28)] transition hover:shadow-[0_12px_32px_rgba(255,187,88,.38)]"
                 >
                   Explore the collection <ArrowRight size={16} />
                 </a>
               </div>
 
               {/* right — image: object-cover with left-anchored position keeps logo/bottles in frame */}
-              <div className="relative min-h-[320px] overflow-hidden sm:min-h-[400px]">
+              <div className="relative min-h-[240px] overflow-hidden sm:min-h-[300px]">
                 <Image
                   src="/images/campaign-wide.webp"
                   alt="Pradnyasanskar product collection"

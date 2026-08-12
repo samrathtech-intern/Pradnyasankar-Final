@@ -13,7 +13,7 @@ type TurnState = { from: number; to: number; direction: 1 | -1 };
 
 function IngredientDetails({ ingredient, pageNumber }: { ingredient: Ingredient; pageNumber: number }) {
   return (
-    <div className="relative flex h-full flex-col p-7 sm:p-9 lg:p-10">
+    <div className="relative flex h-full flex-col p-5 sm:p-7 lg:p-8">
       <div className="flex items-start justify-between gap-5">
         <div>
           <p className="text-[11.5px] font-extrabold uppercase tracking-[.15em] text-[#8C52FF]">Pradnyasanskar botanical library</p>
@@ -22,14 +22,14 @@ function IngredientDetails({ ingredient, pageNumber }: { ingredient: Ingredient;
         <Leaf size={22} className="shrink-0 text-[#8C52FF]" />
       </div>
 
-      <div className="mt-7 border-b border-[#D9CEC0] pb-5">
-        <h3 className="text-[clamp(48px,4.4vw,66px)] font-extrabold leading-[.96] tracking-[-.055em] text-[#2E0569]">{ingredient.name}</h3>
-        <p className="mt-3 font-display text-[20px] italic leading-tight text-[#716A78]">{ingredient.technical}</p>
+      <div className="mt-5 border-b border-[#D9CEC0] pb-4">
+        <h3 className="text-[clamp(40px,3.8vw,58px)] font-extrabold leading-[.96] tracking-[-.055em] text-[#2E0569]">{ingredient.name}</h3>
+        <p className="mt-2 font-display text-[18px] italic leading-tight text-[#716A78]">{ingredient.technical}</p>
       </div>
 
-      <p className="mt-5 text-[16px] leading-[1.78] text-[#554D5B]">{ingredient.copy}</p>
+      <p className="mt-4 text-[15px] leading-[1.75] text-[#554D5B]">{ingredient.copy}</p>
 
-      <div className="mt-6 grid gap-6 sm:grid-cols-2">
+      <div className="mt-5 grid gap-5 sm:grid-cols-2">
         <div>
           <p className="text-[11px] font-extrabold uppercase tracking-[.13em] text-[#8C52FF]">Key plant constituents</p>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -110,12 +110,12 @@ export function IngredientsSection() {
   };
 
   return (
-    <section id="ingredients" className="overflow-hidden bg-white py-28 sm:py-36">
+    <section id="ingredients" className="overflow-hidden bg-white py-10 sm:py-14">
       <div className="relative container-page ">
         <Reveal>
           <span className="eyebrow"><BookOpen size={13} /> Ingredient library</span>
           <div className="mt-5 grid gap-6 lg:grid-cols-[.9fr_1fr] lg:items-end">
-            <h2 className="section-heading">Open the story behind every ingredient.</h2>
+            <h2 className="text-[clamp(28px,3.2vw,44px)] font-extrabold leading-[1.04] tracking-[-.05em] text-[#2E0569]">Open the story behind every ingredient.</h2>
             <p className="max-w-2xl text-[15px] leading-[1.8] text-[#645D68] lg:justify-self-end">
               Turn the pages of a visual botanical volume where ingredient identity, plant constituents, familiar wellness contexts and responsible-use notes stay together.
             </p>
@@ -123,9 +123,9 @@ export function IngredientsSection() {
         </Reveal>
 
         <Reveal delay={.08}>
-          <div className="mt-8">
+          <div className="mt-5">
             {/* nav bar */}
-            <div className="mb-4 flex flex-wrap items-center justify-between gap-4 border-b border-[#EDE6DC] pb-4">
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-4 border-b border-[#EDE6DC] pb-3">
               <div>
                 <p className="text-[10px] font-extrabold uppercase tracking-[.17em] text-[#8C52FF]">Botanical volume I</p>
                 <p className="mt-1 text-[13px] font-semibold text-[#716A78]">Leaf {String(activeIndex + 1).padStart(2, "0")} of {String(ingredients.length).padStart(2, "0")} · click either page to turn</p>
@@ -196,10 +196,10 @@ const articles = [
 
 export function KnowledgeSection() {
   return (
-    <section id="knowledge" className="bg-[#FAF7FF] py-28 sm:py-36">
+    <section id="knowledge" className="bg-[#FAF7FF] py-10 sm:py-14">
       <div className="relative container-page">
-        <Reveal><span className="eyebrow">Knowledge hub</span><h2 className="section-heading mt-5">Wellness, explained clearly.</h2><p className="mt-4 max-w-2xl text-[14px] leading-relaxed text-[#716A78]">Educational content that supports understanding without offering diagnosis, personalised dosage or disease-treatment guidance.</p></Reveal>
-        <div className="mt-10 grid gap-5 lg:grid-cols-[1.15fr_.85fr]">
+        <Reveal><span className="eyebrow">Knowledge hub</span><h2 className="text-[clamp(28px,3.2vw,44px)] font-extrabold leading-[1.04] tracking-[-.05em] text-[#2E0569] mt-3">Wellness, explained clearly.</h2><p className="mt-3 max-w-2xl text-[14px] leading-relaxed text-[#716A78]">Educational content that supports understanding without offering diagnosis, personalised dosage or disease-treatment guidance.</p></Reveal>
+        <div className="mt-5 grid gap-5 lg:grid-cols-[1.15fr_.85fr]">
           <Reveal>
             <Link href={`/knowledge/${articles[0].slug}`} className="group grid overflow-hidden rounded-[36px] border border-[#E9E3EE] bg-white sm:grid-rows-[1fr_auto] transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(46,5,105,.12)]">
               <div className="relative min-h-[240px] overflow-hidden sm:min-h-[400px]"><Image src={articles[0].image} alt={articles[0].title} fill className="object-cover transition duration-700 group-hover:scale-[1.035]" /></div>
@@ -222,13 +222,13 @@ const community = [
 
 export function CommunitySection() {
   return (
-    <section className="bg-white py-28 sm:py-36">
+    <section className="bg-white py-10 sm:py-14">
       <div className="relative container-page">
         <Reveal>
           <div className="grid gap-5 lg:grid-cols-[.9fr_1fr] lg:items-end">
             <div>
               <span className="eyebrow">Everyday wellness stories</span>
-              <h2 className="section-heading mt-5 max-w-4xl">Wellness looks different in every routine.</h2>
+              <h2 className="text-[clamp(28px,3.2vw,44px)] font-extrabold leading-[1.04] tracking-[-.05em] text-[#2E0569] mt-3 max-w-4xl">Wellness looks different in every routine.</h2>
             </div>
             <p className="max-w-2xl text-[14px] leading-relaxed text-[#716A78] lg:justify-self-end">
               Explore real-life moments that shape the Pradnyasanskar approach to modern wellness—presented as visual inspiration, not customer testimonials.
@@ -236,11 +236,11 @@ export function CommunitySection() {
           </div>
         </Reveal>
 
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
           {community.map((item, index) => (
             <Reveal key={item.title} delay={index * .055}>
-              <article className="group flex h-full min-h-[510px] flex-col overflow-hidden rounded-[30px] border border-[#E9E3EE] bg-white transition duration-300 hover:-translate-y-1 hover:border-[#CDBAF1] hover:shadow-[0_18px_44px_rgba(46,5,105,.08)]">
-                <div className="relative aspect-[4/5] overflow-hidden bg-white">
+              <article className="group flex h-full min-h-[380px] flex-col overflow-hidden rounded-[30px] border border-[#E9E3EE] bg-white transition duration-300 hover:-translate-y-1 hover:border-[#CDBAF1] hover:shadow-[0_18px_44px_rgba(46,5,105,.08)]">
+                <div className="relative aspect-[4/4] overflow-hidden bg-white">
                   <Image src={item.image} alt={item.title} fill sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw" className="object-cover transition duration-700 group-hover:scale-[1.035]" />
                 </div>
                 <div className="flex flex-1 flex-col p-6">
@@ -264,21 +264,21 @@ export function CommunitySection() {
 export function BusinessCTA() {
   const [submitted, setSubmitted] = useState(false);
   return (
-    <section id="business" className="bg-[#FFFDF7] py-28 sm:py-36">
+    <section id="business" className="bg-[#FFFDF7] py-10 sm:py-14">
       <div className="relative container-page">
         <Reveal>
           <div className="overflow-hidden rounded-[40px] border border-[#E9E3EE] bg-[#F2EBFF] shadow-[0_28px_80px_rgba(46,5,105,.09)]">
             <div className="grid lg:grid-cols-[.95fr_1.05fr]">
-              <div className="p-8 sm:p-11 lg:p-12">
+              <div className="p-6 sm:p-8 lg:p-10">
                 <span className="text-[10px] font-extrabold uppercase tracking-[.16em] text-[#8C52FF]">Business with Pradnyasanskar</span>
-                <h2 className="mt-4 text-[clamp(42px,5vw,66px)] font-extrabold leading-[1] tracking-[-.055em] text-[#2E0569]">Let’s build thoughtful wellness opportunities.</h2>
-                <p className="mt-5 max-w-xl text-[14px] leading-[1.8] text-[#645D68]">Connect for distributor interest, bulk purchase, institutional supply, private-label requirements, product development or contract-manufacturing discussions, subject to capability confirmation.</p>
-                <div className="mt-6 flex flex-wrap gap-2">{["Distributor", "Bulk purchase", "Institutional supply", "Private label", "Product development"].map((item) => <span key={item} className="rounded-full border border-[#DCD0EA] bg-white/75 px-4 py-2 text-[10px] font-extrabold text-[#2E0569]">{item}</span>)}</div>
+                <h2 className="mt-3 text-[clamp(28px,3.2vw,44px)] font-extrabold leading-[1] tracking-[-.055em] text-[#2E0569]">Let's build thoughtful wellness opportunities.</h2>
+                <p className="mt-3 max-w-xl text-[14px] leading-[1.8] text-[#645D68]">Connect for distributor interest, bulk purchase, institutional supply, private-label requirements, product development or contract-manufacturing discussions, subject to capability confirmation.</p>
+                <div className="mt-4 flex flex-wrap gap-2">{["Distributor", "Bulk purchase", "Institutional supply", "Private label", "Product development"].map((item) => <span key={item} className="rounded-full border border-[#DCD0EA] bg-white/75 px-4 py-2 text-[10px] font-extrabold text-[#2E0569]">{item}</span>)}</div>
 
                 {submitted ? (
                   <div className="mt-8 rounded-[24px] border border-[#CFE5C4] bg-[#EAF4E4] p-6"><p className="text-[10px] font-extrabold uppercase tracking-[.14em] text-[#4A732F]">Enquiry captured</p><h3 className="mt-2 text-[22px] font-extrabold text-[#2E0569]">Thank you for connecting.</h3><p className="mt-2 text-[12px] leading-relaxed text-[#5F6D57]">Your enquiry has been recorded. The Pradnyasanskar team can follow up using the contact information provided.</p><button type="button" onClick={() => setSubmitted(false)} className="mt-4 text-[10px] font-extrabold uppercase tracking-[.12em] text-[#2E0569]">Submit another enquiry</button></div>
                 ) : (
-                  <form id="business-form" onSubmit={(event) => { event.preventDefault(); setSubmitted(true); }} className="mt-8 grid gap-3 sm:grid-cols-2">
+                  <form id="business-form" onSubmit={(event) => { event.preventDefault(); setSubmitted(true); }} className="mt-5 grid gap-3 sm:grid-cols-2">
                     <label className="grid gap-1.5 text-[10px] font-extrabold uppercase tracking-[.12em] text-[#675A71]">Name<input required name="name" className="min-h-12 rounded-2xl border border-[#DCD0EA] bg-white px-4 text-[13px] font-semibold normal-case tracking-normal text-[#2E0569] outline-none focus:border-[#8C52FF]" /></label>
                     <label className="grid gap-1.5 text-[10px] font-extrabold uppercase tracking-[.12em] text-[#675A71]">Email<input required type="email" name="email" className="min-h-12 rounded-2xl border border-[#DCD0EA] bg-white px-4 text-[13px] font-semibold normal-case tracking-normal text-[#2E0569] outline-none focus:border-[#8C52FF]" /></label>
                     <label className="grid gap-1.5 text-[10px] font-extrabold uppercase tracking-[.12em] text-[#675A71] sm:col-span-2">Enquiry type<select name="type" className="min-h-12 rounded-2xl border border-[#DCD0EA] bg-white px-4 text-[13px] font-semibold normal-case tracking-normal text-[#2E0569] outline-none focus:border-[#8C52FF]"><option>Distributor or dealer</option><option>Bulk purchase</option><option>Institutional supply</option><option>Private label</option><option>Product development</option><option>Contract manufacturing</option></select></label>
@@ -288,7 +288,7 @@ export function BusinessCTA() {
                 )}
               </div>
 
-              <div className="flex min-h-[320px] items-center justify-center rounded-r-[40px] bg-[#EDE4FF] p-6 sm:p-8 sm:min-h-[480px] lg:min-h-0 lg:p-10">
+              <div className="flex min-h-[280px] items-center justify-center rounded-r-[40px] bg-[#EDE4FF] p-5 sm:p-6 sm:min-h-[380px] lg:min-h-0 lg:p-8">
                 <div className="relative w-full">
                   <div className="overflow-hidden rounded-[24px] border border-[#D8CCF0] bg-white shadow-[0_16px_48px_rgba(46,5,105,.13)]">
                     <Image
@@ -340,7 +340,7 @@ export function Newsletter() {
                 <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[10px] font-extrabold uppercase tracking-[.15em]">
                   <Mail size={14} />Stay connected
                 </span>
-                <h2 className="mt-6 text-[clamp(42px,5vw,68px)] font-extrabold leading-[1] tracking-[-.055em]">Wellness worth coming back to.</h2>
+                <h2 className="mt-6 text-[clamp(28px,3.2vw,44px)] font-extrabold leading-[1.04] tracking-[-.055em]">Wellness worth coming back to.</h2>
                 <p className="mt-5 max-w-xl text-[14px] leading-[1.8] text-white/[.72]">Receive ingredient education, product stories, new collection updates and approved offers from Pradnyasanskar.</p>
 
                 {submitted ? (
