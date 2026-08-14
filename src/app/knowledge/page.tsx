@@ -433,6 +433,18 @@ function WhyTrust() {
 // ─── Newsletter Banner ────────────────────────────────────────────────────────
 
 function KnowledgeNewsletter() {
+  const [email, setEmail] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (email.trim()) {
+      setSubmitted(true);
+      setEmail("");
+      setTimeout(() => setSubmitted(false), 3000);
+    }
+  };
+
   return (
     <section className="bg-[#FFFDF7] py-14">
       <div className="container-page">
@@ -454,22 +466,36 @@ function KnowledgeNewsletter() {
               </div>
 
               {/* Form */}
-              <form onSubmit={(e) => e.preventDefault()} className="flex flex-col gap-3">
-                <div className="flex gap-2">
-                  <input
-                    type="email"
-                    placeholder="Enter your email address"
-                    className="h-12 flex-1 rounded-full border border-[#DDD3E5] bg-white px-5 text-[13px] text-[#2E0569] placeholder:text-[#B0A8BA] focus:border-[#8C52FF] focus:outline-none"
-                  />
-                  <button type="submit" className="btn-primary shrink-0">
-                    Subscribe
-                  </button>
+              {submitted ? (
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-start gap-3">
+                    <CheckCircle2 size={20} className="mt-0.5 shrink-0 text-[#8C52FF]" />
+                    <div>
+                      <p className="text-[13px] font-extrabold text-[#2E0569]">You're subscribed!</p>
+                      <p className="mt-1 text-[12px] leading-[1.6] text-[#716A78]">Thank you for joining. We'll be in touch soon.</p>
+                    </div>
+                  </div>
                 </div>
-                <p className="flex items-center gap-2 text-[11px] text-[#716A78]">
-                  <CheckCircle2 size={13} className="text-[#8C52FF]" />
-                  No spam. Unsubscribe anytime.
-                </p>
-              </form>
+              ) : (
+                <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+                  <div className="flex gap-2">
+                    <input
+                      type="email"
+                      placeholder="Enter your email address"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="h-12 flex-1 rounded-full border border-[#DDD3E5] bg-white px-5 text-[13px] text-[#2E0569] placeholder:text-[#B0A8BA] focus:border-[#8C52FF] focus:outline-none"
+                    />
+                    <button type="submit" className="btn-primary shrink-0">
+                      Subscribe
+                    </button>
+                  </div>
+                  <p className="flex items-center gap-2 text-[11px] text-[#716A78]">
+                    <CheckCircle2 size={13} className="text-[#8C52FF]" />
+                    No spam. Unsubscribe anytime.
+                  </p>
+                </form>
+              )}
 
               {/* Image */}
               <div className="hidden lg:block">

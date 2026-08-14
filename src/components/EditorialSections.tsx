@@ -189,9 +189,9 @@ export function IngredientsSection() {
 
 const articles = [
   { slug: "reading-a-supplement-label", category: "Ayurveda basics", title: "Understanding common Ayurvedic product formats", image: "/images/brand-story-2.webp", copy: "A clear introduction to capsules, oils, powders, syrups and traditional formats." },
-  { slug: "reading-a-supplement-label", category: "Nutraceutical education", title: "How to read a composition panel", image: "/images/brand-story-4.webp", copy: "Learn how serving size, ingredient quantity and product classification fit together." },
-  { slug: "daily-wellness-routines", category: "Responsible use", title: "Why directions and warnings matter", image: "/images/lifestyle-4.webp", copy: "A practical guide to locating and understanding approved product information." },
-  { slug: "daily-wellness-routines", category: "Everyday wellness", title: "Building a routine without overcomplicating it", image: "/images/lifestyle-8.webp", copy: "Start with simple product discovery and keep information-led choices at the centre." },
+  { slug: "how-to-read-a-composition-panel", category: "Nutraceutical education", title: "How to read a composition panel", image: "/images/brand-story-4.webp", copy: "Learn how serving size, ingredient quantity and product classification fit together." },
+  { slug: "why-directions-and-warnings-matter", category: "Responsible use", title: "Why directions and warnings matter", image: "/images/lifestyle-4.webp", copy: "A practical guide to locating and understanding approved product information." },
+  { slug: "building-a-routine-without-overcomplicating-it", category: "Everyday wellness", title: "Building a routine without overcomplicating it", image: "/images/lifestyle-8.webp", copy: "Start with simple product discovery and keep information-led choices at the centre." },
 ];
 
 export function KnowledgeSection() {
