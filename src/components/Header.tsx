@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -180,7 +181,6 @@ export function Header() {
           {[
             ["Ayurveda", "/shop/ayurveda"],
             ["Nutraceuticals", "/shop/nutraceuticals"],
-            ["Wellness goals", "/#wellness-focus"],
             ["Routines", "/#routines"],
             ["Ingredients", "/ingredients"],
             ["Knowledge", "/knowledge"],
@@ -312,104 +312,109 @@ export function Header() {
         )}
       </AnimatePresence>
 
-      {/* Mobile drawer */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <>
-            <motion.button
-              aria-label="Close navigation"
-              onClick={() => setMobileOpen(false)}
-              className="fixed inset-0 z-[80] bg-[#21182B]/[.50] backdrop-blur-sm"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
-            />
-            <motion.aside
-              initial={{ x: "-100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "-100%" }}
-              transition={{ type: "spring", damping: 28, stiffness: 260 }}
-              className="fixed inset-y-0 left-0 z-[90] flex w-[min(92vw,420px)] flex-col bg-[#FFFDF7] shadow-[24px_0_80px_rgba(46,5,105,.18)]"
-            >
-              {/* Drawer header */}
-              <div className="flex items-center justify-between border-b border-[#E9E3EE] px-5 py-4">
-                <div className="relative h-12 w-52">
-                  <Image src="/logo.png" alt="Pradnyasanskar" fill className="object-contain object-left" />
+      {/* Mobile drawer — rendered via portal to escape header's backdrop-filter stacking context */}
+      {typeof document !== "undefined" && createPortal(
+        <AnimatePresence>
+          {mobileOpen && (
+            <>
+              <motion.button
+                aria-label="Close navigation"
+                onClick={() => setMobileOpen(false)}
+                className="fixed inset-0 z-[80] bg-[#21182B]/[.50] backdrop-blur-sm"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.25 }}
+              />
+              <motion.aside
+                initial={{ x: "-100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "-100%" }}
+                transition={{ type: "spring", damping: 28, stiffness: 260 }}
+                className="fixed inset-y-0 left-0 z-[90] flex w-[min(92vw,420px)] flex-col bg-[#FFFDF7] shadow-[24px_0_80px_rgba(46,5,105,.18)]"
+              >
+                {/* Drawer header */}
+                <div className="flex items-center justify-between border-b border-[#E9E3EE] px-5 py-4">
+                  <div className="relative h-12 w-52">
+                    <Image src="/logo.png" alt="Pradnyasanskar" fill className="object-contain object-left" />
+                  </div>
+                  <button
+                    className="grid h-10 w-10 place-items-center rounded-full border border-[#E9E3EE] bg-white text-[#2E0569] transition hover:border-[#8C52FF] hover:text-[#8C52FF]"
+                    onClick={() => setMobileOpen(false)}
+                    aria-label="Close navigation"
+                  >
+                    <X size={18} />
+                  </button>
                 </div>
-                <button
-                  className="grid h-10 w-10 place-items-center rounded-full border border-[#E9E3EE] bg-white text-[#2E0569] transition hover:border-[#8C52FF] hover:text-[#8C52FF]"
-                  onClick={() => setMobileOpen(false)}
-                  aria-label="Close navigation"
-                >
-                  <X size={18} />
-                </button>
-              </div>
 
-              {/* Search bar */}
-              <div className="p-5">
-                <button
-                  onClick={() => { setMobileOpen(false); setSearchOpen(true); }}
-                  className="flex min-h-12 w-full items-center gap-3 rounded-full border border-[#E9E3EE] bg-white px-5 text-left text-[13px] font-semibold text-[#716A78] transition hover:border-[#8C52FF]"
-                >
-                  <Search size={17} className="text-[#8C52FF]" />
-                  Search products, goals or ingredients
-                </button>
-              </div>
+                {/* Search bar */}
+                <div className="p-5">
+                  <button
+                    onClick={() => { setMobileOpen(false); setSearchOpen(true); }}
+                    className="flex min-h-12 w-full items-center gap-3 rounded-full border border-[#E9E3EE] bg-white px-5 text-left text-[13px] font-semibold text-[#716A78] transition hover:border-[#8C52FF]"
+                  >
+                    <Search size={17} className="text-[#8C52FF]" />
+                    Search products, goals or ingredients
+                  </button>
+                </div>
 
-              {/* Nav links */}
-              <nav className="flex-1 overflow-y-auto px-5 pb-8">
-                {[
-                  ["Shop all", "/shop"],
-                  ["Ayurveda", "/shop/ayurveda"],
-                  ["Nutraceuticals", "/shop/nutraceuticals"],
-                  ["Knowledge", "/knowledge"],
-                  ["Quality", "/quality"],
-                  ["About us", "/about"],
-                  ["Contact", "/contact"],
-                  ["Business enquiry", "/b2b"],
-                  ["Policies", "/policies"],
-                ].map(([label, href]) => {
-                  const active = pathname === href || pathname.startsWith(href + "/");
-                  return (
-                    <a
-                      key={label}
-                      href={href}
-                      onClick={() => setMobileOpen(false)}
-                      className={`flex min-h-[56px] items-center justify-between border-b border-[#F0EAF4] text-[15px] font-extrabold transition hover:text-[#8C52FF] ${
-                        active ? "text-[#8C52FF]" : "text-[#2E0569]"
-                      }`}
-                    >
-                      {label}
-                      <ArrowUpRight size={15} className={active ? "text-[#8C52FF]" : "text-[#8C52FF]/60"} />
-                    </a>
-                  );
-                })}
-              </nav>
+                {/* Nav links */}
+                <nav className="flex-1 overflow-y-auto px-5 pb-8">
+                  {[
+                    ["Shop all", "/shop"],
+                    ["Ayurveda", "/shop/ayurveda"],
+                    ["Nutraceuticals", "/shop/nutraceuticals"],
+                    ["Routines", "/#routines"],
+                    ["Ingredients", "/ingredients"],
+                    ["Knowledge", "/knowledge"],
+                    ["Our story", "/about"],
+                    ["Quality", "/quality"],
+                    ["Contact", "/contact"],
+                    ["Business enquiry", "/b2b"],
+                    ["Policies", "/policies"],
+                  ].map(([label, href]) => {
+                    const active = pathname === href || pathname.startsWith(href + "/");
+                    return (
+                      <a
+                        key={label}
+                        href={href}
+                        onClick={() => setMobileOpen(false)}
+                        className={`flex min-h-[56px] items-center justify-between border-b border-[#F0EAF4] text-[15px] font-extrabold transition hover:text-[#8C52FF] ${
+                          active ? "text-[#8C52FF]" : "text-[#2E0569]"
+                        }`}
+                      >
+                        {label}
+                        <ArrowUpRight size={15} className={active ? "text-[#8C52FF]" : "text-[#8C52FF]/60"} />
+                      </a>
+                    );
+                  })}
+                </nav>
 
-              {/* Drawer footer CTA */}
-              <div className="border-t border-[#E9E3EE] bg-gradient-to-br from-[#F2EBFF] to-[#EDE4FF] p-5">
-                <div className="flex items-center gap-2">
-                  <Sparkles size={14} className="text-[#8C52FF]" />
-                  <p className="text-[11px] font-extrabold uppercase tracking-[.14em] text-[#8C52FF]">
-                    Pradnyasanskar community
+                {/* Drawer footer CTA */}
+                <div className="border-t border-[#E9E3EE] bg-gradient-to-br from-[#F2EBFF] to-[#EDE4FF] p-5">
+                  <div className="flex items-center gap-2">
+                    <Sparkles size={14} className="text-[#8C52FF]" />
+                    <p className="text-[11px] font-extrabold uppercase tracking-[.14em] text-[#8C52FF]">
+                      Pradnyasanskar community
+                    </p>
+                  </div>
+                  <p className="mt-2 text-[13px] leading-relaxed text-[#5F5765]">
+                    Join for product stories, ingredient education and collection updates.
                   </p>
+                  <a
+                    href="/#newsletter"
+                    onClick={() => setMobileOpen(false)}
+                    className="btn-primary mt-4 w-full"
+                  >
+                    Join the community
+                  </a>
                 </div>
-                <p className="mt-2 text-[13px] leading-relaxed text-[#5F5765]">
-                  Join for product stories, ingredient education and collection updates.
-                </p>
-                <a
-                  href="/#newsletter"
-                  onClick={() => setMobileOpen(false)}
-                  className="btn-primary mt-4 w-full"
-                >
-                  Join the community
-                </a>
-              </div>
-            </motion.aside>
-          </>
-        )}
-      </AnimatePresence>
+              </motion.aside>
+            </>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </header>
   );
 }

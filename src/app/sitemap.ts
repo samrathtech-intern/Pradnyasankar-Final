@@ -17,12 +17,16 @@ const STATIC_ROUTES = [
 ];
 
 const KNOWLEDGE_SLUGS = [
-  "understanding-ashwagandha",
+  "understanding-ayurvedic-product-formats",
   "ayurveda-vs-nutraceuticals",
+  "how-to-read-a-composition-panel",
+  "gut-health-basics",
+  "why-directions-and-warnings-matter",
+  "understanding-ashwagandha",
+  "building-a-routine-without-overcomplicating-it",
   "reading-a-supplement-label",
   "daily-wellness-routines",
   "turmeric-curcumin-guide",
-  "gut-health-basics",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

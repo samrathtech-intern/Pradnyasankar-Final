@@ -10,18 +10,18 @@ import { Reveal } from "./Reveal";
 export function FAQ() {
   const [open, setOpen] = useState(0);
   return (
-    <section id="faq" className="bg-[#FAF7FF] py-20 sm:py-28">
+    <section id="faq" className="bg-[#FAF7FF] py-10 sm:py-14">
       <div className="container-page">
-        <div className="grid gap-10 lg:grid-cols-[.75fr_1.25fr]">
+        <div className="grid gap-8 lg:grid-cols-[.75fr_1.25fr]">
           <Reveal>
             <div className="lg:sticky lg:top-28">
               <span className="eyebrow">Frequently asked questions</span>
-              <h2 className="section-heading mt-5">Questions? Let’s make wellness clearer.</h2>
-              <p className="mt-5 max-w-md text-[14px] leading-[1.8] text-[#716A78]">Find quick answers about product ranges, information, shopping and support.</p>
-              <a href="#newsletter" className="btn-primary mt-7">Join the community</a>
+              <h2 className="text-[clamp(28px,3.2vw,44px)] font-extrabold leading-[1.04] tracking-[-.05em] text-[#2E0569] mt-3">Questions? Let’s make wellness clearer.</h2>
+              <p className="mt-3 max-w-md text-[14px] leading-[1.8] text-[#716A78]">Find quick answers about product ranges, information, shopping and support.</p>
+              <a href="#newsletter" className="btn-primary mt-5">Join the community</a>
             </div>
           </Reveal>
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {faqs.map(([question, answer], index) => (
               <Reveal key={question} delay={index * .04}>
                 <article className="overflow-hidden rounded-[24px] border border-[#E9E3EE] bg-white">

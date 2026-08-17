@@ -66,10 +66,10 @@ export function Hero() {
       </div>
 
       {/* ── Main content grid ── */}
-      <div className="container-page relative z-10 grid min-h-[780px] items-center gap-12 py-16 lg:grid-cols-[.9fr_1.1fr] lg:py-24 xl:min-h-[860px]">
+      <div className="container-page relative z-10 grid min-h-[540px] items-start gap-8 py-8 lg:grid-cols-[.9fr_1.1fr] lg:py-10 xl:min-h-[580px]">
 
         {/* Left: Text content */}
-        <div className="relative max-w-[700px]">
+        <div className="relative max-w-[700px] lg:pt-6">
           <AnimatePresence mode="wait">
             <motion.div
               key={slide.id}
@@ -89,7 +89,7 @@ export function Hero() {
               </motion.span>
 
               {/* Headline */}
-              <h1 className="mt-7 text-[clamp(50px,6.4vw,92px)] font-extrabold leading-[.94] tracking-[-.068em] text-[#21182B] drop-shadow-[0_2px_24px_rgba(255,253,247,.15)]">
+              <h1 className="mt-2 text-[clamp(30px,3.8vw,52px)] font-extrabold leading-[1.04] tracking-[-.052em] text-[#21182B] drop-shadow-[0_2px_24px_rgba(255,253,247,.15)]">
                 {slide.titleLead}
                 <br />
                 <span className="relative inline-block font-display font-semibold italic text-[#8C52FF]">
@@ -114,12 +114,12 @@ export function Hero() {
               </h1>
 
               {/* Body copy */}
-              <p className="mt-8 max-w-[600px] text-[15px] leading-[1.9] text-[#3D3244] sm:text-[17px]">
+              <p className="mt-3 max-w-[560px] text-[14px] leading-[1.65] text-[#3D3244] sm:text-[15px]">
                 {slide.copy}
               </p>
 
               {/* CTA buttons */}
-              <div className="mt-9 flex flex-wrap gap-3">
+              <div className="mt-4 flex flex-wrap gap-3">
                 <a href="#featured" className="btn-primary group">
                   {slide.primary}
                   <ArrowRight size={17} className="transition-transform duration-300 group-hover:translate-x-1" />
@@ -133,7 +133,7 @@ export function Hero() {
               </div>
 
               {/* Trust badges */}
-              <div className="mt-10 grid max-w-[680px] grid-cols-2 gap-3 border-t border-[#2E0569]/[.12] pt-7 sm:flex sm:flex-wrap sm:gap-x-6">
+              <div className="mt-4 grid max-w-[680px] grid-cols-2 gap-2 border-t border-[#2E0569]/[.12] pt-3 sm:flex sm:flex-wrap sm:gap-x-6">
                 {["Ayurveda", "Nutraceuticals", "Clear composition", "Responsible information"].map((item) => (
                   <span
                     key={item}
@@ -148,7 +148,7 @@ export function Hero() {
         </div>
 
         {/* Right: Image composition */}
-        <div className="relative min-h-[560px] sm:min-h-[660px] lg:min-h-[710px]">
+        <div className="relative min-h-[320px] sm:min-h-[420px] lg:min-h-[520px] lg:pt-4">
 
           {/* ── Ambient depth glow — sits behind the blob, fills dead space ── */}
           <div
@@ -353,7 +353,7 @@ export function Hero() {
 
       {/* ── Wave divider ── */}
       <svg
-        className="relative z-10 block h-16 w-full text-[#FFFDF7] sm:h-24"
+        className="relative z-10 block h-10 w-full text-[#FFFDF7] sm:h-14"
         viewBox="0 0 1440 120"
         preserveAspectRatio="none"
         aria-hidden="true"
@@ -382,7 +382,7 @@ export function TrustMarquee() {
   return (
     <section
       aria-label="Why Pradnyasanskar"
-      className="relative overflow-hidden border-y border-[#E9E3EE] bg-white py-5 sm:py-7"
+      className="relative overflow-hidden border-y border-[#E9E3EE] bg-white py-3 sm:py-4"
     >
       {/* Fade edges */}
       <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-white to-transparent" />
@@ -392,7 +392,7 @@ export function TrustMarquee() {
         {repeated.map((item, index) => (
           <div key={`${item}-${index}`} className="flex shrink-0 items-center">
             <span
-              className={`px-5 text-[clamp(28px,3.8vw,56px)] font-extrabold leading-none tracking-[-.055em] transition-colors duration-300 ${
+              className={`px-4 text-[clamp(18px,2.4vw,36px)] font-extrabold leading-none tracking-[-.055em] transition-colors duration-300 ${
                 index % 2 === 0 ? "text-[#2E0569]" : "trust-outline-text"
               }`}
             >
@@ -400,7 +400,7 @@ export function TrustMarquee() {
             </span>
             <span
               aria-hidden="true"
-              className="mx-3 text-[clamp(22px,2.8vw,42px)] font-light text-[#8C52FF]/60"
+              className="mx-2 text-[clamp(14px,1.8vw,28px)] font-light text-[#8C52FF]/60"
             >
               ✦
             </span>

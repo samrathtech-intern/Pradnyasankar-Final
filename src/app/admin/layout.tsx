@@ -69,7 +69,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <AdminAuthGuard>
-      <div className="flex min-h-screen bg-[#FAFAFA]">
+      <div className="flex h-screen overflow-hidden bg-[#FAFAFA]">
         <Sidebar />
         <main className="flex-1 overflow-y-auto p-8">{children}</main>
       </div>
