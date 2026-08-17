@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Eye, EyeOff, Loader2, Lock, Mail, User } from "lucide-react";
+import { Eye, EyeOff, Loader2, Lock, Mail, Phone, User } from "lucide-react";
 import { useAuth } from "@/components/AuthContext";
 
 export function RegisterForm() {
@@ -14,15 +14,17 @@ export function RegisterForm() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState<{ name?: string; email?: string; password?: string; confirm?: string }>({});
+  const [errors, setErrors] = useState<{ name?: string; email?: string; mobile?: string; password?: string; confirm?: string }>({});
 
   function validate() {
     const e: typeof errors = {};
     if (!name.trim()) e.name = "Full name is required.";
     if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = "Valid email is required.";
+    if (!mobile.trim() || !/^[0-9]{10}$/.test(mobile)) e.mobile = "Mobile number must be 10 digits.";
     if (!password || password.length < 6) e.password = "Password must be at least 6 characters.";
     if (password !== confirm) e.confirm = "Passwords do not match.";
     setErrors(e);
@@ -34,7 +36,7 @@ export function RegisterForm() {
     clearAuthError();
     if (!validate()) return;
     try {
-      await register(name, email, password);
+      await register(name, email, mobile, password);
       router.push(redirect);
     } catch {}
   }
@@ -91,6 +93,27 @@ export function RegisterForm() {
                 />
               </div>
               {errors.email && <p className="mt-1 text-[11px] font-semibold text-red-500">{errors.email}</p>}
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-[11px] font-extrabold uppercase tracking-[.1em] text-[#2E0569]">Mobile number</label>
+              <div className="relative">
+                <Phone size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8C52FF]" />
+                <input
+                  type="tel"
+                  value={mobile}
+                  onChange={(e) => { 
+                    const value = e.target.value.replace(/\D/g, '').slice(0, 10);
+                    setMobile(value); 
+                    setErrors((v) => ({ ...v, mobile: undefined })); 
+                  }}
+                  placeholder="10-digit mobile number"
+                  maxLength={10}
+                  className={`${inputCls(errors.mobile)} pl-10`}
+                  autoComplete="tel"
+                />
+              </div>
+              {errors.mobile && <p className="mt-1 text-[11px] font-semibold text-red-500">{errors.mobile}</p>}
             </div>
 
             <div>

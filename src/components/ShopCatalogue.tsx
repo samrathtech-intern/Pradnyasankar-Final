@@ -2,7 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useRef, useState } from "react";
+import {
+  getCategories, getProductByCategory, type Category
+} from "@/lib/categoryApi";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
@@ -98,6 +101,7 @@ export function ShopCatalogue({
 
   const [activeRange, setActiveRange] = useState<"all" | ProductRange>(range);
   const [format, setFormat] = useState(initialFormat && FORMATS.includes(initialFormat) ? initialFormat : "All formats");
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [goal, setGoal] = useState(initialGoal && GOALS.includes(initialGoal) ? initialGoal : "All goals");
   const [sort, setSort] = useState<SortKey>("default");
   const [query, setQuery] = useState("");
@@ -109,6 +113,56 @@ export function ShopCatalogue({
   const [maxInput, setMaxInput] = useState(String(PRICE_MAX));
   const lastTrackedQuery = useRef("");
   const queryRef = useRef("");
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [categoryProducts, setCategoryProducts] = useState<any[]>([]);
+  const [loadingCategories, setLoadingCategories] = useState(true);
+  const[loadingProducts, setLoadingProducts] = useState(false);
+
+  useEffect(() => {
+    async function loadCategories(){
+      try{
+        const data = await getCategories();
+        setCategories(data.filter((category) => category.isActive));
+      } catch(error){
+        console.error("Failed to load categories:", error);
+      } finally{
+        setLoadingCategories(false);
+      }
+    }
+
+    loadCategories();
+  }, []);
+
+  <select
+  value={selectedCategory}
+  onChange={(e) => setSelectedCategory(e.target.value)}
+  disabled={loadingCategories}
+>
+  <option value="all">All Categories</option>
+
+  {categories.map((category) => (
+    <option
+      key={category.categoryId}
+      value={category.categoryId}
+    >
+      {category.categoryName}
+    </option>
+  ))}
+</select>
+
+  const handleCategoryClick = async (categoryId: number) => {
+    try{
+      setLoadingProducts(true);
+
+      const data = await getProductByCategory(categoryId);
+
+      setCategoryProducts(data);
+    } catch(error){
+      console.error("Failed to load products by category:", error);
+    } finally{
+      setLoadingProducts(false);
+    }
+  };
 
   function setQueryAndRef(val: string) {
     queryRef.current = val;
@@ -198,6 +252,10 @@ export function ShopCatalogue({
     setGoal(val);
     pushFilterEvent("goal", val);
   }
+  function handleCategoryChange(value: string) {
+  setSelectedCategory(value);
+  pushFilterEvent("category", value);
+}
   function handleSortChange(val: SortKey) {
     setSort(val);
     pushFilterEvent("sort", val);
@@ -256,6 +314,35 @@ export function ShopCatalogue({
             );
           })}
         </div>
+
+        <div className="mt-6 flex flex-wrap gap-2">
+  {loadingCategories ? (
+    <p>Loading categories...</p>
+  ) : (
+    categories.map((category) => (
+      <button
+        key={category.categoryId}
+        onClick={() => handleCategoryClick(category.categoryId)}
+        className="rounded-full border border-[#E9E3EE] bg-white px-4 py-2 text-sm"
+      >
+        {category.categoryName}
+      </button>
+    ))
+  )}
+</div>
+
+{loadingProducts && <p className="mt-4">Loading products...</p>}
+
+{categoryProducts.length > 0 && (
+  <div className="mt-6">
+    {categoryProducts.map((product) => (
+      <div key={product.productId}>
+        <h3>{product.productName}</h3>
+        <p>{product.categoryName}</p>
+      </div>
+    ))}
+  </div>
+)}
 
         {/* ── Toolbar ── */}
         <div className="mt-6 flex flex-wrap items-center gap-3">

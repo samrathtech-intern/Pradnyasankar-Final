@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { PageLayout } from "@/components/PageLayout";
 import { Reveal } from "@/components/Reveal";
+import { getContentPageBySlug } from "@/lib/contentPageApi";
 
 export const metadata: Metadata = {
   title: "Shipping Policy | Pradnyasanskar",
@@ -20,7 +21,11 @@ const SECTIONS = [
   { heading: "Cash on delivery", body: "Cash on delivery (COD) is not available at this time. All orders must be paid online through Razorpay at checkout." },
 ];
 
-export default function ShippingPolicyPage() {
+export default async function ShippingPolicyPage() {
+  const shippingPage = await getContentPageBySlug("shipping");
+
+  console.log("Backend Shipping Page:", shippingPage);
+
   return (
     <PageLayout>
       <div className="min-h-screen bg-[#FFFDF7]">
