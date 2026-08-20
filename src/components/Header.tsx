@@ -236,7 +236,7 @@ export function Header() {
           {user ? (
             <div className="hidden items-center gap-2 sm:flex">
               <span className="max-w-[100px] truncate text-[11px] font-extrabold text-[#2E0569]">
-                {user?.firstName || user?.name?.split(" ")[0] || "User"}
+                {user?.firstName || "User"}
               </span>
               <button
                 onClick={() => logout()}

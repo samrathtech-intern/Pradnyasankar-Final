@@ -3,7 +3,6 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { PageLayout } from "@/components/PageLayout";
 import { Reveal } from "@/components/Reveal";
-import { getContentPageBySlug } from "@/lib/contentPageApi";
 
 export const metadata: Metadata = {
   title: "Returns & Refunds | Pradnyasanskar",
@@ -22,10 +21,7 @@ const SECTIONS = [
   { heading: "Defective or wrong products", body: "If you receive a defective or incorrectly shipped product, contact us within 48 hours of delivery with photographs. We will arrange a replacement or full refund at no additional cost to you." },
 ];
 
-export default async function ReturnsPolicyPage() {
-  const returnsPage = await getContentPageBySlug("returns");
-
-  console.log("Backend Returns Page:", returnsPage);
+export default function ReturnsPolicyPage() {
   return (
     <PageLayout>
       <div className="min-h-screen bg-[#FFFDF7]">

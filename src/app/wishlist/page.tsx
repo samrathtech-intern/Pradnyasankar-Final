@@ -41,10 +41,7 @@ export default function WishlistPage() {
         setLoading(true);
         setError("");
 
-        const data = await getWishlist(
-          user.userId,
-          token
-        );
+        const data = await getWishlist(Number(user.userId));
 
         setWishlist(data);
       } catch (err) {
@@ -74,11 +71,7 @@ export default function WishlistPage() {
       setRemovingId(variantId);
       setError("");
 
-      await removeFromWishlist(
-        user.userId,
-        variantId,
-        token
-      );
+      await removeFromWishlist(Number(user.userId), variantId);
 
       // Remove immediately from UI
       setWishlist((current) =>

@@ -3,7 +3,6 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { PageLayout } from "@/components/PageLayout";
 import { Reveal } from "@/components/Reveal";
-import { getContentPageBySlug } from "@/lib/contentPageApi";
 
 export const metadata: Metadata = {
   title: "Terms of Use | Pradnyasanskar",
@@ -23,11 +22,7 @@ const SECTIONS = [
   { heading: "Contact", body: "For questions about these terms, contact us through the Contact page on this website." },
 ];
 
-export default async function TermsPage() {
-const termsPage = await getContentPageBySlug("terms-of-use");
-
-console.log("Backend Terms Page:", termsPage);
-
+export default function TermsPage() {
   return (
     <PageLayout>
       <div className="min-h-screen bg-[#FFFDF7]">

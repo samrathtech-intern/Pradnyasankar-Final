@@ -133,23 +133,6 @@ export function ShopCatalogue({
     loadCategories();
   }, []);
 
-  <select
-  value={selectedCategory}
-  onChange={(e) => setSelectedCategory(e.target.value)}
-  disabled={loadingCategories}
->
-  <option value="all">All Categories</option>
-
-  {categories.map((category) => (
-    <option
-      key={category.categoryId}
-      value={category.categoryId}
-    >
-      {category.categoryName}
-    </option>
-  ))}
-</select>
-
   const handleCategoryClick = async (categoryId: number) => {
     try{
       setLoadingProducts(true);
