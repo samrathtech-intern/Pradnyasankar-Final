@@ -2,8 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { getBlogs, Blog } from "@/lib/blogApi";
+import { useState } from "react";
 import {
   ArrowRight,
   BookOpen,
@@ -516,16 +515,12 @@ function KnowledgeNewsletter() {
   );
 }
 
-// ─── All Articles Grid (filtered) ────────────────────────────────────────────
+// ─── All Articles Grid ────────────────────────────────────────────────────────
 
-function ArticlesGrid({
-  active,
-  blogs,
-}: {
-  active: string;
-  blogs: Blog[];
-}) {
-  const filtered = blogs;
+function ArticlesGrid({ active }: { active: string }) {
+  const filtered = active === "all"
+    ? ARTICLES
+    : ARTICLES.filter((a) => a.category === active);
 
   if (filtered.length === 0) return null;
 
@@ -533,40 +528,33 @@ function ArticlesGrid({
     <section id="articles-grid" className="bg-[#FFFDF7] pb-10">
       <div className="container-page">
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((blog, i) => (
-            <Reveal key={blog.blogId} delay={i * 0.05}>
+          {filtered.map((article, i) => (
+            <Reveal key={article.slug} delay={i * 0.05}>
               <Link
-                href={`/knowledge/${blog.slug}`}
+                href={`/knowledge/${article.slug}`}
                 className="group flex h-full flex-col overflow-hidden rounded-[22px] border border-[#E9E3EE] bg-white transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(46,5,105,.10)]"
               >
                 <div className="relative aspect-[3/2] w-full overflow-hidden">
                   <Image
-                    src={blog.featuredImageUrl}
-                    alt={blog.title}
+                    src={article.image}
+                    alt={article.title}
                     fill
                     className="object-cover transition duration-500 group-hover:scale-105"
                   />
                 </div>
-
                 <div className="flex flex-1 flex-col p-5">
-                  <p className="text-[10px] font-extrabold uppercase tracking-[.12em] text-[#8B8292]">
-                    {blog.authorName}
+                  <p className="text-[10px] font-extrabold uppercase tracking-[.12em] text-[#8C52FF]">
+                    {article.category}
                   </p>
-
                   <h3 className="mt-2 text-[15px] font-extrabold leading-tight tracking-[-0.03em] text-[#2E0569] transition group-hover:text-[#8C52FF]">
-                    {blog.title}
+                    {article.title}
                   </h3>
-
                   <p className="mt-2 flex-1 text-[12.5px] leading-relaxed text-[#716A78] line-clamp-2">
-                    {blog.summary}
+                    {article.excerpt}
                   </p>
-
                   <div className="mt-4 flex items-center gap-1.5 border-t border-[#F0EAF4] pt-4 text-[11px] font-extrabold text-[#8C52FF]">
                     Read article
-                    <ArrowRight
-                      size={12}
-                      className="transition-transform group-hover:translate-x-1"
-                    />
+                    <ArrowRight size={12} className="transition-transform group-hover:translate-x-1" />
                   </div>
                 </div>
               </Link>
@@ -583,60 +571,17 @@ function ArticlesGrid({
 export default function KnowledgePage() {
   const [activeTopic, setActiveTopic] = useState("all");
 
-  const [blogs, setBlogs] = useState<Blog[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  console.log("Blogs from backend:", blogs);
-
-  useEffect(() => {
-  async function loadBlogs() {
-    try {
-      const data = await getBlogs();
-
-      console.log("DATA RECEIVED FROM API:", data);
-      console.log("NUMBER OF BLOGS:", data.length);
-
-      setBlogs(data);
-    } catch (error) {
-      console.error("Failed to load blogs:", error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  loadBlogs();
-}, []);
-
   return (
     <PageLayout>
       <div className="min-h-screen bg-[#FFFDF7]">
         <KnowledgeHero onTopicClick={setActiveTopic} />
- HEAD
 
         <TopicFilterBar
           active={activeTopic}
           setActive={setActiveTopic}
         />
 
-        {activeTopic !== "all" && (
-  <ArticlesGrid
-    active={activeTopic}
-    blogs={blogs}
-  />
-)}
-
-        <BrowseByTopic onExplore={setActiveTopic} />
-
-
-                <TopicFilterBar
-          active={activeTopic}
-          setActive={setActiveTopic}
-        />
-
-        <ArticlesGrid
-          active={activeTopic}
-          blogs={blogs}
-        />
+        <ArticlesGrid active={activeTopic} />
 
         <BrowseByTopic onExplore={setActiveTopic} />
 

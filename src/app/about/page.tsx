@@ -3,7 +3,6 @@ import Image from "next/image";
 import { ArrowRight, Brain, Leaf, ShieldCheck } from "lucide-react";
 import { PageLayout } from "@/components/PageLayout";
 import { Reveal } from "@/components/Reveal";
-import { getContentPageBySlug } from "@/lib/contentPageApi";
 
 export const metadata: Metadata = {
   title: "About Pradnyasanskar | Thoughtful Ayurveda & Nutraceutical Wellness",
@@ -23,10 +22,7 @@ const TIMELINE = [
   { year: "Today", title: "Growing with integrity", copy: "As we expand our catalogue and reach, our commitment to approved content, transparent composition and responsible product information remains unchanged." },
 ];
 
-export default async function AboutPage() {
-
-  const aboutPage = await getContentPageBySlug("about-us");
-
+export default function AboutPage() {
   return (
     <PageLayout>
       <div className="min-h-screen bg-[#FFFDF7]">
