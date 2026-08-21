@@ -12,7 +12,8 @@ import {
 import { Product } from "@/data";
 import { Order } from "@/lib/orders";
 import { trackAddToCart } from "@/lib/analytics";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "@/components/AuthContext";
+
 
 import {
   addToCart as apiAddToCart,
@@ -22,7 +23,17 @@ import {
   clearCart as apiClearCart,
   checkoutCart as apiCheckoutCart,
   type CartItemDTO,
+  type CheckoutResponseDTO,
 } from "@/lib/cartApi";
+
+
+// export interface CheckoutOrderResponse {
+//   orderId: number;
+//   razorpayOrderId: string;
+//   amount: number;
+//   currency: string;
+//   status: string;
+// }
 
 import { fetchProducts } from "@/lib/productApi";
 
@@ -54,7 +65,11 @@ type AppContextValue = {
   updateBagQty: (id: string, qty: number) => void;
   clearBag: () => void;
 
-  checkoutCart: () => Promise<void>;
+
+  
+  checkoutCart: (
+  checkoutData: CheckoutRequest
+) => Promise<CheckoutResponseDTO>;
 
   toggleSaved: (id: string) => void;
 
@@ -68,6 +83,20 @@ type AppContextValue = {
       | Omit<Order, "id" | "placedAt" | "status">
       | null
   ) => void;
+};
+
+export type CheckoutRequest = {
+  fullName: string;
+  mobileNumber: string;
+  addressLine1: string;
+  addressLine2: string;
+  landmark: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  notes: string;
+  couponCode: string | null;
 };
 
 const AppContext = createContext<AppContextValue | null>(null);
@@ -807,57 +836,51 @@ export function AppProvider({
       // CHECKOUT
       // ========================================================
 
-      checkoutCart: async () => {
+  checkoutCart: async (checkoutData) => {
 
-        if (!user) {
+  if (!user) {
+    throw new Error(
+      "Please login before checkout."
+    );
+  }
 
-          throw new Error(
-            "Please login before checkout."
-          );
+  if (!authToken) {
+    throw new Error(
+      "Authentication token missing."
+    );
+  }
 
-        }
+  setCartError("");
+  setCartLoading(true);
 
+  try {
 
-        if (!authToken) {
+    const order = await apiCheckoutCart(
+        checkoutData,
+        authToken
+    );
 
-          throw new Error(
-            "Authentication token missing."
-          );
+    //setBag([]);
 
-        }
+    return order;
 
+  } catch (err: unknown) {
 
-        setCartError("");
-        setCartLoading(true);
+    const message =
+      err instanceof Error
+        ? err.message
+        : "Checkout failed.";
 
+    setCartError(message);
 
-        try {
+    throw err;
 
-          await apiCheckoutCart(
-            authToken
-          );
+  } finally {
 
-          setBag([]);
+    setCartLoading(false);
 
-        } catch (err: unknown) {
-
-          const message =
-            err instanceof Error
-              ? err.message
-              : "Checkout failed.";
-
-          setCartError(message);
-
-          throw err;
-
-        } finally {
-
-          setCartLoading(false);
-
-        }
-
-      },
-
+  }
+},
 
       // ========================================================
       // SAVED
@@ -938,3 +961,4 @@ export function useApp() {
 
   return context;
 }
+

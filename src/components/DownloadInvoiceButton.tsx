@@ -3,25 +3,55 @@
 import { useState } from "react";
 import { Download, Loader2 } from "lucide-react";
 import { downloadInvoice } from "@/lib/invoiceApi";
+import { useAuth } from "@/components/AuthContext";
 
 type Props = {
   orderId: string;
   variant?: "primary" | "ghost";
 };
 
-export function DownloadInvoiceButton({ orderId, variant = "ghost" }: Props) {
-  const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
+export function DownloadInvoiceButton({
+  orderId,
+  variant = "ghost",
+}: Props) {
+  const { token } = useAuth();
+
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "error"
+  >("idle");
+
   const [errorMsg, setErrorMsg] = useState("");
 
   async function handleClick() {
+    if (!orderId) {
+      setStatus("error");
+      setErrorMsg("Order ID is missing.");
+      return;
+    }
+
+    if (!token) {
+      setStatus("error");
+      setErrorMsg("Please log in to download your invoice.");
+      return;
+    }
+
     setStatus("loading");
     setErrorMsg("");
+
     try {
-      await downloadInvoice(orderId);
+      await downloadInvoice(orderId, token);
+
       setStatus("idle");
     } catch (err) {
+      console.error("Invoice download error:", err);
+
       setStatus("error");
-      setErrorMsg(err instanceof Error ? err.message : "Could not download invoice.");
+
+      setErrorMsg(
+        err instanceof Error
+          ? err.message
+          : "Could not download invoice."
+      );
     }
   }
 
@@ -32,15 +62,32 @@ export function DownloadInvoiceButton({ orderId, variant = "ghost" }: Props) {
 
   return (
     <div className="flex flex-col gap-1">
-      <button onClick={handleClick} disabled={status === "loading"} className={base}>
+      <button
+        type="button"
+        onClick={handleClick}
+        disabled={status === "loading"}
+        className={base}
+      >
         {status === "loading" ? (
-          <><Loader2 size={13} className="animate-spin" /> Downloading…</>
+          <>
+            <Loader2
+              size={13}
+              className="animate-spin"
+            />
+            Downloading…
+          </>
         ) : (
-          <><Download size={13} /> Download invoice</>
+          <>
+            <Download size={13} />
+            Download invoice
+          </>
         )}
       </button>
+
       {status === "error" && (
-        <p className="text-[11px] font-semibold text-red-500">{errorMsg}</p>
+        <p className="text-[11px] font-semibold text-red-500">
+          {errorMsg}
+        </p>
       )}
     </div>
   );

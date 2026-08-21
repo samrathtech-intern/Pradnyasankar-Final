@@ -1,281 +1,732 @@
 "use client";
 
-import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-import { X, Upload, Eye, EyeOff } from "lucide-react";
+import { useEffect, useState } from "react";
+import { X } from "lucide-react";
 
-export type AdminProduct = {
-  id: string;
-  name: string;
-  category: string;
-  price: number;
-  stockQty: number;
-  featured: boolean;
-  image: string;
-  shortDescription: string;
-  fullDescription: string;
-  benefits: string;
-  ingredients: string;
-};
+import {
+  Product,
+  ProductRequest,
+  ProductVariant,
+  ProductVariantRequest,
+  updateAdminProduct,
+  updateAdminVariant,
+  createAdminVariant,
+} from "@/lib/adminApi";
 
 type Props = {
-  product: AdminProduct | null;
+  product: Product | null;
+  variant: ProductVariant | null;
   onClose: () => void;
-  onSave: (p: AdminProduct) => void;
+  onSaved: (
+    product: Product,
+    variant: ProductVariant | null,
+  ) => void;
 };
 
-const CATEGORIES = ["Ayurveda", "Nutraceuticals", "External Wellness"];
+const inputCls =
+  "w-full rounded-[10px] border border-[#E9E3EE] bg-[#FAFAFA] px-3 py-2.5 text-[13px] font-semibold text-[#2E0569] outline-none transition placeholder:text-[#9B93A1] focus:border-[#8C52FF] focus:bg-white";
 
-export default function ProductEditModal({ product, onClose, onSave }: Props) {
-  const isNew = !product?.id;
-  const [form, setForm] = useState<AdminProduct>(
-    product ?? {
-      id: "",
-      name: "",
-      category: "Ayurveda",
-      price: 0,
-      stockQty: 0,
-      featured: false,
-      image: "",
-      shortDescription: "",
-      fullDescription: "",
-      benefits: "",
-      ingredients: "",
-    }
+export default function ProductEditModal({
+  product,
+  variant,
+  onClose,
+  onSaved,
+}: Props) {
+  const isNew = !product;
+
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+
+  const [productName, setProductName] = useState(
+    product?.productName ?? "",
   );
-  const [previewImage, setPreviewImage] = useState<string>(product?.image ?? "");
-  const fileRef = useRef<HTMLInputElement>(null);
+
+  const [categoryId, setCategoryId] = useState(
+    product?.categoryId ?? 0,
+  );
+
+  const [slug, setSlug] = useState(
+    product?.slug ?? "",
+  );
+
+  const [brand, setBrand] = useState(
+    product?.brand ?? "",
+  );
+
+  const [manufacturer, setManufacturer] = useState(
+    product?.manufacturer ?? "",
+  );
+
+  const [description, setDescription] = useState(
+    product?.description ?? "",
+  );
+
+  const [composition, setComposition] = useState(
+    product?.composition ?? "",
+  );
+
+  const [dosageForm, setDosageForm] = useState(
+    product?.dosageForm ?? "",
+  );
+
+  const [prescriptionRequired, setPrescriptionRequired] =
+    useState(product?.prescriptionRequired ?? false);
+
+  const [productStatus, setProductStatus] = useState<
+    "ACTIVE" | "INACTIVE" | "DISCONTINUED"
+  >(
+    product?.productStatus ?? "ACTIVE",
+  );
+
+  /* Variant */
+
+  const [sku, setSku] = useState(
+    variant?.sku ?? "",
+  );
+
+  const [variantName, setVariantName] = useState(
+    variant?.variantName ?? "Default",
+  );
+
+  const [strength, setStrength] = useState(
+    variant?.strength ?? "",
+  );
+
+  const [packSize, setPackSize] = useState(
+    variant?.packSize ?? "",
+  );
+
+  const [unitOfMeasure, setUnitOfMeasure] = useState(
+    variant?.unitOfMeasure ?? "",
+  );
+
+  const [mrp, setMrp] = useState(
+    variant?.mrp ?? 0,
+  );
+
+  const [sellingPrice, setSellingPrice] = useState(
+    variant?.sellingPrice ?? 0,
+  );
+
+  const [gstPercentage, setGstPercentage] = useState(
+    variant?.gstPercentage ?? 0,
+  );
+
+  const [reorderLevel, setReorderLevel] = useState(
+    variant?.reorderLevel ?? 0,
+  );
+
+  const [weight, setWeight] = useState(
+    variant?.weight ?? 0,
+  );
+
+  const [dimensions, setDimensions] = useState(
+    variant?.dimensions ?? "",
+  );
+
+  const [isActive, setIsActive] = useState(
+    variant?.isActive ?? true,
+  );
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = ""; };
+
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, []);
 
-  function set<K extends keyof AdminProduct>(key: K, value: AdminProduct[K]) {
-    setForm((prev) => ({ ...prev, [key]: value }));
-  }
+  async function handleSave() {
+    setError("");
 
-  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const url = URL.createObjectURL(file);
-    setPreviewImage(url);
-    set("image", url);
-  }
+    if (!productName.trim()) {
+      setError("Product name is required.");
+      return;
+    }
 
-  function handleSave() {
-    const id = form.id || form.name.toLowerCase().replace(/\s+/g, "-");
-    onSave({ ...form, id });
-  }
+    if (!categoryId) {
+      setError("Category ID is required.");
+      return;
+    }
 
-  const inStock = form.stockQty > 0;
+    if (!slug.trim()) {
+      setError("Slug is required.");
+      return;
+    }
+
+    if (sellingPrice < 0 || mrp < 0) {
+      setError("Price cannot be negative.");
+      return;
+    }
+
+    try {
+      setSaving(true);
+
+      /* -------------------------------------------------------------- */
+      /* PRODUCT                                                        */
+      /* -------------------------------------------------------------- */
+
+      const productPayload: ProductRequest = {
+        categoryId,
+        productName: productName.trim(),
+        slug: slug.trim(),
+        brand: brand.trim() || undefined,
+        manufacturer: manufacturer.trim() || undefined,
+        description: description.trim() || undefined,
+        composition: composition.trim() || undefined,
+        dosageForm: dosageForm.trim() || undefined,
+        prescriptionRequired,
+        productStatus,
+      };
+
+      let savedProduct: Product;
+
+      if (product) {
+        savedProduct = await updateAdminProduct(
+          product.productId,
+          productPayload,
+        );
+      } else {
+        savedProduct = await createProductNotAvailable(
+          productPayload,
+        );
+      }
+
+      /* -------------------------------------------------------------- */
+      /* VARIANT                                                        */
+      /* -------------------------------------------------------------- */
+
+      const variantPayload: ProductVariantRequest = {
+        productId: savedProduct.productId,
+
+        sku:
+          sku.trim() ||
+          `${savedProduct.slug}-default`,
+
+        variantName:
+          variantName.trim() || "Default",
+
+        strength:
+          strength.trim() || undefined,
+
+        packSize:
+          packSize.trim() || undefined,
+
+        unitOfMeasure:
+          unitOfMeasure.trim() || undefined,
+
+        mrp: Number(mrp),
+        sellingPrice: Number(sellingPrice),
+        gstPercentage: Number(gstPercentage),
+        reorderLevel: Number(reorderLevel),
+
+        weight:
+          weight
+            ? Number(weight)
+            : undefined,
+
+        dimensions:
+          dimensions.trim() || undefined,
+
+        isActive,
+      };
+
+      let savedVariant: ProductVariant | null = null;
+
+      if (variant) {
+        savedVariant = await updateAdminVariant(
+          variant.variantId,
+          variantPayload,
+        );
+      } else {
+        savedVariant = await createAdminVariant(
+          variantPayload,
+        );
+      }
+
+      onSaved(savedProduct, savedVariant);
+
+      onClose();
+    } catch (err) {
+      console.error(err);
+
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to save product.",
+      );
+    } finally {
+      setSaving(false);
+    }
+  }
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-[2px] p-4"
-      onClick={(e) => e.target === e.currentTarget && onClose()}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
     >
       <div className="relative flex w-full max-w-2xl flex-col rounded-[24px] bg-white shadow-2xl max-h-[92vh]">
-        {/* Header */}
+
+        {/* HEADER */}
+
         <div className="flex items-center justify-between border-b border-[#E9E3EE] px-6 py-4 shrink-0">
           <div>
-            <h2 className="text-[17px] font-extrabold tracking-[-.03em] text-[#2E0569]">
+            <h2 className="text-[17px] font-extrabold text-[#2E0569]">
               {isNew ? "Add Product" : "Edit Product"}
             </h2>
+
             <p className="text-[12px] text-[#9B93A1] mt-0.5">
-              {isNew ? "Fill in the details to add a new product." : `Editing: ${product?.name}`}
+              {isNew
+                ? "Create a new product and variant."
+                : `Editing: ${product?.productName}`}
             </p>
           </div>
+
           <button
             onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-[#F4EEFF] text-[#8C52FF] transition hover:bg-[#EAD9FF]"
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-[#F4EEFF] text-[#8C52FF]"
           >
             <X size={15} />
           </button>
         </div>
 
-        {/* Scrollable body */}
+        {/* BODY */}
+
         <div className="overflow-y-auto px-6 py-5 space-y-6">
 
-          {/* Basic Information */}
-          <Section title="Basic Information">
+          {error && (
+            <div className="rounded-[10px] bg-[#FDECEA] px-4 py-3 text-[13px] font-semibold text-[#8B1A1A]">
+              {error}
+            </div>
+          )}
+
+          {/* PRODUCT */}
+
+          <Section title="Product Information">
+
             <Field label="Product Name">
               <input
-                value={form.name}
-                onChange={(e) => set("name", e.target.value)}
-                placeholder="e.g. Ashwagandha Capsules"
+                value={productName}
+                onChange={(e) => {
+                  setProductName(e.target.value);
+
+                  if (isNew) {
+                    setSlug(
+                      e.target.value
+                        .toLowerCase()
+                        .trim()
+                        .replace(/[^a-z0-9]+/g, "-")
+                        .replace(/(^-|-$)/g, ""),
+                    );
+                  }
+                }}
                 className={inputCls}
+                placeholder="Ashwagandha Capsules"
               />
             </Field>
+
             <div className="grid grid-cols-2 gap-4">
-              <Field label="Category">
-                <select
-                  value={form.category}
-                  onChange={(e) => set("category", e.target.value)}
-                  className={inputCls}
-                >
-                  {CATEGORIES.map((c) => (
-                    <option key={c}>{c}</option>
-                  ))}
-                </select>
-              </Field>
-              <Field label="Price (₹)">
+
+              <Field label="Category ID">
                 <input
                   type="number"
-                  min={0}
-                  value={form.price}
-                  onChange={(e) => set("price", Number(e.target.value))}
+                  value={categoryId || ""}
+                  onChange={(e) =>
+                    setCategoryId(
+                      Number(e.target.value),
+                    )
+                  }
+                  className={inputCls}
+                  placeholder="1"
+                />
+              </Field>
+
+              <Field label="Slug">
+                <input
+                  value={slug}
+                  onChange={(e) =>
+                    setSlug(e.target.value)
+                  }
                   className={inputCls}
                 />
               </Field>
-            </div>
-          </Section>
 
-          {/* Inventory */}
-          <Section title="Inventory">
+            </div>
+
             <div className="grid grid-cols-2 gap-4">
-              <Field label="Stock Quantity">
+
+              <Field label="Brand">
                 <input
-                  type="number"
-                  min={0}
-                  value={form.stockQty}
-                  onChange={(e) => set("stockQty", Number(e.target.value))}
+                  value={brand}
+                  onChange={(e) =>
+                    setBrand(e.target.value)
+                  }
                   className={inputCls}
                 />
               </Field>
-              <Field label="Status">
-                <div className={`flex h-10 items-center rounded-[10px] border px-3 text-[13px] font-extrabold ${inStock ? "border-[#C3E6B0] bg-[#EAF4E4] text-[#315C20]" : "border-[#F5C6C6] bg-[#FDECEA] text-[#8B1A1A]"}`}>
-                  <span className={`mr-2 h-2 w-2 rounded-full ${inStock ? "bg-[#4CAF50]" : "bg-[#E53935]"}`} />
-                  {inStock ? "In Stock" : "Out of Stock"}
-                </div>
-              </Field>
-            </div>
-            <Field label="">
-              <label className="flex cursor-pointer items-center gap-2.5">
-                <div
-                  onClick={() => set("featured", !form.featured)}
-                  className={`relative h-5 w-9 rounded-full transition-colors ${form.featured ? "bg-[#8C52FF]" : "bg-[#D9D0E3]"}`}
-                >
-                  <span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${form.featured ? "translate-x-4" : "translate-x-0.5"}`} />
-                </div>
-                <span className="text-[13px] font-semibold text-[#2E0569]">Mark as Featured</span>
-              </label>
-            </Field>
-          </Section>
 
-          {/* Content */}
-          <Section title="Content">
-            <Field label="Short Description">
-              <input
-                value={form.shortDescription}
-                onChange={(e) => set("shortDescription", e.target.value)}
-                placeholder="One-line product summary"
-                className={inputCls}
-              />
-            </Field>
-            <Field label="Full Description">
+              <Field label="Manufacturer">
+                <input
+                  value={manufacturer}
+                  onChange={(e) =>
+                    setManufacturer(e.target.value)
+                  }
+                  className={inputCls}
+                />
+              </Field>
+
+            </div>
+
+            <Field label="Description">
               <textarea
                 rows={3}
-                value={form.fullDescription}
-                onChange={(e) => set("fullDescription", e.target.value)}
-                placeholder="Detailed product description…"
+                value={description}
+                onChange={(e) =>
+                  setDescription(e.target.value)
+                }
                 className={`${inputCls} resize-none`}
               />
             </Field>
+
             <div className="grid grid-cols-2 gap-4">
-              <Field label="Benefits">
-                <textarea
-                  rows={3}
-                  value={form.benefits}
-                  onChange={(e) => set("benefits", e.target.value)}
-                  placeholder="List key benefits…"
-                  className={`${inputCls} resize-none`}
+
+              <Field label="Composition">
+                <input
+                  value={composition}
+                  onChange={(e) =>
+                    setComposition(e.target.value)
+                  }
+                  className={inputCls}
                 />
               </Field>
-              <Field label="Ingredients">
-                <textarea
-                  rows={3}
-                  value={form.ingredients}
-                  onChange={(e) => set("ingredients", e.target.value)}
-                  placeholder="List key ingredients…"
-                  className={`${inputCls} resize-none`}
+
+              <Field label="Dosage Form">
+                <input
+                  value={dosageForm}
+                  onChange={(e) =>
+                    setDosageForm(e.target.value)
+                  }
+                  className={inputCls}
                 />
               </Field>
+
             </div>
+
+            <div className="grid grid-cols-2 gap-4">
+
+              <Field label="Product Status">
+                <select
+                  value={productStatus}
+                  onChange={(e) =>
+                    setProductStatus(
+                      e.target.value as
+                        | "ACTIVE"
+                        | "INACTIVE"
+                        | "DISCONTINUED",
+                    )
+                  }
+                  className={inputCls}
+                >
+                  <option value="ACTIVE">
+                    ACTIVE
+                  </option>
+
+                  <option value="INACTIVE">
+                    INACTIVE
+                  </option>
+
+                  <option value="DISCONTINUED">
+                    DISCONTINUED
+                  </option>
+                </select>
+              </Field>
+
+              <Field label="Prescription Required">
+                <select
+                  value={
+                    prescriptionRequired
+                      ? "true"
+                      : "false"
+                  }
+                  onChange={(e) =>
+                    setPrescriptionRequired(
+                      e.target.value === "true",
+                    )
+                  }
+                  className={inputCls}
+                >
+                  <option value="false">
+                    No
+                  </option>
+
+                  <option value="true">
+                    Yes
+                  </option>
+                </select>
+              </Field>
+
+            </div>
+
           </Section>
 
-          {/* Media */}
-          <Section title="Media">
-            <div className="flex items-start gap-4">
-              <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-[14px] border border-[#E9E3EE] bg-gradient-to-br from-[#F4EEFF] to-[#FAF6FF]">
-                {previewImage ? (
-                  <Image src={previewImage} alt="preview" fill className="object-contain p-2" />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center text-[#C4B8D0]">
-                    <Upload size={22} />
-                  </div>
-                )}
-              </div>
-              <div className="flex-1">
-                <p className="text-[12px] font-semibold text-[#716A78] mb-2">
-                  Upload a product image (PNG, WEBP, JPG)
-                </p>
-                <button
-                  type="button"
-                  onClick={() => fileRef.current?.click()}
-                  className="rounded-[10px] border border-[#8C52FF] px-4 py-2 text-[12px] font-extrabold text-[#8C52FF] transition hover:bg-[#F4EEFF]"
-                >
-                  {previewImage ? "Replace Image" : "Upload Image"}
-                </button>
+          {/* VARIANT */}
+
+          <Section title="Product Variant">
+
+            <div className="grid grid-cols-2 gap-4">
+
+              <Field label="SKU">
                 <input
-                  ref={fileRef}
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleImageChange}
+                  value={sku}
+                  onChange={(e) =>
+                    setSku(e.target.value)
+                  }
+                  className={inputCls}
+                  placeholder="ashwagandha-default"
                 />
-              </div>
+              </Field>
+
+              <Field label="Variant Name">
+                <input
+                  value={variantName}
+                  onChange={(e) =>
+                    setVariantName(e.target.value)
+                  }
+                  className={inputCls}
+                  placeholder="Default"
+                />
+              </Field>
+
             </div>
+
+            <div className="grid grid-cols-2 gap-4">
+
+              <Field label="Strength">
+                <input
+                  value={strength}
+                  onChange={(e) =>
+                    setStrength(e.target.value)
+                  }
+                  className={inputCls}
+                  placeholder="500mg"
+                />
+              </Field>
+
+              <Field label="Pack Size">
+                <input
+                  value={packSize}
+                  onChange={(e) =>
+                    setPackSize(e.target.value)
+                  }
+                  className={inputCls}
+                  placeholder="60 capsules"
+                />
+              </Field>
+
+            </div>
+
+            <Field label="Unit of Measure">
+              <input
+                value={unitOfMeasure}
+                onChange={(e) =>
+                  setUnitOfMeasure(e.target.value)
+                }
+                className={inputCls}
+                placeholder="Capsules"
+              />
+            </Field>
+
+            <div className="grid grid-cols-2 gap-4">
+
+              <Field label="MRP (₹)">
+                <input
+                  type="number"
+                  min={0}
+                  value={mrp}
+                  onChange={(e) =>
+                    setMrp(Number(e.target.value))
+                  }
+                  className={inputCls}
+                />
+              </Field>
+
+              <Field label="Selling Price (₹)">
+                <input
+                  type="number"
+                  min={0}
+                  value={sellingPrice}
+                  onChange={(e) =>
+                    setSellingPrice(
+                      Number(e.target.value),
+                    )
+                  }
+                  className={inputCls}
+                />
+              </Field>
+
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+
+              <Field label="GST Percentage">
+                <input
+                  type="number"
+                  min={0}
+                  value={gstPercentage}
+                  onChange={(e) =>
+                    setGstPercentage(
+                      Number(e.target.value),
+                    )
+                  }
+                  className={inputCls}
+                />
+              </Field>
+
+              <Field label="Reorder Level">
+                <input
+                  type="number"
+                  min={0}
+                  value={reorderLevel}
+                  onChange={(e) =>
+                    setReorderLevel(
+                      Number(e.target.value),
+                    )
+                  }
+                  className={inputCls}
+                />
+              </Field>
+
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+
+              <Field label="Weight">
+                <input
+                  type="number"
+                  min={0}
+                  value={weight}
+                  onChange={(e) =>
+                    setWeight(
+                      Number(e.target.value),
+                    )
+                  }
+                  className={inputCls}
+                />
+              </Field>
+
+              <Field label="Dimensions">
+                <input
+                  value={dimensions}
+                  onChange={(e) =>
+                    setDimensions(e.target.value)
+                  }
+                  className={inputCls}
+                  placeholder="10 x 10 x 20 cm"
+                />
+              </Field>
+
+            </div>
+
+            <label className="flex items-center gap-2 text-[13px] font-semibold text-[#2E0569]">
+              <input
+                type="checkbox"
+                checked={isActive}
+                onChange={(e) =>
+                  setIsActive(e.target.checked)
+                }
+              />
+
+              Active Variant
+            </label>
+
           </Section>
+
         </div>
 
-        {/* Footer */}
+        {/* FOOTER */}
+
         <div className="flex items-center justify-end gap-3 border-t border-[#E9E3EE] px-6 py-4 shrink-0">
+
           <button
             onClick={onClose}
-            className="rounded-[12px] border border-[#E9E3EE] px-5 py-2.5 text-[13px] font-extrabold text-[#716A78] transition hover:bg-[#FAFAFA]"
+            disabled={saving}
+            className="rounded-[12px] border border-[#E9E3EE] px-5 py-2.5 text-[13px] font-extrabold text-[#716A78]"
           >
             Cancel
           </button>
+
           <button
             onClick={handleSave}
-            className="rounded-[12px] bg-[#8C52FF] px-5 py-2.5 text-[13px] font-extrabold text-white transition hover:bg-[#7A3FEE]"
+            disabled={saving}
+            className="rounded-[12px] bg-[#8C52FF] px-5 py-2.5 text-[13px] font-extrabold text-white disabled:opacity-50"
           >
-            {isNew ? "Add Product" : "Save Changes"}
+            {saving
+              ? "Saving..."
+              : isNew
+                ? "Add Product"
+                : "Save Changes"}
           </button>
+
         </div>
+
       </div>
     </div>
   );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+/**
+ * Your backend ProductController currently supports product creation,
+ * so replace this implementation with createAdminProduct import if
+ * you want Add Product enabled.
+ */
+async function createProductNotAvailable(
+  request: ProductRequest,
+): Promise<Product> {
+  const { createAdminProduct } = await import(
+    "@/lib/adminApi"
+  );
+
+  return createAdminProduct(request);
+}
+
+function Section({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
   return (
     <div>
-      <p className="mb-3 text-[11px] font-extrabold uppercase tracking-[.1em] text-[#8C52FF]">{title}</p>
-      <div className="space-y-3">{children}</div>
+      <p className="mb-3 text-[11px] font-extrabold uppercase tracking-[.1em] text-[#8C52FF]">
+        {title}
+      </p>
+
+      <div className="space-y-3">
+        {children}
+      </div>
     </div>
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
   return (
     <div>
-      {label && <label className="mb-1.5 block text-[12px] font-extrabold text-[#2E0569]">{label}</label>}
+      <label className="mb-1.5 block text-[12px] font-extrabold text-[#2E0569]">
+        {label}
+      </label>
+
       {children}
     </div>
   );
 }
-
-const inputCls =
-  "w-full rounded-[10px] border border-[#E9E3EE] bg-[#FAFAFA] px-3 py-2.5 text-[13px] font-semibold text-[#2E0569] outline-none transition placeholder:text-[#9B93A1] focus:border-[#8C52FF] focus:bg-white";

@@ -1,6 +1,8 @@
 "use client";
 
+
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
@@ -13,10 +15,12 @@ import {
   X,
   ArrowUpRight,
   Sparkles,
+  User,
 } from "lucide-react";
 import { announcements } from "@/data";
-import { useApp } from "./AppContext";
-import { useAuth } from "./AuthContext";
+import { useApp } from "@/components/AppContext";
+import { useAuth } from "@/components/AuthContext";
+
 
 const menuColumns = [
   {
@@ -53,20 +57,27 @@ const menuColumns = [
   },
 ];
 
+
 export function AnnouncementBar() {
   const [index, setIndex] = useState(0);
+
 
   useEffect(() => {
     const timer = window.setInterval(
       () => setIndex((current) => (current + 1) % announcements.length),
       5200,
     );
+
+
     return () => window.clearInterval(timer);
   }, []);
+
 
   return (
     <div className="relative z-[70] overflow-hidden bg-gradient-to-r from-[#210044] via-[#2E0569] to-[#3D0880]">
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(105deg,transparent_40%,rgba(255,255,255,.06)_50%,transparent_60%)] bg-[length:200%_100%] animate-[shimmer_3.5s_linear_infinite]" />
+
+
       <div className="mx-auto flex min-h-[42px] max-w-[1500px] items-center justify-center px-10 text-center">
         <AnimatePresence mode="wait">
           <motion.p
@@ -81,6 +92,8 @@ export function AnnouncementBar() {
           </motion.p>
         </AnimatePresence>
       </div>
+
+
       <motion.div
         key={index}
         className="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-[#FFBB58] to-[#FFD98A]"
@@ -92,40 +105,79 @@ export function AnnouncementBar() {
   );
 }
 
+
 export function Header() {
   const [megaOpen, setMegaOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { bag, saved, setSearchOpen, setBagOpen, setSavedOpen } = useApp();
+
+
+  const {
+    bag,
+    saved,
+    setSearchOpen,
+    setBagOpen,
+    setSavedOpen,
+  } = useApp();
+
+
   const { user, logout } = useAuth();
+
+
   const megaRef = useRef<HTMLDivElement>(null);
+
+
+  const pathname = usePathname();
+
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 24);
+
+
     handler();
+
+
     window.addEventListener("scroll", handler, { passive: true });
+
+
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
+
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+
+
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [mobileOpen]);
+
 
   // Close mega menu on click outside
   useEffect(() => {
     if (!megaOpen) return;
+
+
     function handleClick(e: MouseEvent) {
-      if (megaRef.current && !megaRef.current.contains(e.target as Node)) {
+      if (
+        megaRef.current &&
+        !megaRef.current.contains(e.target as Node)
+      ) {
         setMegaOpen(false);
       }
     }
+
+
     document.addEventListener("mousedown", handleClick);
+
+
     return () => document.removeEventListener("mousedown", handleClick);
   }, [megaOpen]);
 
-  const pathname = usePathname();
+
   const closeMega = () => setMegaOpen(false);
+
 
   return (
     <header
@@ -136,15 +188,213 @@ export function Header() {
           : "border-transparent bg-[#FFFDF7]/[.94] backdrop-blur-lg"
       }`}
     >
-      <div className="container-page flex h-[74px] items-center justify-between gap-5 lg:h-[84px]">
+      {/* =========================================================
+          DESKTOP / TABLET TOP HEADER
+          Logo + Large Search + User/Wishlist/Bag
+          ========================================================= */}
+      <div className="container-page hidden lg:block">
+
+
+        <div className="flex min-h-[88px] items-center gap-6">
+          {/* Logo */}
+          <a
+            href="/"
+            className="group relative block h-[54px] w-[210px] shrink-0"
+            aria-label="Pradnyasanskar home"
+          >
+            <Image
+              src="/logo.png"
+              alt="Pradnyasanskar Enterprises Pvt. Ltd."
+              fill
+              priority
+              className="object-contain object-left transition duration-300 group-hover:opacity-85"
+            />
+          </a>
+
+
+          {/* LARGE SEARCH BAR */}
+          <div className="flex flex-1 items-center">
+            <button
+              type="button"
+              onClick={() => setSearchOpen(true)}
+              aria-label="Search products, goals or ingredients"
+              className="group flex h-[50px] w-full items-center overflow-hidden rounded-[10px] border border-[#DCD5E4] bg-white text-left shadow-[0_4px_18px_rgba(46,5,105,.05)] transition hover:border-[#8C52FF] focus:outline-none focus:ring-2 focus:ring-[#8C52FF]/20"
+            >
+              <div className="flex h-full w-[58px] shrink-0 items-center justify-center bg-[#F3F0F5] text-[#5F5765] transition group-hover:bg-[#EEE8F8]">
+                <Search size={21} />
+              </div>
+
+
+              <div className="flex flex-1 items-center px-5">
+                <span className="text-[14px] font-medium text-[#8B8292]">
+                  Search products, goals or ingredients
+                </span>
+              </div>
+
+
+              <div className="mr-2 flex h-[40px] w-[48px] items-center justify-center rounded-[7px] bg-[#8C52FF] text-white transition group-hover:bg-[#2E0569]">
+                <Search size={19} />
+              </div>
+            </button>
+          </div>
+
+
+          {/* RIGHT SIDE ACTIONS */}
+          <div className="flex shrink-0 items-center gap-2">
+
+
+            {/* Saved */}
+            <button
+              className="header-icon relative"
+              onClick={() => setSavedOpen(true)}
+              aria-label={`${saved.length} saved products`}
+            >
+              <Heart size={20} />
+
+
+              {saved.length > 0 && (
+                <span className="counter-badge">
+                  {saved.length}
+                </span>
+              )}
+            </button>
+
+
+            {/* Bag */}
+            <button
+              className="header-icon relative"
+              onClick={() => setBagOpen(true)}
+              aria-label={`${bag.length} products in wellness bag`}
+            >
+              <ShoppingBag size={20} />
+
+
+              {bag.length > 0 && (
+                <span className="counter-badge">
+                  {bag.length}
+                </span>
+              )}
+            </button>
+
+
+            {/* User */}
+            {user ? (
+              <div className="flex items-center gap-2 pl-2">
+
+
+                {/* Profile icon */}
+                <button><Link href="/profile">
+                <div className="grid h-10 w-10 place-items-center rounded-full border border-[#E9E3EE] bg-white text-[#2E0569]">
+                 
+                   <User size={20} strokeWidth={1.8} />
+                    </div>
+                  </Link>
+                 </button>
+               
+
+
+                {/* First name only */}
+                <span className="max-w-[100px] truncate text-[12px] font-extrabold text-[#2E0569]">
+                  {user.firstName}
+                </span>
+
+
+                {/* Sign out */}
+                <button
+                  onClick={() => logout()}
+                  className="rounded-full border border-[#E9E3EE] bg-white px-3 py-2 text-[10px] font-extrabold uppercase tracking-[.1em] text-[#716A78] transition hover:border-[#8C52FF] hover:text-[#8C52FF]"
+                >
+                  Sign out
+                </button>
+              </div>
+            ) : (
+              <a
+                href="/auth/login"
+                className="inline-flex rounded-full border border-[#E9E3EE] bg-white px-4 py-2 text-[10px] font-extrabold uppercase tracking-[.1em] text-[#2E0569] transition hover:border-[#8C52FF] hover:text-[#8C52FF]"
+              >
+                Sign in
+              </a>
+            )}
+          </div>
+        </div>
+
+
+        {/* =========================================================
+            DESKTOP NAVIGATION ROW
+            ========================================================= */}
+        <div className="flex min-h-[52px] items-center justify-center border-t border-[#F0EAF4]">
+          <nav
+            className="flex items-center gap-0.5"
+            aria-label="Primary navigation"
+          >
+            <button
+              type="button"
+              className="nav-link"
+              onMouseEnter={() => setMegaOpen(true)}
+              onFocus={() => setMegaOpen(true)}
+              onClick={() => setMegaOpen((open) => !open)}
+              aria-expanded={megaOpen}
+            >
+              Shop{" "}
+              <ChevronDown
+                size={13}
+                className={`transition-transform duration-300 ${
+                  megaOpen ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+
+
+            {[
+              ["Ayurveda", "/shop/ayurveda"],
+              ["Nutraceuticals", "/shop/nutraceuticals"],
+              ["Wellness goals", "/#wellness-focus"],
+              ["Routines", "/#routines"],
+              ["Ingredients", "/ingredients"],
+              ["Knowledge", "/knowledge"],
+              ["Our story", "/about"],
+              ["Business Enquiry", "/b2b"],
+            ].map(([label, href]) => {
+              const isActive =
+                pathname === href ||
+                pathname.startsWith(href + "/");
+
+
+              return (
+                <a
+                  key={label}
+                  className={`nav-link relative after:absolute after:bottom-1 after:left-3 after:right-3 after:h-[2px] after:rounded-full after:bg-[#8C52FF] after:transition-transform after:duration-300 ${
+                    isActive
+                      ? "text-[#8C52FF] after:scale-x-100"
+                      : "after:scale-x-0 hover:after:scale-x-100"
+                  }`}
+                  href={href}
+                  onMouseEnter={closeMega}
+                >
+                  {label}
+                </a>
+              );
+            })}
+          </nav>
+        </div>
+      </div>
+
+
+      {/* =========================================================
+          MOBILE HEADER
+          ========================================================= */}
+      <div className="container-page flex h-[74px] items-center justify-between gap-5 lg:hidden">
+
+
         {/* Mobile menu trigger */}
         <button
-          className="grid h-11 w-11 place-items-center rounded-full border border-[#E9E3EE] bg-white text-[#2E0569] transition hover:border-[#8C52FF] hover:text-[#8C52FF] lg:hidden"
+          className="grid h-11 w-11 place-items-center rounded-full border border-[#E9E3EE] bg-white text-[#2E0569] transition hover:border-[#8C52FF] hover:text-[#8C52FF]"
           onClick={() => setMobileOpen(true)}
           aria-label="Open navigation"
         >
           <Menu size={20} />
         </button>
+
 
         {/* Logo */}
         <a
@@ -161,52 +411,11 @@ export function Header() {
           />
         </a>
 
-        {/* Desktop nav */}
-        <nav className="hidden items-center gap-0.5 lg:flex" aria-label="Primary navigation">
-          <button
-            type="button"
-            className="nav-link"
-            onMouseEnter={() => setMegaOpen(true)}
-            onFocus={() => setMegaOpen(true)}
-            onClick={() => setMegaOpen((open) => !open)}
-            aria-expanded={megaOpen}
-          >
-            Shop{" "}
-            <ChevronDown
-              size={13}
-              className={`transition-transform duration-300 ${megaOpen ? "rotate-180" : ""}`}
-            />
-          </button>
-          {[
-  ["Ayurveda", "/shop/ayurveda"],
-  ["Nutraceuticals", "/shop/nutraceuticals"],
-  ["Wellness goals", "/#wellness-focus"],
-  ["Routines", "/#routines"],
-  ["Ingredients", "/ingredients"],
-  ["Knowledge", "/knowledge"],
-  ["Our story", "/about"],
-  ["Business Enquiry", "/b2b"],   // <-- Add this line
-].map(([label, href]) => {
-            const isActive = pathname === href || pathname.startsWith(href + "/");
-            return (
-              <a
-                key={label}
-                className={`nav-link relative after:absolute after:bottom-1 after:left-3 after:right-3 after:h-[2px] after:rounded-full after:bg-[#8C52FF] after:transition-transform after:duration-300 ${
-                  isActive
-                    ? "text-[#8C52FF] after:scale-x-100"
-                    : "after:scale-x-0 hover:after:scale-x-100"
-                }`}
-                href={href}
-                onMouseEnter={closeMega}
-              >
-                {label}
-              </a>
-            );
-          })}
-        </nav>
 
-        {/* Icon actions */}
-        <div className="flex items-center gap-1.5 sm:gap-2">
+        {/* Mobile search / bag */}
+        <div className="flex items-center gap-1.5">
+
+
           <button
             className="header-icon"
             onClick={() => setSearchOpen(true)}
@@ -214,66 +423,52 @@ export function Header() {
           >
             <Search size={19} />
           </button>
-          <button
-            className="header-icon relative hidden sm:grid"
-            onClick={() => setSavedOpen(true)}
-            aria-label={`${saved.length} saved products`}
-          >
-            <Heart size={19} />
-            {saved.length > 0 && (
-              <span className="counter-badge">{saved.length}</span>
-            )}
-          </button>
+
+
           <button
             className="header-icon relative"
             onClick={() => setBagOpen(true)}
             aria-label={`${bag.length} products in wellness bag`}
           >
             <ShoppingBag size={19} />
+
+
             {bag.length > 0 && (
-              <span className="counter-badge">{bag.length}</span>
+              <span className="counter-badge">
+                {bag.length}
+              </span>
             )}
           </button>
-          {user ? (
-            <div className="hidden items-center gap-2 sm:flex">
-              <span className="max-w-[100px] truncate text-[11px] font-extrabold text-[#2E0569]">
-                {user.firstName}
-              </span>
-              <button
-                onClick={() => logout()}
-                className="rounded-full border border-[#E9E3EE] bg-white px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[.1em] text-[#716A78] transition hover:border-[#8C52FF] hover:text-[#8C52FF]"
-              >
-                Sign out
-              </button>
-            </div>
-          ) : (
-            <a
-              href="/auth/login"
-              className="hidden rounded-full border border-[#E9E3EE] bg-white px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[.1em] text-[#2E0569] transition hover:border-[#8C52FF] hover:text-[#8C52FF] sm:inline-flex"
-            >
-              Sign in
-            </a>
-          )}
         </div>
       </div>
 
-      {/* Mega menu */}
+
+      {/* =========================================================
+          MEGA MENU
+          ========================================================= */}
       <AnimatePresence>
         {megaOpen && (
           <motion.div
             initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+            transition={{
+              duration: 0.24,
+              ease: [0.22, 1, 0.36, 1],
+            }}
             onMouseLeave={closeMega}
             className="absolute inset-x-0 top-full hidden border-y border-[#E9E3EE] bg-white/98 shadow-[0_32px_80px_rgba(46,5,105,.13)] backdrop-blur-xl lg:block"
           >
             <div className="container-page grid grid-cols-[1fr_1fr_1fr_1.25fr] gap-10 py-10">
+
+
               {menuColumns.map((column) => (
                 <div key={column.title}>
                   <p className="text-[10px] font-extrabold uppercase tracking-[.17em] text-[#8C52FF]">
                     {column.title}
                   </p>
+
+
                   <div className="mt-5 space-y-3">
                     {column.links.map(([link, href]) => (
                       <a
@@ -283,12 +478,15 @@ export function Header() {
                         className="group flex items-center gap-2 text-[13px] font-bold text-[#382D42] transition duration-200 hover:text-[#8C52FF]"
                       >
                         <span className="h-px w-0 rounded-full bg-[#8C52FF] transition-all duration-300 group-hover:w-4" />
+
+
                         {link}
                       </a>
                     ))}
                   </div>
                 </div>
               ))}
+
 
               {/* Featured card */}
               <a
@@ -297,15 +495,24 @@ export function Header() {
                 className="group relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#F2EBFF] to-[#E8DEFF] p-7 transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(140,82,255,.18)]"
               >
                 <div className="absolute -right-8 -top-10 h-40 w-40 rounded-full bg-[#FFBB58]/[.40] blur-xl transition-transform duration-500 group-hover:scale-125" />
+
+
                 <div className="absolute -bottom-6 -left-6 h-28 w-28 rounded-full bg-[#8C52FF]/[.12] blur-lg" />
+
+
                 <p className="relative text-[10px] font-extrabold uppercase tracking-[.16em] text-[#8C52FF]">
                   Guided discovery
                 </p>
+
+
                 <h3 className="relative mt-3 max-w-[220px] text-[24px] font-extrabold leading-tight tracking-[-.04em] text-[#2E0569]">
                   Find a wellness routine that fits your day.
                 </h3>
+
+
                 <span className="relative mt-6 inline-flex items-center gap-2 rounded-full bg-[#2E0569] px-4 py-2.5 text-[10px] font-extrabold uppercase tracking-[.1em] text-white transition duration-300 group-hover:bg-[#8C52FF]">
-                  Shop all products <ArrowUpRight size={14} />
+                  Shop all products
+                  <ArrowUpRight size={14} />
                 </span>
               </a>
             </div>
@@ -313,7 +520,10 @@ export function Header() {
         )}
       </AnimatePresence>
 
-      {/* Mobile drawer */}
+
+      {/* =========================================================
+          MOBILE DRAWER
+          ========================================================= */}
       <AnimatePresence>
         {mobileOpen && (
           <>
@@ -326,18 +536,35 @@ export function Header() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
             />
+
+
             <motion.aside
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
-              transition={{ type: "spring", damping: 28, stiffness: 260 }}
+              transition={{
+                type: "spring",
+                damping: 28,
+                stiffness: 260,
+              }}
               className="fixed inset-y-0 left-0 z-[90] flex w-[min(92vw,420px)] flex-col bg-[#FFFDF7] shadow-[24px_0_80px_rgba(46,5,105,.18)]"
             >
+
+
               {/* Drawer header */}
               <div className="flex items-center justify-between border-b border-[#E9E3EE] px-5 py-4">
+
+
                 <div className="relative h-12 w-52">
-                  <Image src="/logo.png" alt="Pradnyasanskar" fill className="object-contain object-left" />
+                  <Image
+                    src="/logo.png"
+                    alt="Pradnyasanskar"
+                    fill
+                    className="object-contain object-left"
+                  />
                 </div>
+
+
                 <button
                   className="grid h-10 w-10 place-items-center rounded-full border border-[#E9E3EE] bg-white text-[#2E0569] transition hover:border-[#8C52FF] hover:text-[#8C52FF]"
                   onClick={() => setMobileOpen(false)}
@@ -347,19 +574,31 @@ export function Header() {
                 </button>
               </div>
 
+
               {/* Search bar */}
               <div className="p-5">
                 <button
-                  onClick={() => { setMobileOpen(false); setSearchOpen(true); }}
+                  onClick={() => {
+                    setMobileOpen(false);
+                    setSearchOpen(true);
+                  }}
                   className="flex min-h-12 w-full items-center gap-3 rounded-full border border-[#E9E3EE] bg-white px-5 text-left text-[13px] font-semibold text-[#716A78] transition hover:border-[#8C52FF]"
                 >
-                  <Search size={17} className="text-[#8C52FF]" />
+                  <Search
+                    size={17}
+                    className="text-[#8C52FF]"
+                  />
+
+
                   Search products, goals or ingredients
                 </button>
               </div>
 
+
               {/* Nav links */}
               <nav className="flex-1 overflow-y-auto px-5 pb-8">
+
+
                 {[
                   ["Shop all", "/shop"],
                   ["Ayurveda", "/shop/ayurveda"],
@@ -371,34 +610,61 @@ export function Header() {
                   ["Business enquiry", "/b2b"],
                   ["Policies", "/policies"],
                 ].map(([label, href]) => {
-                  const active = pathname === href || pathname.startsWith(href + "/");
+                  const active =
+                    pathname === href ||
+                    pathname.startsWith(href + "/");
+
+
                   return (
                     <a
                       key={label}
                       href={href}
                       onClick={() => setMobileOpen(false)}
                       className={`flex min-h-[56px] items-center justify-between border-b border-[#F0EAF4] text-[15px] font-extrabold transition hover:text-[#8C52FF] ${
-                        active ? "text-[#8C52FF]" : "text-[#2E0569]"
+                        active
+                          ? "text-[#8C52FF]"
+                          : "text-[#2E0569]"
                       }`}
                     >
                       {label}
-                      <ArrowUpRight size={15} className={active ? "text-[#8C52FF]" : "text-[#8C52FF]/60"} />
+
+
+                      <ArrowUpRight
+                        size={15}
+                        className={
+                          active
+                            ? "text-[#8C52FF]"
+                            : "text-[#8C52FF]/60"
+                        }
+                      />
                     </a>
                   );
                 })}
               </nav>
 
+
               {/* Drawer footer CTA */}
               <div className="border-t border-[#E9E3EE] bg-gradient-to-br from-[#F2EBFF] to-[#EDE4FF] p-5">
+
+
                 <div className="flex items-center gap-2">
-                  <Sparkles size={14} className="text-[#8C52FF]" />
+                  <Sparkles
+                    size={14}
+                    className="text-[#8C52FF]"
+                  />
+
+
                   <p className="text-[11px] font-extrabold uppercase tracking-[.14em] text-[#8C52FF]">
                     Pradnyasanskar community
                   </p>
                 </div>
+
+
                 <p className="mt-2 text-[13px] leading-relaxed text-[#5F5765]">
                   Join for product stories, ingredient education and collection updates.
                 </p>
+
+
                 <a
                   href="/#newsletter"
                   onClick={() => setMobileOpen(false)}
@@ -407,6 +673,8 @@ export function Header() {
                   Join the community
                 </a>
               </div>
+
+
             </motion.aside>
           </>
         )}

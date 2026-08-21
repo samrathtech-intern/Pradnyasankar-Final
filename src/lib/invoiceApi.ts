@@ -1,39 +1,111 @@
 /**
  * Invoice API service
  *
- * Integration point for the backend team:
- * - Endpoint: GET /api/orders/:orderId/invoice
- * - Expected response: PDF blob (Content-Type: application/pdf)
- * - Auth: attach bearer token here once customer auth is implemented
- * - Set NEXT_PUBLIC_API_BASE_URL in .env.local to point to the backend
+ * Browser -> Next.js proxy -> Spring Boot backend
+ *
+ * Frontend route:
+ * GET /api/invoices/order/:orderId/pdf
+ *
+ * Backend route:
+ * GET /api/invoices/order/:orderId/pdf
  */
 
-// The browser calls the same-origin Next.js rewrite path (`/api/orders/...`),
-// which forwards the request server-to-server to the backend at
-// NEXT_PUBLIC_API_BASE_URL. This avoids CORS blocking.
-const API_BASE = "";
+export async function downloadInvoice(
+  orderId: string,
+  token: string
+): Promise<void> {
 
-export async function downloadInvoice(orderId: string): Promise<void> {
-  const response = await fetch(`${API_BASE}/api/orders/${orderId}/invoice`, {
-    method: "GET",
-    headers: {
-      Accept: "application/pdf",
-      // Authorization: `Bearer ${getAuthToken()}`, // uncomment when auth is ready
-    },
-  });
+  console.log(
+    "======================================"
+  );
+
+  console.log(
+    "INVOICE API"
+  );
+
+  console.log(
+    "orderId:",
+    orderId
+  );
+
+  console.log(
+    "token exists:",
+    !!token
+  );
+
+  console.log(
+    "token length:",
+    token?.length
+  );
+
+  console.log(
+    "======================================"
+  );
+
+  const response =
+    await fetch(
+      `/api/invoices/${orderId}/pdf`,
+      {
+        method: "GET",
+
+        headers: {
+          Authorization:
+            `Bearer ${token}`,
+
+          Accept:
+            "application/pdf",
+        },
+
+        cache: "no-store",
+      }
+    );
+
+  console.log(
+    "INVOICE API - status:",
+    response.status
+  );
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch invoice: ${response.status} ${response.statusText}`);
+
+    const errorText =
+      await response.text();
+
+    console.error(
+      "INVOICE API ERROR:",
+      response.status,
+      errorText
+    );
+
+    throw new Error(
+      `Failed to download invoice: ${response.status} ${response.statusText}`
+    );
   }
 
-  const blob = await response.blob();
-  const url = URL.createObjectURL(blob);
+  const blob =
+    await response.blob();
 
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.download = `invoice-${orderId}.pdf`;
-  document.body.appendChild(anchor);
-  anchor.click();
-  anchor.remove();
-  URL.revokeObjectURL(url);
+  console.log(
+    "INVOICE API - PDF received:",
+    blob.size,
+    "bytes"
+  );
+
+  const url =
+    window.URL.createObjectURL(blob);
+
+  const link =
+    document.createElement("a");
+
+  link.href = url;
+
+  link.download =
+    `invoice-${orderId}.pdf`;
+
+  document.body.appendChild(link);
+
+  link.click();
+
+  link.remove();
+
+  window.URL.revokeObjectURL(url);
 }

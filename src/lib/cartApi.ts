@@ -4,12 +4,17 @@
  * Backend endpoints:
  *
  * POST   /api/cart/add
- *        { variantId, quantity }
+ *        {
+ *          variantId,
+ *          quantity
+ *        }
  *
  * GET    /api/cart
  *
  * PUT    /api/cart/item/{cartItemId}
- *        { quantity }
+ *        {
+ *          quantity
+ *        }
  *
  * DELETE /api/cart/item/{cartItemId}
  *
@@ -20,10 +25,10 @@
  *
  * The backend identifies the customer from the JWT token.
  *
- * The browser calls the same-origin Next.js route:
+ * The browser calls the same-origin Next.js routes:
  * /api/cart/...
  *
- * Next.js forwards the request to:
+ * Next.js forwards these requests to:
  * http://localhost:8080
  */
 
@@ -63,13 +68,14 @@ export interface CheckoutRequestDTO {
   fullName: string;
   mobileNumber: string;
   addressLine1: string;
-  addressLine2?: string;
-  landmark?: string;
+  addressLine2: string;
+  landmark: string;
   city: string;
   state: string;
   postalCode: string;
   country: string;
-  notes?: string;
+  notes: string;
+  couponCode: string | null;
 }
 
 // ============================================================
@@ -100,7 +106,7 @@ async function request<T>(
   // REQUEST
   // ==========================================================
 
-  const res = await fetch(`${API_BASE}${path}`, {
+  const response = await fetch(`${API_BASE}${path}`, {
     method: options.method ?? "GET",
     headers,
     body:
@@ -113,20 +119,23 @@ async function request<T>(
   // RESPONSE
   // ==========================================================
 
-  const data = await res.json().catch(() => null);
+  const data = await response.json().catch(() => null);
 
   // ==========================================================
   // ERROR HANDLING
   // ==========================================================
 
-  if (!res.ok) {
-    const message =
+  if (!response.ok) {
+    let message = `Cart request failed: ${response.status}`;
+
+    if (
       data &&
       typeof data === "object" &&
       "message" in data &&
       typeof (data as { message: unknown }).message === "string"
-        ? (data as { message: string }).message
-        : `Cart request failed: ${res.status}`;
+    ) {
+      message = (data as { message: string }).message;
+    }
 
     throw new Error(message);
   }
@@ -255,19 +264,99 @@ export async function clearCart(
 }
 
 // ============================================================
+// CHECKOUT RESPONSE
+// ============================================================
+
+/**
+ * This matches the OrderResponseDTO returned
+ * by your backend checkout API.
+ */
+
+export interface CheckoutOrderItemDTO {
+  orderItemId: number;
+  variantId: number;
+  productName: string;
+  variantName: string;
+  quantity: number;
+  unitPrice: number;
+  discountAmount: number;
+  taxAmount: number;
+  subtotal: number;
+}
+
+export interface CheckoutResponseDTO {
+  orderId: number;
+  orderNumber: string;
+  userId: number;
+
+  customerName: string;
+
+  fullName: string;
+  mobileNumber: string;
+
+  addressLine1: string;
+  addressLine2: string;
+  landmark: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+
+  orderStatus: string;
+  paymentStatus: string;
+
+  subtotal: number;
+  discountAmount: number;
+  taxAmount: number;
+  shippingCharge: number;
+  totalAmount: number;
+
+  notes: string;
+
+  orderedAt: string;
+
+  items: CheckoutOrderItemDTO[];
+
+  // Razorpay
+  razorpayOrderId: string;
+  amount: number;
+  currency: string;
+  status: string;
+}
+
+// ============================================================
 // CHECKOUT
 // ============================================================
 
 /**
  * POST /api/cart/checkout
  *
- * The backend expects CheckoutRequestDTO.
+ * The backend gets the logged-in user from JWT.
+ *
+ * IMPORTANT:
+ * Do NOT send userId here.
+ *
+ * Example body:
+ *
+ * {
+ *   "fullName": "Aishwarya",
+ *   "mobileNumber": "9876543210",
+ *   "addressLine1": "Flat 101, ABC Building",
+ *   "addressLine2": "MG Road",
+ *   "landmark": "Near XYZ",
+ *   "city": "Pune",
+ *   "state": "Maharashtra",
+ *   "postalCode": "411001",
+ *   "country": "India",
+ *   "notes": "",
+ *   "couponCode": null
+ * }
  */
 export async function checkoutCart(
   checkoutData: CheckoutRequestDTO,
   token?: string,
-): Promise<any> {
-  return request<any>(
+): Promise<CheckoutResponseDTO> {
+  return request<CheckoutResponseDTO>(
     "/api/cart/checkout",
     {
       method: "POST",

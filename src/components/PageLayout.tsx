@@ -5,6 +5,7 @@ import { AnnouncementBar, Header } from "@/components/Header";
 import { FAQ, Footer } from "@/components/FAQFooter";
 import { BagDrawer, QuickViewModal, SavedDrawer, SearchOverlay } from "@/components/Overlays";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
+import { AuthProvider } from "./AuthContext";
 
 export function PageLayout({
   children,
@@ -14,6 +15,7 @@ export function PageLayout({
   showFaq?: boolean;
 }) {
   return (
+    <AuthProvider>
     <AppProvider>
       <div className="min-h-screen overflow-x-clip bg-[#FFFDF7]">
         <a
@@ -34,5 +36,6 @@ export function PageLayout({
         <MobileBottomNav />
       </div>
     </AppProvider>
+    </AuthProvider>
   );
 }
